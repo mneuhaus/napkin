@@ -1,0 +1,9 @@
+# German as written in Switzerland. Format: see crates/napkin-core/src/vocab.rs.
+
+base = de
+
+# In Switzerland a Zentner is 100 kg; Swiss spelling has no ß.
+show.centner = Zentner | Zentner
+unit.centner = zen{,.}, zent{,.}, Ztr{,.}, q
+show.foot = Fuss | Fuss
+currency.CHF = Fr{,.}, Stutz

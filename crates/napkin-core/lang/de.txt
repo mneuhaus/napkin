@@ -1,0 +1,243 @@
+# German (Deutsch). Format: see crates/napkin-core/src/vocab.rs.
+
+# Arithmetic
+plus = und, mit, zuzüglich, zzgl{,.}, addiert mit, addiert zu
+minus = weniger, abzüglich, abzgl{,.}, ohne
+times = mal, multipliziert mit, multipliziert, malgenommen mit
+divide = geteilt durch, geteilt, dividiert durch, dividiert, durch
+per = pro, je
+modulo = modulo
+convert = nach, zu, als, umgerechnet in, in
+assign = ist gleich, sind gleich, es ist gleich, sie sind gleich, ist, sind, gleich
+
+# Percentages
+percent = Prozent{,e}, Perzent{,e}, Proz{,.}, Prz{,.}, vH, v. H.
+percent.of = von
+percent.on = auf, zusätzlich zu, Aufschlag auf
+percent.off = abgezogen von, Rabatt auf, Rabatt von, Nachlass auf, Skonto auf, Abzug von
+as-percent.of = {in,als} {Prozent,Perzent,%} von
+as-percent.off = {in,als} {Prozent,Perzent,%} {abzüglich,weniger}
+as-percent.on = {in,als} {Prozent,Perzent,%} {zuzüglich,mehr}
+what-is.of = von was {sind,ergeben,ist}, wovon {sind,ergeben,ist}
+what-is.off = was ergibt ist, abgezogen von was ist
+what-is.on = auf was ist, zusätzlich zu was ist
+
+# Scales (German uses the long scale: Milliarde = 10^9, Billion = 10^12)
+scale.1e3 = Tausend, Tsd{,.}
+scale.1e6 = Million{,en}, Mio{,.}
+scale.1e9 = Milliarde{,n}, Mrd{,.}
+scale.1e12 = Billion{,en}, Bio{,.}
+
+# Dates and times
+today = heute
+tomorrow = morgen
+yesterday = gestern
+day.2 = übermorgen
+day.-2 = vorgestern
+now = jetzt, Zeit, Uhrzeit, aktuelle Zeit
+oclock = Uhr
+local = Lokalzeit, lokale Zeit, lokale Zeitzone, Ortszeit, lokal, Zeitzone
+noon = Mittag
+midnight = Mitternacht
+
+# Document references
+prev = vorheriges, vorherige{,r,s,n}, vorher
+sum = Summe, insgesamt, ingesamt, gesamt, Gesamtsumme, Ergebnis
+average = Mittel, Mittelwert, Durchschnitt, durchschnittlich, Schnitt, Ø
+
+# Functions and formats
+function.sqrt = Quadratwurzel, Quadrat Wurzel, Wurzel
+function.cbrt = Kubikwurzel, Kubik Wurzel, dritte Wurzel
+function.round = runden, gerundet
+function.ceil = aufrunden
+function.floor = abrunden
+function.abs = Betrag
+function.fact = Fakultät
+function.sin = Sinus
+function.cos = Kosinus, Cosinus
+function.tan = Tangens
+format.hex = hexadezimal
+format.bin = binär, Binärzahl, dual
+format.oct = oktal
+format.dec = dezimal
+format.sci = wissenschaftlich, Exponentialschreibweise
+
+# Time
+show.s = Sekunde | Sekunden
+unit.s = Sek{,.}, sek, Sec
+show.min = Minute | Minuten
+unit.min = Min{,.}, min.
+show.h = Stunde | Stunden
+unit.h = Std{,.}, Stdn{,.}
+show.day = Tag | Tage
+unit.day = Tagen, T, Tg{,.}
+show.week = Woche | Wochen
+unit.week = W, Wo{,.}, wo{,.}, Wch{,.}, wch{,.}
+show.month = Monat | Monate
+unit.month = Monaten, Mon{,.}
+show.year = Jahr | Jahre
+unit.year = Jahren, J, j
+show.decade = Jahrzehnt | Jahrzehnte
+unit.decade = Jahrzehnten, Dekade{,n}
+show.century = Jahrhundert | Jahrhunderte
+unit.century = Jahrhunderten
+show.fortnight = vierzehn Tage | vierzehn Tage
+
+# SI prefixes that German spells differently from English
+prefix.c = Zenti
+prefix.d = Dezi
+prefix.da = Deka
+prefix.h = Hekto
+prefix.µ = Mikro
+prefix.p = Piko
+prefix.y = Yokto
+
+# Length
+unit.m = Meter{,n}
+show.inch = Zoll | Zoll
+unit.inch = Zolls, Zolles, Zölle, Zölles, Inch{,es}, ”
+show.foot = Fuß | Fuß
+unit.foot = Fuss, Füße, Füsse, Foot, Feet, Fb{,.}, fb{,.}, Ft{,.}
+show.yard = Yard | Yards
+unit.yard = Yd{,.}
+show.mile = Meile | Meilen
+unit.mile = Mile, Mi{,.}
+show.nautical mile = Seemeile | Seemeilen
+unit.nautical mile = nautische Meile{,n}, nautischer Meile, Nautische Meile{,n}, sm
+show.league = League | Leagues
+unit.league = Legue, Leguen, Leuge, Leugen
+show.furlong = Furlong | Furlongs
+unit.furlong = Furchenlänge{,n}, Furchenläge, fur{,.}
+show.chain = Kette | Ketten
+unit.chain = Chain{,s}, Kettenlänge{,n}, Kettenlägen, ch
+show.cable = Kabellänge | Kabellängen
+unit.cable = Cable{,s}
+show.hand = Hand | Hand
+show.light year = Lichtjahr | Lichtjahre
+unit.light year = Lichtjahren, Lj
+unit.pt = Punkt{,e}
+unit.px = Pixel
+unit.em = Em
+
+# Area
+square = Quadrat*, Quadrat *
+show.square = Quadrat*
+unit.ha = Hektar{,e,en,s,es}
+show.are = Ar | Ar
+unit.are = Are, Aren, Ares, ar
+show.acre = Acre | Acres
+show.ping = Ping | Ping
+
+# Volume
+cubic = Kubik*, Kubik *
+show.cubic = Kubik*
+unit.l = Liter{,n}, Ltr{,.}
+unit.inch3 = Kubikzölle, cuin, ci, Kbz{,.}, kbz{,.}
+unit.cm3 = ccm, Kz{,.}, kz{,.}
+show.cup = Tasse | Tassen
+unit.cup = Cup{,s}, Häferl, Haferl, Schale{,n}
+show.tablespoon = Esslöffel | Esslöffel
+unit.tablespoon = EL, Löffel
+show.teaspoon = Teelöffel | Teelöffel
+unit.teaspoon = TL
+show.quart = Quart | Quart
+unit.quart = Quarten, Quartier{,e}, Viertel, viert{,.}, vier.
+show.pint = Pint | Pints
+unit.pint = Pinte{,n}
+show.gallon = Gallone | Gallonen
+unit.gallon = Gallon{,s}, Gal{,.}
+show.fluid ounce = Flüssigunze | Flüssigunzen
+
+# Weight (Zentner is 50 kg in Germany but 100 kg in Austria and Switzerland, so only de-AT and
+# de-CH read it; Napkin's centner is the 100 kg one)
+unit.g = Gramm{,s}, Grammen
+unit.kg = Kilo{,s}
+unit.t = Tonne{,n,s}, metrische Tonne{,n}
+show.stone = Stone | Stones
+unit.stone = Stonen, Stein, Steiner
+show.carat = Karat | Karat
+unit.carat = Karate, metrisches Karat, metrische Karate, Kt
+show.pound = Pfund | Pfund
+unit.pound = Pfunde, Pound{,s}, Pfd{,.}
+show.centner = Doppelzentner | Doppelzentner
+unit.centner = dz, Quintal{,e}
+show.ounce = Unze | Unzen
+unit.ounce = Ounce{,s}, uz{,.}, Uz{,.}, oz.
+
+# Temperature, angles, data, speed
+unit.°C = Celsius, Grad Celsius
+unit.°F = Fahrenheit, Grad Fahrenheit, Fah{,.}, Fahr{,.}
+unit.K = Kelvin
+unit.° = Grad, Grade, Bogengrad{,e}, º
+unit.rad = Radiant{,en}, Radian{,s}
+unit.b = Bit{,s}
+unit.B = Byte{,s}
+unit.km/h = Stundenkilometer, Kilometer pro Stunde
+show.knot = Knoten | Knoten
+
+# Currencies
+currency.EUR = Euro{,s}
+currency.USD = US-Dollar{,s}, US Dollar{,s}, amerikanische{,r,m,n} Dollar{,s}
+currency.GBP = Pfund, Pfund Sterling, britische{,s,m,n} Pfund, Britische{,s,m,n} Pfund
+currency.CHF = Franken, Schweizer Franken, Schweizerfranken, Fränkli, sFr{,.}, SFr{,.}
+currency.RUB = Rubel
+currency.CZK = Tschechische Krone{,n}, tschechische Krone{,n}
+currency.SEK = Schwedische Krone{,n}, schwedische Krone{,n}
+currency.NOK = Norwegische Krone{,n}, norwegische Krone{,n}
+currency.DKK = Dänische Krone{,n}, dänische Krone{,n}
+
+# Time zones: German names of cities and countries
+zone.Europe/Vienna = Wien, Österreich, Salzburg, Innsbruck, Graz, Linz
+zone.Europe/Zurich = Zürich, Genf, Basel, Bern, Luzern, Schweiz
+zone.Europe/Berlin = Nürnberg, Deutschland
+zone.Europe/Moscow = Moskau, Sankt Petersburg, Russland
+zone.Asia/Shanghai = Peking, Schanghai
+zone.Europe/Rome = Rom, Mailand, Neapel, Florenz, Venedig, Turin, Italien
+zone.Europe/Lisbon = Lissabon
+zone.Europe/Prague = Prag, Tschechien
+zone.Europe/Warsaw = Warschau, Krakau, Polen
+zone.Europe/Brussels = Brüssel, Antwerpen, Belgien
+zone.Europe/Copenhagen = Kopenhagen, Dänemark
+zone.Europe/Athens = Athen, Griechenland
+zone.Europe/Bucharest = Bukarest, Rumänien
+zone.Europe/Belgrade = Belgrad
+zone.Europe/Kyiv = Kiew
+zone.Europe/Paris = Frankreich
+zone.Europe/Madrid = Sevilla, Spanien
+zone.Europe/London = England, Großbritannien
+zone.Europe/Amsterdam = Den Haag, Niederlande, Holland
+zone.Europe/Luxembourg = Luxemburg
+zone.Europe/Stockholm = Schweden
+zone.Europe/Oslo = Norwegen
+zone.Europe/Helsinki = Finnland
+zone.Europe/Istanbul = Türkei
+zone.Asia/Tokyo = Tokio
+zone.Africa/Cairo = Kairo, Ägypten
+zone.Africa/Johannesburg = Kapstadt, Südafrika
+zone.America/Mexico_City = Mexiko-Stadt, Mexiko
+zone.America/Havana = Havanna
+zone.America/Los_Angeles = Kalifornien
+zone.Asia/Kolkata = Neu-Delhi, Indien
+zone.Asia/Singapore = Singapur
+zone.Asia/Tehran = Teheran
+zone.Asia/Riyadh = Riad
+zone.Asia/Seoul = Südkorea
+
+# Month names in dates (`12. März 2026`)
+month.1 = Januar, Jan{,.}
+month.2 = Februar, Feb{,.}
+month.3 = März, Maerz, Mär{,.}, Mrz{,.}
+month.4 = April, Apr{,.}
+month.5 = Mai
+month.6 = Juni, Jun{,.}
+month.7 = Juli, Jul{,.}
+month.8 = August, Aug{,.}
+month.9 = September, Sep{,.}, Sept{,.}
+month.10 = Oktober, Okt{,.}
+month.11 = November, Nov{,.}
+month.12 = Dezember, Dez{,.}
+
+# Display
+weekdays = Mo., Di., Mi., Do., Fr., Sa., So.
+months = Jan., Feb., März, Apr., Mai, Juni, Juli, Aug., Sept., Okt., Nov., Dez.
+date = %a, %-d. %b %Y

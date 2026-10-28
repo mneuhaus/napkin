@@ -12,6 +12,7 @@ use crate::lexer::{self, Raw, RawKind, Sym};
 use crate::parser::{self, Expr};
 use crate::units::{BUILTINS, Form, Unit, UnitRef};
 use crate::value::{Units, Value};
+use crate::vocab::{Lexicon, Meaning};
 use crate::zones::Zone;
 use crate::{Clock, Engine, EvalError, LineOutput, LineResult, Span, SpanKind};
 
@@ -31,7 +32,24 @@ pub(crate) struct Document<'a> {
     em_px: f64,
     now: DateTime<Utc>,
     local: Zone,
+    lexicon: Lexicon,
 }
+
+/// Where an assignment's parts are in a line.
+#[derive(Debug)]
+struct Assignment {
+    /// Byte range of the variable name.
+    name: Range<usize>,
+    /// Byte range of `=` or the assignment words.
+    operator: Range<usize>,
+    operator_kind: SpanKind,
+    /// Index of the expression's first raw.
+    expression: usize,
+}
+
+/// Most raws a variable name can span: names in Chinese or Japanese characters are one raw per
+/// character.
+const MAX_NAME_RAWS: usize = 8;
 
 /// Where the label, comments and code of a line are.
 #[derive(Debug, Default)]
@@ -182,6 +200,8 @@ fn can_end(tok: &Tok) -> bool {
                 | Op::Semi
         ) | Tok::Convert(_)
             | Tok::Percent(_)
+            | Tok::AsPercent(_)
+            | Tok::PercentWhat(_)
             | Tok::What
             | Tok::Is
             | Tok::Power(_)
@@ -213,9 +233,12 @@ fn can_start(tok: &Tok) -> bool {
                 | Op::Sup3
         ) | Tok::Convert(_)
             | Tok::Percent(_)
+            | Tok::AsPercent(_)
+            | Tok::PercentWhat(_)
             | Tok::What
             | Tok::Is
             | Tok::Radix(_)
+            | Tok::LocalZone
             | Tok::Gap
     )
 }
@@ -272,6 +295,7 @@ impl<'a> Document<'a> {
             em_px: DEFAULT_EM_PX,
             now,
             local,
+            lexicon: Lexicon::new(engine.settings.input_language),
         };
         let globals = engine
             .globals
@@ -325,7 +349,7 @@ impl<'a> Document<'a> {
             self.block.clear();
             return none(Vec::new());
         }
-        if content.starts_with('#') {
+        if content.starts_with(['#', '＃']) {
             self.block.clear();
             let range = content_start..content_start + content.len();
             return none(vec![Span {
@@ -381,30 +405,75 @@ impl<'a> Document<'a> {
             let error = EvalError::new(format!("`{name}` is not a valid variable name"));
             return (LineResult::Error(error), None);
         }
-        let assignment = match raws {
-            [name, eq, ..] if name.kind == RawKind::Word && eq.kind == RawKind::Sym(Sym::Equals) => {
-                Some(&line[name.range.clone()])
-            }
-            _ => None,
-        };
-        let expression = if assignment.is_some() { &raws[2..] } else { raws };
+        let assignment = self.assignment(line, raws);
+        let expression = assignment.as_ref().map_or(raws, |a| &raws[a.expression..]);
         let items = self.classify(line, expression);
         spans.extend(items.iter().map(|item| Span {
             range: item.range.clone(),
             kind: item.kind,
         }));
-        let Some(name) = assignment else {
+        let Some(assignment) = assignment else {
             return self.evaluate(line, &items);
         };
         spans.push(Span {
-            range: raws[0].range.clone(),
+            range: assignment.name.clone(),
             kind: SpanKind::Variable,
         });
         spans.push(Span {
-            range: raws[1].range.clone(),
-            kind: SpanKind::Operator,
+            range: assignment.operator.clone(),
+            kind: assignment.operator_kind,
         });
-        self.assign(line, name, &items)
+        self.assign(line, &line[assignment.name], &items)
+    }
+
+    /// `name = ...`, `name is ...`, `x ist gleich ...`, `价格 = ...`: where the name, the
+    /// assignment operator and the expression are. A word operator only assigns to a valid,
+    /// unreserved name; `=` assigns to any name, so a bad name is reported.
+    fn assignment(&self, line: &str, raws: &[Raw]) -> Option<Assignment> {
+        let words = raws.iter().take_while(|raw| raw.kind == RawKind::Word).count();
+        for name_raws in 1..=words.min(MAX_NAME_RAWS) {
+            let touching = raws[..name_raws]
+                .windows(2)
+                .all(|pair| pair[0].range.end == pair[1].range.start);
+            if !touching {
+                break;
+            }
+            let name = raws[0].range.start..raws[name_raws - 1].range.end;
+            let operator_at = raws.get(name_raws)?;
+            if operator_at.kind == RawKind::Sym(Sym::Equals) {
+                return Some(Assignment {
+                    name,
+                    operator: operator_at.range.clone(),
+                    operator_kind: SpanKind::Operator,
+                    expression: name_raws + 1,
+                });
+            }
+            let Some(words) = self.assignment_words(line, &raws[name_raws..]) else {
+                continue;
+            };
+            if self.check_name(&line[name.clone()]).is_ok() {
+                return Some(Assignment {
+                    name,
+                    operator: operator_at.range.start..raws[name_raws + words - 1].range.end,
+                    operator_kind: SpanKind::Keyword,
+                    expression: name_raws + words,
+                });
+            }
+        }
+        None
+    }
+
+    /// How many raws at the start of `raws` form an assignment phrase (`is`, `ist gleich`).
+    fn assignment_words(&self, line: &str, raws: &[Raw]) -> Option<usize> {
+        let first = &line[raws.first()?.range.clone()];
+        let window = self.lexicon.window(first).min(raws.len());
+        (1..=window).rev().find(|&count| {
+            let spaced = raws[..count]
+                .windows(2)
+                .all(|pair| line[pair[0].range.end..pair[1].range.start].trim().is_empty());
+            let text = &line[raws[0].range.start..raws[count - 1].range.end];
+            spaced && self.lexicon.meanings(text).contains(&Meaning::Assign)
+        })
     }
 
     fn classify(&self, line: &str, raws: &[Raw]) -> Vec<Item> {
@@ -414,6 +483,7 @@ impl<'a> Document<'a> {
             custom: &self.engine.custom,
             is_variable: &is_variable,
             year: self.local.naive(self.now).year(),
+            lexicon: self.lexicon,
         };
         classify::classify(raws, &ctx)
     }

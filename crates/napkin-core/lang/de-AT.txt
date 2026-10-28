@@ -1,0 +1,11 @@
+# German as written in Austria. Format: see crates/napkin-core/src/vocab.rs.
+
+base = de
+
+# In Austria a Zentner is 100 kg, and 10 g is a Deka(gramm).
+show.centner = Zentner | Zentner
+unit.centner = zen{,.}, zent{,.}, Ztr{,.}, q
+unit.dag = Deka, dkg
+month.1 = Jänner, Jän{,.}
+month.2 = Feber
+months = Jän., Feb., März, Apr., Mai, Juni, Juli, Aug., Sep., Okt., Nov., Dez.

@@ -1,0 +1,6 @@
+# Phrases of Numi's English vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+are.variants	a	`a` is the article (`5 a day`, `as a % of`); ares are `are`/`ares`
+thousand.variants	th	would turn ordinals into thousands (`5th` = 5000)
+thousand.variants	th.	would turn ordinals into thousands (`5th.` = 5000)
+teaspoon.variants	t.	`t` is the tonne; `5 t.` at the end of a sentence must stay 5 tonnes

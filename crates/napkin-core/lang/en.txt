@@ -1,0 +1,37 @@
+# English phrases beyond the built-in English grammar. English is always understood, whatever
+# input language is selected. Format: see crates/napkin-core/src/vocab.rs.
+
+times = multiply, multiply by, mult
+assign = equal, equals, is equal to, is
+percent = percents, pct.
+percent.of = from
+as-percent.off = as a {%,percent} decrease of, as a {%,percent} decrease from
+as-percent.on = as a {%,percent} increase of, as a {%,percent} increase on
+scale.1e9 = milliard{,s}
+local = local, local time, local timezone, local time zone
+function.sqrt = square root
+function.cbrt = cubic root, cube root, cubed root
+format.sci = exp, exponent, exponential
+
+unit.week = w
+unit.month = monthes, mon, mon.
+unit.year = y
+unit.inch = ″
+unit.mile = mi.
+unit.foot = foots, feets, ft.
+unit.yard = yd.
+unit.pt = pt.
+unit.nautical mile = n.m.
+unit.px = px.
+unit.em = ems
+unit.°F = fahrenheits
+unit.° = arcdegree{,s}
+unit.tablespoon = tbsp., T.
+unit.teaspoon = tsp.
+unit.quart = qt.
+unit.gallon = gal.
+unit.inch3 = c.i., CI, cui, cubic inch{,es}
+unit.cm3 = cc, ccm
+unit.carat = CD
+unit.pound = lbm
+unit.centner = quintal{,s}

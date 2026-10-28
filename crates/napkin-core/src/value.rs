@@ -5,8 +5,9 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use crate::custom::{self, Base, Registry};
 use crate::format::{self, Radix};
 use crate::units::{BUILTINS, BaseDim, Dimension, Factor, Form, Scale, Style, Unit, UnitRef, superscript};
+use crate::vocab::{self, Vocab};
 use crate::zones::Zone;
-use crate::{Answer, EvalError, ExchangeRates, NumberStyle, Settings, TimeFormat, currency};
+use crate::{Answer, EvalError, ExchangeRates, InputLanguage, NumberStyle, Settings, TimeFormat, currency};
 
 /// Metres per inch, for CSS units.
 const INCH: f64 = 0.0254;
@@ -228,7 +229,7 @@ impl Units<'_> {
     pub(crate) fn display(&self, value: &Value, settings: &Settings, now: DateTime<Utc>) -> String {
         match value {
             Value::Quantity(quantity) => self.display_quantity(quantity, settings),
-            Value::Moment(moment) => display_moment(moment, settings.time_format, now),
+            Value::Moment(moment) => display_moment(moment, settings, now),
         }
     }
 
@@ -246,10 +247,16 @@ impl Units<'_> {
                 format::number(quantity.value, settings.precision, style)
             }
         };
-        self.with_unit(&number, quantity, style)
+        self.with_unit(&number, quantity, style, settings.input_language)
     }
 
-    fn with_unit(&self, number: &str, quantity: &Quantity, style: NumberStyle) -> String {
+    fn with_unit(
+        &self,
+        number: &str,
+        quantity: &Quantity,
+        style: NumberStyle,
+        language: InputLanguage,
+    ) -> String {
         let unit = &quantity.unit;
         match unit.factors.as_slice() {
             [] => number.to_owned(),
@@ -270,12 +277,21 @@ impl Units<'_> {
                 let def = BUILTINS.def(*index);
                 match (def.style, form, *power) {
                     (Style::Word, Form::Abbrev(abbrev), 1) => format!("{number} {abbrev}"),
-                    (Style::Word, _, 1) => format!("{number} {}", plural(def.singular, def.plural, number)),
-                    (Style::Word, _, 2) => {
-                        format!("{number} square {}", plural(def.singular, def.plural, number))
+                    (Style::Word, _, 1) => format!("{number} {}", word(*index, number, style, language)),
+                    (Style::Word, _, power @ (2 | 3)) if language == InputLanguage::English => {
+                        let word = plural(def.singular, def.plural, number);
+                        let power = if power == 2 { "square" } else { "cubic" };
+                        format!("{number} {power} {word}")
                     }
-                    (Style::Word, _, 3) => {
-                        format!("{number} cubic {}", plural(def.singular, def.plural, number))
+                    (Style::Word, _, power @ (2 | 3)) => {
+                        let localized = vocab::vocab(language);
+                        match (
+                            localized.power_template(power),
+                            localized.unit_word(*index, number, style),
+                        ) {
+                            (Some(template), Some(word)) => format!("{number} {}", compound(template, word)),
+                            _ => format!("{number} {}", self.symbols(unit)),
+                        }
                     }
                     (Style::Attached, _, _) => format!("{number}{}{}", def.symbol, superscript(*power)),
                     _ => format!("{number} {}", self.symbols(unit)),
@@ -356,11 +372,30 @@ fn plural<'a>(singular: &'a str, plural: &'a str, number: &str) -> &'a str {
     }
 }
 
-fn display_moment(moment: &Moment, time_format: TimeFormat, now: DateTime<Utc>) -> String {
+/// The word for a word-style unit after `number`: the input language's form when it has one,
+/// else English.
+fn word(index: usize, number: &str, style: NumberStyle, language: InputLanguage) -> &'static str {
+    let def = BUILTINS.def(index);
+    if language != InputLanguage::English
+        && let Some(word) = vocab::vocab(language).unit_word(index, number, style)
+    {
+        return word;
+    }
+    plural(def.singular, def.plural, number)
+}
+
+fn display_moment(moment: &Moment, settings: &Settings, now: DateTime<Utc>) -> String {
     let naive = moment.naive();
-    let time = match time_format {
+    let time = match settings.time_format {
         TimeFormat::H24 => naive.format("%H:%M").to_string(),
         TimeFormat::H12 => naive.format("%-I:%M %P").to_string(),
+    };
+    let localized: Option<&Vocab> =
+        (settings.input_language != InputLanguage::English).then(|| vocab::vocab(settings.input_language));
+    let date = || {
+        localized
+            .and_then(|vocab| vocab.date(naive.date()))
+            .unwrap_or_else(|| naive.format("%a, %-d %b %Y").to_string())
     };
     match moment.kind {
         MomentKind::Time => {
@@ -368,11 +403,35 @@ fn display_moment(moment: &Moment, time_format: TimeFormat, now: DateTime<Utc>) 
             let days_away = (naive.date() - moment.zone.naive(now).date()).num_days().abs();
             match days_away {
                 0 => time,
-                1..=6 => format!("{} {time}", naive.format("%a")),
-                _ => format!("{} {time}", naive.format("%a, %-d %b %Y")),
+                1..=6 => {
+                    let weekday = localized
+                        .and_then(|vocab| vocab.weekday(naive.date()))
+                        .map_or_else(|| naive.format("%a").to_string(), str::to_owned);
+                    format!("{weekday} {time}")
+                }
+                _ => format!("{} {time}", date()),
             }
         }
-        MomentKind::Date => naive.format("%a, %-d %b %Y").to_string(),
-        MomentKind::DateTime => format!("{} {time}", naive.format("%a, %-d %b %Y")),
+        MomentKind::Date => date(),
+        MomentKind::DateTime => format!("{} {time}", date()),
     }
+}
+
+/// Fills a display template: `Quadrat*` with `Fuß` is `Quadratfuß`, `* carré` with `pied` is
+/// `pied carré`. A word joined to a letter loses its capital, as in German compounds.
+fn compound(template: &str, word: &str) -> String {
+    let joined = template
+        .split('*')
+        .next()
+        .and_then(|head| head.chars().last())
+        .is_some_and(char::is_alphabetic);
+    if !joined {
+        return template.replace('*', word);
+    }
+    let mut chars = word.chars();
+    let lowered: String = chars
+        .next()
+        .map(|first| first.to_lowercase().chain(chars).collect())
+        .unwrap_or_default();
+    template.replace('*', &lowered)
 }

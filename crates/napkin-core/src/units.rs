@@ -88,6 +88,10 @@ pub(crate) struct UnitDef {
     pub(crate) style: Style,
     pub(crate) dim: Dimension,
     pub(crate) scale: Scale,
+    /// Whether prefixed forms (`km`, `kB`) exist for this unit.
+    pub(crate) prefixable: bool,
+    /// The SI or IEC prefix symbol of a prefixed unit (`k` for `km`).
+    pub(crate) prefix: Option<&'static str>,
 }
 
 /// How a unit reference wants to be displayed.
@@ -636,6 +640,16 @@ fn specs() -> Vec<Spec> {
             &["acre", "acres"],
             &["ac"],
         ),
+        // The East Asian 坪 (tsubo, ping): 400/121 m², a 1.82 m square.
+        word(
+            "ping",
+            "ping",
+            ("ping", "pings"),
+            AREA,
+            400.0 / 121.0,
+            &["ping", "pings", "píng", "píngs"],
+            &[],
+        ),
         // Volume.
         symbol(
             "l",
@@ -1021,6 +1035,8 @@ impl Builtins {
             style: spec.style,
             dim: dims(spec.dim),
             scale: spec.scale,
+            prefixable: spec.prefixes != Prefixes::None,
+            prefix: None,
         });
         let word_style = spec.style == Style::Word;
         for &symbol in spec.symbols {
@@ -1081,6 +1097,8 @@ impl Builtins {
             style: Style::Symbol,
             dim: dims(spec.dim),
             scale,
+            prefixable: false,
+            prefix: Some(prefix.symbols[0]),
         });
         let hit = Hit {
             index,
@@ -1108,6 +1126,32 @@ impl Builtins {
             .or_else(|| self.by_name.get(&text.to_lowercase()).copied())
     }
 
+    /// Looks up a case-sensitive symbol or abbreviation only (`m`, `ft`), not a name.
+    pub(crate) fn symbol(&self, text: &str) -> Option<Hit> {
+        self.by_symbol.get(text).copied()
+    }
+
+    /// Every symbol and abbreviation of a length unit (`m`, `km`, `ft`), with its unit.
+    pub(crate) fn length_symbols(&self) -> impl Iterator<Item = (&str, usize)> {
+        self.by_symbol
+            .iter()
+            .filter(|(_, hit)| is_length(hit.index))
+            .map(|(symbol, hit)| (symbol.as_str(), hit.index))
+    }
+
+    /// The unit `base` with an SI or IEC prefix (`k` + metre = `km`), when that unit exists.
+    pub(crate) fn prefixed(&self, base: usize, prefix_symbol: &str) -> Option<usize> {
+        let def = self.defs.get(base)?;
+        if !def.prefixable {
+            return None;
+        }
+        let prefix = SI_PREFIXES
+            .iter()
+            .chain(IEC_PREFIXES)
+            .find(|p| p.symbols.contains(&prefix_symbol))?;
+        self.by_id(&format!("{}{}", prefix.symbols[0], def.symbol))
+    }
+
     /// Looks up a unit by its id.
     pub(crate) fn by_id(&self, id: &str) -> Option<usize> {
         self.by_id.get(id).copied()
@@ -1123,6 +1167,14 @@ fn dims(spec: &[(BaseDim, i8)]) -> Dimension {
     spec.iter().fold(Dimension::default(), |acc, &(base, exp)| {
         acc.mul_pow(&Dimension::of(base, exp), 1)
     })
+}
+
+/// Every SI and IEC prefix as its display symbol and long English names (`k`, `["kilo"]`).
+pub(crate) fn prefix_names() -> impl Iterator<Item = (&'static str, &'static [&'static str])> {
+    SI_PREFIXES
+        .iter()
+        .chain(IEC_PREFIXES)
+        .map(|prefix| (prefix.symbols[0], prefix.names))
 }
 
 /// The built-in unit table, built on first use.

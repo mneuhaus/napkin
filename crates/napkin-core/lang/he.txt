@@ -1,0 +1,1 @@
+# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.

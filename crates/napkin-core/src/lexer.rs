@@ -76,6 +76,33 @@ fn is_word_start(c: char) -> bool {
     c.is_alphabetic() || matches!(c, '_' | '°' | '℃' | '℉')
 }
 
+/// Writing systems that decide where a word ends.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Script {
+    /// Chinese characters and Japanese kana: written without spaces, so every character is a
+    /// token of its own and the classifier joins them into the longest known phrase (`厘米`).
+    Ideographic,
+    /// Korean: words are separated by spaces but run into digits (`5센티미터`).
+    Hangul,
+    /// Latin, Cyrillic, Greek, Hebrew, Arabic and the rest.
+    Alphabetic,
+}
+
+fn script(c: char) -> Script {
+    match c {
+        '\u{3005}'..='\u{3007}'
+        | '\u{3040}'..='\u{30FF}'
+        | '\u{31F0}'..='\u{31FF}'
+        | '\u{3400}'..='\u{4DBF}'
+        | '\u{4E00}'..='\u{9FFF}'
+        | '\u{F900}'..='\u{FAFF}'
+        | '\u{FF66}'..='\u{FF9F}'
+        | '\u{20000}'..='\u{2FA1F}' => Script::Ideographic,
+        '\u{1100}'..='\u{11FF}' | '\u{3130}'..='\u{318F}' | '\u{AC00}'..='\u{D7AF}' => Script::Hangul,
+        _ => Script::Alphabetic,
+    }
+}
+
 /// Before or after noon.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Meridiem {
@@ -149,13 +176,16 @@ impl Lexer<'_> {
     fn word(&mut self, start: usize) {
         let mut chars = self.s[start..].char_indices().peekable();
         let mut end = start;
+        let first = self.peek(start).map_or(Script::Alphabetic, script);
         while let Some((at, c)) = chars.next() {
             let continues = if at == 0 {
                 true
+            } else if first == Script::Ideographic || script(c) != first {
+                false
             } else if matches!(c, '\'' | '’') {
                 chars.peek().is_some_and(|(_, next)| next.is_alphabetic())
             } else {
-                c.is_alphabetic() || c.is_ascii_digit() || c == '_'
+                c.is_alphabetic() || (first == Script::Alphabetic && (c.is_ascii_digit() || c == '_'))
             };
             if !continues {
                 break;
@@ -172,19 +202,19 @@ impl Lexer<'_> {
             ('*', Some('*')) => (Some(Sym::Caret), 2),
             ('<', Some('<')) => (Some(Sym::Shl), 2),
             ('>', Some('>')) => (Some(Sym::Shr), 2),
-            ('+', _) => (Some(Sym::Plus), 1),
-            ('-' | '−' | '–' | '—', _) => (Some(Sym::Minus), 1),
-            ('*' | '×' | '·' | '⋅', _) => (Some(Sym::Star), 1),
-            ('/' | '÷' | '∕', _) => (Some(Sym::Slash), 1),
-            ('^', _) => (Some(Sym::Caret), 1),
+            ('+' | '＋', _) => (Some(Sym::Plus), 1),
+            ('-' | '−' | '–' | '—' | '－', _) => (Some(Sym::Minus), 1),
+            ('*' | '×' | '·' | '⋅' | '＊', _) => (Some(Sym::Star), 1),
+            ('/' | '÷' | '∕' | '／', _) => (Some(Sym::Slash), 1),
+            ('^' | '＾', _) => (Some(Sym::Caret), 1),
             ('&', _) => (Some(Sym::Amp), 1),
             ('|', _) => (Some(Sym::Pipe), 1),
-            ('!', _) => (Some(Sym::Bang), 1),
-            ('%', _) => (Some(Sym::Percent), 1),
-            ('(' | '[' | '{', _) => (Some(Sym::LParen), 1),
-            (')' | ']' | '}', _) => (Some(Sym::RParen), 1),
-            (';', _) => (Some(Sym::Semicolon), 1),
-            ('=', _) => (Some(Sym::Equals), 1),
+            ('!' | '！', _) => (Some(Sym::Bang), 1),
+            ('%' | '％', _) => (Some(Sym::Percent), 1),
+            ('(' | '[' | '{' | '（', _) => (Some(Sym::LParen), 1),
+            (')' | ']' | '}' | '）', _) => (Some(Sym::RParen), 1),
+            (';' | '；', _) => (Some(Sym::Semicolon), 1),
+            ('=' | '＝', _) => (Some(Sym::Equals), 1),
             ('²', _) => (Some(Sym::Sup2), 1),
             ('³', _) => (Some(Sym::Sup3), 1),
             _ => (None, 1),

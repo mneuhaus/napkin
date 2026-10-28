@@ -387,6 +387,10 @@ impl Env<'_> {
                 zone: Zone::Named(*tz),
                 ..m
             })),
+            (Value::Moment(m), Target::Local) => Ok(Value::Moment(Moment {
+                zone: self.local,
+                ..m
+            })),
             (Value::Quantity(q), Target::Radix(radix)) => {
                 let integer_base = matches!(radix, Radix::Hex | Radix::Binary | Radix::Octal);
                 if integer_base && format::radix(q.value, *radix).is_none() {
@@ -399,7 +403,9 @@ impl Env<'_> {
             }
             (Value::Quantity(q), Target::Unit(unit)) => Ok(Value::Quantity(self.convert_quantity(q, unit)?)),
             (Value::Moment(_), _) => err("dates and times can only be converted to a time zone"),
-            (Value::Quantity(_), Target::Zone(_)) => err("only times can be converted to a time zone"),
+            (Value::Quantity(_), Target::Zone(_) | Target::Local) => {
+                err("only times can be converted to a time zone")
+            }
         }
     }
 

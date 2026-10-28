@@ -24,11 +24,13 @@ mod document;
 mod eval;
 mod format;
 mod functions;
+mod language;
 mod lexer;
 mod num;
 mod parser;
 mod units;
 mod value;
+mod vocab;
 mod zones;
 
 use std::collections::BTreeMap;
@@ -38,6 +40,8 @@ use std::sync::Arc;
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+
+pub use language::{InputLanguage, ParseInputLanguageError};
 
 /// Evaluates Napkin documents. Cheap to share: `Engine` is `Send + Sync`.
 #[derive(Debug, Clone, Default)]
@@ -296,6 +300,9 @@ pub struct Settings {
     pub angle_unit: AngleUnit,
     /// How times of day are shown.
     pub time_format: TimeFormat,
+    /// The language whose words are understood on top of English, and in which word units
+    /// and dates are shown.
+    pub input_language: InputLanguage,
 }
 
 impl Default for Settings {
@@ -305,6 +312,7 @@ impl Default for Settings {
             number_style: NumberStyle::English,
             angle_unit: AngleUnit::Degrees,
             time_format: TimeFormat::H24,
+            input_language: InputLanguage::English,
         }
     }
 }

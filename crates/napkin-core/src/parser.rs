@@ -31,6 +31,8 @@ pub(crate) enum Target {
     Unit(Unit),
     Radix(Radix),
     Zone(Tz),
+    /// The local time zone (`in local`).
+    Local,
 }
 
 /// An expression.
@@ -113,6 +115,10 @@ struct Parser<'a> {
 enum Infix {
     Binary(BinOp),
     Percent(PercentOp),
+    /// `as a % of` in one token.
+    AsPercent(PercentOp),
+    /// `of what is` in one token.
+    PercentWhat(PercentOp),
     Convert(ConvertWord),
     Juxtapose,
 }
@@ -151,6 +157,8 @@ fn infix(tok: &Tok) -> Option<(u8, u8, Infix)> {
         Tok::Op(Op::Shr) => binary(5, BinOp::Shr),
         Tok::Percent(op) => Some((MUL, MUL + 1, Infix::Percent(*op))),
         Tok::Convert(word) => Some((CONVERT, CONVERT + 1, Infix::Convert(*word))),
+        Tok::AsPercent(op) => Some((CONVERT, CONVERT + 1, Infix::AsPercent(*op))),
+        Tok::PercentWhat(op) => Some((MUL, MUL + 1, Infix::PercentWhat(*op))),
         tok if starts_operand(tok) => Some((JUXTAPOSE, POW, Infix::Juxtapose)),
         _ => None,
     }
@@ -214,6 +222,8 @@ impl<'a> Parser<'a> {
                 Infix::Juxtapose => Expr::Juxtapose(boxed(lhs), boxed(self.expr(right)?)),
                 Infix::Percent(op) => self.percent_phrase(op, lhs)?,
                 Infix::Convert(word) => self.conversion(word, lhs)?,
+                Infix::AsPercent(op) => Expr::AsPercent(op, boxed(lhs), boxed(self.expr(right)?)),
+                Infix::PercentWhat(op) => Expr::PercentWhat(op, boxed(lhs), boxed(self.expr(ADD)?)),
             };
         }
         Ok(lhs)
@@ -253,6 +263,16 @@ impl<'a> Parser<'a> {
                 self.pos += 1;
                 let expr = lhs();
                 anchor(&expr, tz).unwrap_or(Expr::Convert(expr, Target::Zone(tz)))
+            }
+            Tok::LocalZone => {
+                self.pos += 1;
+                let expr = lhs();
+                // Literals without a zone already are local times.
+                if matches!(*expr, Expr::TimeLit(_, None) | Expr::DateLit(_, None)) {
+                    *expr
+                } else {
+                    Expr::Convert(expr, Target::Local)
+                }
             }
             _ => return Ok(None),
         }))
@@ -295,6 +315,12 @@ impl<'a> Parser<'a> {
                     self.pos += 1;
                 }
                 Expr::ZoneNow(tz)
+            }
+            Tok::LocalZone => {
+                if self.peek() == Some(&Tok::Now) {
+                    self.pos += 1;
+                }
+                Expr::Now
             }
             other => return Err(EvalError::new(format!("unexpected {}", describe(&other)))),
         })
@@ -391,6 +417,10 @@ impl<'a> Parser<'a> {
                 let tz = *tz;
                 self.pos += 1;
                 Target::Zone(tz)
+            }
+            Some(Tok::LocalZone) => {
+                self.pos += 1;
+                Target::Local
             }
             Some(Tok::Unit(_) | Tok::Power(_)) => Target::Unit(self.unit_product()?),
             _ => {

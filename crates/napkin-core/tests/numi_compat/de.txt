@@ -1,0 +1,13 @@
+# Phrases of Numi's German vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+million.variants	m	`m` stays the metre (`2 m` is two metres); millions are `Mio`/`Millionen`
+inch.variants	'	`'` is the foot mark and the Swiss thousands separator, not inches
+foot.variants	fb. Ft	two phrases run together in Numi's list; `fb.` and `Ft` each work
+carat.variants	kt	`kt` is the knot; carats are `Kt`/`Karat`
+centner.variants	zentner	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
+centner.variants	Zentner	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
+centner.variants	zen	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
+centner.variants	zen.	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
+centner.variants	zent	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
+centner.variants	zent.	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
+centner.variants	q	a German Zentner is 50 kg, Napkin's centner 100 kg (Doppelzentner); de-AT and de-CH read it
