@@ -1,0 +1,21 @@
+[package]
+name = "napkin-cli"
+description = "Napkin on the command line: `napkin \"20 inches in cm\"`"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "napkin"
+path = "src/main.rs"
+
+[dependencies]
+napkin-core.workspace = true
+napkin-rates.workspace = true
+napkin-extensions.workspace = true
+anyhow.workspace = true
+
+[lints]
+workspace = true

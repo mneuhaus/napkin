@@ -1,0 +1,74 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/napkin-core",
+    "crates/napkin-rates",
+    "crates/napkin-extensions",
+    "crates/napkin-cli",
+    "crates/napkin-app",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT"
+repository = "https://github.com/mneuhaus/napkin"
+
+[workspace.dependencies]
+napkin-core = { path = "crates/napkin-core" }
+napkin-rates = { path = "crates/napkin-rates" }
+napkin-extensions = { path = "crates/napkin-extensions" }
+anyhow = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std", "serde"] }
+chrono-tz = "0.10"
+dirs = "6"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+# BeautifulRust lints (https://github.com/morganlinton/BeautifulRust, lints/lints.toml) for the
+# application crates. The library-only lints (missing_docs, missing_errors_doc, missing_panics_doc,
+# print_stdout, print_stderr) are switched on per library crate in its own [lints] table.
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "warn"
+missing_debug_implementations = "warn"
+unreachable_pub = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+expect_used = "allow"
+panic_in_result_fn = "warn"
+allow_attributes = "warn"
+allow_attributes_without_reason = "warn"
+undocumented_unsafe_blocks = "warn"
+multiple_unsafe_ops_per_block = "warn"
+fn_params_excessive_bools = "warn"
+struct_excessive_bools = "warn"
+clone_on_ref_ptr = "warn"
+redundant_clone = "warn"
+rc_buffer = "warn"
+string_add = "warn"
+wildcard_imports = "warn"
+dbg_macro = "warn"
+todo = "warn"
+as_conversions = "warn"
+cast_possible_truncation = "warn"
+cast_sign_loss = "warn"
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+module_inception = "allow"
+enum_glob_use = "allow"
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.release]
+opt-level = 3
+lto = "thin"

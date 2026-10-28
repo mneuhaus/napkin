@@ -1,0 +1,25 @@
+[package]
+name = "napkin-app"
+description = "Napkin desktop app (GPUI)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "napkin-app"
+path = "src/main.rs"
+
+[dependencies]
+napkin-core.workspace = true
+napkin-rates.workspace = true
+napkin-extensions.workspace = true
+anyhow.workspace = true
+dirs.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+gpui-kit = "0.7.3"
+
+[lints]
+workspace = true
