@@ -14,10 +14,31 @@ Branch `host`, worktree `.worktrees/host`. Engine (`napkin-core`) is a stub on t
   `Extension { units, functions, variables, log }`, `Extension::register_into`, `LoadError`.
   Tests: all 17 Numi fixtures (sample.js + 16 community extensions, MIT notice in
   `tests/fixtures/numi/NUMI-LICENSE.txt`) plus 15 host behaviour tests, 3 unit tests, 1 doc test.
+- **napkin-cli** (`napkin`): one-shot (`napkin "20 inches in cm"`, exit 1 + `napkin: msg` on
+  stderr), document from stdin or `-f` (`line  → result`, `line  → error: msg`, bare line for
+  none), `--results-only`, `--json`, `--refresh-rates`, `--no-extensions`, `--precision 0-10`,
+  plus `--extensions-dir DIR` (repeatable), `--rates-cache FILE`, `-v/--verbose`; `serve
+  [--port 15055]` on 127.0.0.1 via tiny_http. 6 unit + 16 integration tests (binary run with an
+  isolated `$HOME`, incl. a real HTTP round trip and a closed stdout pipe).
+- **integrations/alfred**: `info.plist` (script filters `=` without space and `napkin` with space,
+  clipboard output), `script-filter.js` (JXA, runs `napkin --json -- <query>`), README with
+  install steps. `plutil -lint` OK; script filter exercised directly with `osascript`.
 
-## Next
+## Gate (final)
 
-- napkin-cli, Alfred workflow.
+`cargo fmt --check` OK; `cargo clippy -p napkin-rates -p napkin-extensions -p napkin-cli
+--all-targets --no-deps -- -D warnings` OK; `cargo test` for the three crates: 77 passed,
+1 ignored (live rates, passes with `--ignored`); `cargo doc --no-deps` for both libs, no warnings.
+Without `--no-deps`, clippy stops in the `napkin-core` stub (see below).
+
+## Next / known gaps
+
+- Alfred itself is not installed on this machine: the workflow was not imported into Alfred.
+- `log()` output from inside custom functions (at evaluation time) is dropped; only load-time
+  logs reach `LoadReport::log`.
+- `napkin serve` loads rates once at start (no background refresh; `--refresh-rates` at start).
+- Engine-side: accept `base_unit_id == id` for base-less units; real engine replaces the stub, then
+  rerun the CLI tests (they only rely on plain numbers and non-numeric words).
 
 ## Decisions
 
@@ -57,6 +78,16 @@ Branch `host`, worktree `.worktrees/host`. Engine (`napkin-core`) is a stub on t
   (no channel to the user at evaluation time).
 - Folders deduplicated, visited in order, files sorted by name, only top-level `*.js`
   (case-insensitive), BOM stripped, missing folders skipped silently, unreadable folders reported.
+- CLI: no `args_conflicts_with_subcommands`, so global flags work before `serve`
+  (`napkin --no-extensions serve`) and `napkin 5 serve` is still an expression;
+  `allow_negative_numbers` makes `napkin -5` an expression. Document mode always exits 0 (errors
+  are part of the output); `--results-only` prints a blank row for errors, like the app. JSON:
+  `{"input","result":{"text","number","unit"}|null,"error":str|null}` per line, an array per
+  document. A final newline does not create an extra empty line. Broken pipe exits 0. No
+  expression and stdin is a terminal: help on stderr, exit 2. Extension failures are always
+  warned on stderr, logs and rejected registrations only with `--verbose`.
+- HTTP: 200 + result text, 422 + error message, 400 without `q`, 405 for non-GET/HEAD; any path;
+  `+` stays a plus sign (an operator; Numi's workflow encodes spaces as `%20`).
 - `cargo clippy -p <crate>` also lints the path dependency `napkin-core`, whose stub fails two
   pedantic lints (`unused_self`, `missing_panics_doc`) on this branch. My gate uses `--no-deps`;
   the real engine replaces that stub.
