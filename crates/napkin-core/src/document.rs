@@ -13,56 +13,12 @@ use crate::parser::{self, Expr};
 use crate::units::{BUILTINS, Form, Unit, UnitRef};
 use crate::value::{Units, Value};
 use crate::zones::Zone;
-use crate::{Clock, Engine, EvalError, LineOutput, LineResult, Span, SpanKind, currency};
+use crate::{Clock, Engine, EvalError, LineOutput, LineResult, Span, SpanKind};
 
 /// CSS pixels per inch until the document assigns `ppi`.
 const DEFAULT_PPI: f64 = 96.0;
 /// CSS pixels per em until the document assigns `em`.
 const DEFAULT_EM_PX: f64 = 16.0;
-
-/// Words that cannot be variable names (besides units, currencies and functions).
-const KEYWORDS: &[&str] = &[
-    "in",
-    "into",
-    "to",
-    "as",
-    "plus",
-    "and",
-    "with",
-    "minus",
-    "subtract",
-    "without",
-    "times",
-    "mul",
-    "divide",
-    "per",
-    "mod",
-    "xor",
-    "of",
-    "on",
-    "off",
-    "prev",
-    "sum",
-    "total",
-    "avg",
-    "average",
-    "now",
-    "time",
-    "today",
-    "tomorrow",
-    "yesterday",
-    "noon",
-    "midnight",
-    "pi",
-    "e",
-    "sq",
-    "square",
-    "cubic",
-    "cu",
-    "cb",
-    "percent",
-    "pct",
-];
 
 /// The evaluation state of one document, top to bottom.
 pub(crate) struct Document<'a> {
@@ -169,6 +125,29 @@ fn split_quotes(line: &str, region: Range<usize>, out: &mut Layout) {
     out.code.retain(|r| !line[r.clone()].trim().is_empty());
 }
 
+/// Most significant tokens a line may have; longer lines are refused rather than risking deep
+/// recursion.
+const MAX_TOKENS: usize = 300;
+
+/// The tokens the parser sees: prose dropped, everything after a stray `=` dropped, and a
+/// [`Tok::Gap`] where prose separated two operands (so `3 apples 4 pears` does not multiply).
+fn significant(items: &[Item]) -> Vec<Tok> {
+    let mut tokens: Vec<Tok> = Vec::with_capacity(items.len());
+    let mut after_prose = false;
+    for item in items.iter().take_while(|item| item.tok != Tok::Op(Op::Equals)) {
+        if item.tok == Tok::Text {
+            after_prose = true;
+            continue;
+        }
+        if after_prose && tokens.last().is_some_and(Tok::ends_value) && parser::starts_operand(&item.tok) {
+            tokens.push(Tok::Gap);
+        }
+        after_prose = false;
+        tokens.push(item.tok.clone());
+    }
+    tokens
+}
+
 /// Whether a token can end an expression.
 fn can_end(tok: &Tok) -> bool {
     !matches!(
@@ -194,6 +173,7 @@ fn can_end(tok: &Tok) -> bool {
             | Tok::Power(_)
             | Tok::Func(_)
             | Tok::PrefixCurrency(_)
+            | Tok::Gap
     )
 }
 
@@ -222,6 +202,7 @@ fn can_start(tok: &Tok) -> bool {
             | Tok::What
             | Tok::Is
             | Tok::Radix(_)
+            | Tok::Gap
     )
 }
 
@@ -371,6 +352,21 @@ impl<'a> Document<'a> {
 
     /// Evaluates the code tokens of a line; returns the result and its value.
     fn code(&mut self, line: &str, raws: &[Raw], spans: &mut Vec<Span>) -> (LineResult, Option<Value>) {
+        if let [digits, word, eq, ..] = raws
+            && matches!(digits.kind, RawKind::Number(_))
+            && word.kind == RawKind::Word
+            && digits.range.end == word.range.start
+            && eq.kind == RawKind::Sym(Sym::Equals)
+        {
+            let name = &line[digits.range.start..word.range.end];
+            let items = self.classify(line, raws);
+            spans.extend(items.iter().map(|item| Span {
+                range: item.range.clone(),
+                kind: item.kind,
+            }));
+            let error = EvalError::new(format!("`{name}` is not a valid variable name"));
+            return (LineResult::Error(error), None);
+        }
         let assignment = match raws {
             [name, eq, ..] if name.kind == RawKind::Word && eq.kind == RawKind::Sym(Sym::Equals) => {
                 Some(&line[name.range.clone()])
@@ -409,15 +405,16 @@ impl<'a> Document<'a> {
     }
 
     fn evaluate(&self, items: &[Item]) -> (LineResult, Option<Value>) {
-        let tokens: Vec<Tok> = items
-            .iter()
-            .map(|item| &item.tok)
-            .take_while(|tok| **tok != Tok::Op(Op::Equals))
-            .filter(|tok| **tok != Tok::Text)
-            .cloned()
-            .collect();
-        if !tokens.iter().any(Tok::is_value) {
+        let tokens = significant(items);
+        let missing_prev = self.prev.is_none() && tokens.contains(&Tok::Doc(classify::DocRef::Prev));
+        if missing_prev || !tokens.iter().any(Tok::is_value) {
             return (LineResult::None, None);
+        }
+        if tokens.len() > MAX_TOKENS {
+            return (
+                LineResult::Error(EvalError::new("the line is too long to calculate")),
+                None,
+            );
         }
         let lookup = |name: &str| {
             self.vars
@@ -458,6 +455,9 @@ impl<'a> Document<'a> {
         let Value::Quantity(q) = value else {
             return Err(EvalError::new(format!("`{name}` needs a number")));
         };
+        if name == "ppi" && !q.is_plain() {
+            return Err(EvalError::new("`ppi` needs a plain number"));
+        }
         let size = if name == "ppi" || q.is_plain() {
             q.value
         } else {
@@ -489,13 +489,7 @@ pub(crate) fn check_variable_name(name: &str, custom: &crate::custom::Registry) 
     if !valid_start || !name.chars().all(|c| c.is_alphanumeric() || c == '_') {
         return Err(format!("`{name}` is not a valid variable name"));
     }
-    let lower = name.to_lowercase();
-    let taken = KEYWORDS.contains(&lower.as_str())
-        || BUILTINS.lookup(name).is_some()
-        || currency::code(name).is_some()
-        || currency::name(name).is_some()
-        || Builtin::from_name(name).is_some()
-        || custom.names(name);
+    let taken = classify::is_reserved(name) || Builtin::from_name(name).is_some() || custom.names(name);
     if taken {
         return Err(format!(
             "`{name}` is a unit, keyword or function and cannot be a variable"

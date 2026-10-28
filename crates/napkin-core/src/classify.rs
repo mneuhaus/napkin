@@ -99,11 +99,13 @@ pub(crate) enum Tok {
     Radix(Radix),
     /// Ignored prose.
     Text,
+    /// Where ignored prose separated two operands; stops implicit multiplication.
+    Gap,
 }
 
 impl Tok {
     /// Whether a value can end right before this token's position (so a unit can attach).
-    fn ends_value(&self) -> bool {
+    pub(crate) fn ends_value(&self) -> bool {
         matches!(
             self,
             Self::Num(_)
@@ -172,12 +174,71 @@ pub(crate) fn classify(raws: &[Raw], ctx: &Context<'_>) -> Vec<Item> {
         ctx,
         out: Vec::with_capacity(raws.len()),
         money_line,
+        context: None,
     };
     let mut i = 0;
     while i < raws.len() {
         i += classifier.next(i);
     }
     classifier.out
+}
+
+/// Keywords: words that cannot be variable names or extension function phrases.
+const KEYWORDS: &[&str] = &[
+    "in",
+    "into",
+    "to",
+    "as",
+    "plus",
+    "and",
+    "with",
+    "minus",
+    "subtract",
+    "without",
+    "times",
+    "mul",
+    "divide",
+    "per",
+    "mod",
+    "xor",
+    "of",
+    "on",
+    "off",
+    "prev",
+    "sum",
+    "total",
+    "avg",
+    "average",
+    "now",
+    "time",
+    "today",
+    "tomorrow",
+    "yesterday",
+    "noon",
+    "midnight",
+    "pi",
+    "e",
+    "sq",
+    "square",
+    "cubic",
+    "cu",
+    "cb",
+    "percent",
+    "what",
+    "is",
+    "pct",
+];
+
+/// Whether `word` is taken by a keyword, scale, format, unit, currency or zone abbreviation.
+pub(crate) fn is_reserved(word: &str) -> bool {
+    KEYWORDS.contains(&word.to_lowercase().as_str())
+        || scale(word).is_some()
+        || Radix::from_word(word).is_some()
+        || BUILTINS.lookup(word).is_some()
+        || powered_length(word).is_some()
+        || currency::code(word).is_some()
+        || currency::name(word).is_some()
+        || zones::abbreviation(word).is_some()
 }
 
 fn is_pound(text: &str) -> bool {
@@ -247,6 +308,8 @@ struct Classifier<'a> {
     ctx: &'a Context<'a>,
     out: Vec<Item>,
     money_line: bool,
+    /// Index in `out` of the token context rules look at; articles after `as` are skipped.
+    context: Option<usize>,
 }
 
 impl Classifier<'_> {
@@ -255,7 +318,7 @@ impl Classifier<'_> {
     }
 
     fn prev(&self) -> Option<&Tok> {
-        self.out.last().map(|item| &item.tok)
+        self.context.map(|index| &self.out[index].tok)
     }
 
     fn prev_ends_value(&self) -> bool {
@@ -307,6 +370,7 @@ impl Classifier<'_> {
 
     fn push(&mut self, tok: Tok, range: Range<usize>, kind: SpanKind) {
         self.out.push(Item { tok, range, kind });
+        self.context = Some(self.out.len() - 1);
     }
 
     fn span(&self, first: usize, last: usize) -> Range<usize> {
@@ -403,7 +467,8 @@ impl Classifier<'_> {
                 .get(i + 1)
                 .is_some_and(|r| r.kind == RawKind::Sym(Sym::Minus))
                 && self.number_at(i + 2).is_some());
-        let tok = if before_amount && !self.prev_ends_value() {
+        let starts_amount = self.touching(i) && (i == 0 || !self.touching(i - 1));
+        let tok = if before_amount && (!self.prev_ends_value() || starts_amount) {
             Tok::PrefixCurrency(code.to_owned())
         } else if self.prev_ends_value() || self.prev_expects_unit() {
             Tok::Unit(Unit::simple(UnitRef::Currency(code.to_owned()), Form::Default))
@@ -414,7 +479,7 @@ impl Classifier<'_> {
     }
 
     fn word(&mut self, i: usize) -> usize {
-        if let Some(used) = self.iana_zone(i) {
+        if let Some(used) = self.iana_zone(i).or_else(|| self.utc_offset(i)) {
             return used;
         }
         if let Some(m) = month(self.text(i))
@@ -451,6 +516,9 @@ impl Classifier<'_> {
         if j == i {
             return None;
         }
+        if let Some(offset_end) = self.offset_suffix(j) {
+            j = offset_end;
+        }
         let range = self.span(i, j);
         let tz = zones::iana(&self.ctx.line[range.clone()])?;
         self.push(Tok::Zone(tz), range, SpanKind::DateTime);
@@ -460,16 +528,20 @@ impl Classifier<'_> {
     /// Tries raws `i..=j` as one multi-token phrase.
     fn phrase(&mut self, i: usize, j: usize) -> bool {
         let raws = &self.raws[i..=j];
-        let word_like = raws
+        let phrase_like = raws
             .iter()
-            .all(|r| matches!(r.kind, RawKind::Word | RawKind::Other));
+            .all(|r| matches!(r.kind, RawKind::Word | RawKind::Other | RawKind::Sym(_)));
         let ends_well = self.raws[j].kind == RawKind::Word || self.text(j) == ".";
-        if !word_like || !ends_well || !(i..j).all(|k| self.spaced(k)) {
+        if !phrase_like || !ends_well || !(i..j).all(|k| self.spaced(k)) {
             return false;
         }
         let range = self.span(i, j);
         let text = custom::normalize(&self.ctx.line[range.clone()]);
         let words_only = raws.iter().all(|r| r.kind == RawKind::Word);
+        let words_and_dots = raws
+            .iter()
+            .enumerate()
+            .all(|(k, r)| r.kind == RawKind::Word || (r.kind == RawKind::Other && self.text(i + k) == "."));
         let unit_context = self.prev_ends_value() || self.prev_expects_unit();
         if let Some(index) = self.ctx.custom.unit(&text)
             && unit_context
@@ -481,8 +553,19 @@ impl Classifier<'_> {
             );
             return true;
         }
+        if words_and_dots
+            && let Some(tz) = zones::city(&custom::normalize(&text.replace('.', " ")))
+            && self.zone_context(j)
+        {
+            self.push(Tok::Zone(tz), range, SpanKind::DateTime);
+            return true;
+        }
         if !words_only {
             return false;
+        }
+        if let Some(index) = self.ctx.custom.function(&text) {
+            self.push(Tok::Func(Func::Custom(index)), range, SpanKind::Function);
+            return true;
         }
         let lower = text.to_lowercase();
         if let Some(op) = match lower.as_str() {
@@ -497,13 +580,37 @@ impl Classifier<'_> {
             self.push(Tok::Unit(word.unit), range, word.kind);
             return true;
         }
-        if let Some(tz) = zones::city(&text)
-            && self.zone_context(j)
-        {
-            self.push(Tok::Zone(tz), range, SpanKind::DateTime);
-            return true;
-        }
         false
+    }
+
+    /// `+2` or `-5` touching raw `j` (for `UTC+2`, `Etc/GMT+5`): the index of the number.
+    fn offset_suffix(&self, j: usize) -> Option<usize> {
+        let sign = matches!(self.raws.get(j + 1)?.kind, RawKind::Sym(Sym::Plus | Sym::Minus));
+        let hours = self.number_at(j + 2)?;
+        let whole = hours.fract() == 0.0 && (0.0..=14.0).contains(&hours);
+        (sign && whole && self.touching(j) && self.touching(j + 1)).then_some(j + 2)
+    }
+
+    /// `UTC+2`, `GMT-5`: a fixed offset, used like a zone.
+    fn utc_offset(&mut self, i: usize) -> Option<usize> {
+        if !matches!(self.text(i), "UTC" | "GMT") {
+            return None;
+        }
+        let end = self.offset_suffix(i)?;
+        let east = self.raws[i + 1].kind == RawKind::Sym(Sym::Plus);
+        let hours = crate::num::to_i64(self.number_at(end)?)?;
+        // IANA's Etc zones count the other way round: UTC+2 is Etc/GMT-2.
+        let name = match (hours, east) {
+            (0, _) => "Etc/GMT".to_owned(),
+            (_, true) => format!("Etc/GMT-{hours}"),
+            (_, false) => format!("Etc/GMT+{hours}"),
+        };
+        let tz = zones::iana(&name)?;
+        if !self.zone_context(end) {
+            return None;
+        }
+        self.push(Tok::Zone(tz), self.span(i, end), SpanKind::DateTime);
+        Some(end - i + 1)
     }
 
     /// Whether a zone name ending at raw `last` is used as one: `Berlin time`, `in Berlin`,
@@ -561,6 +668,21 @@ impl Classifier<'_> {
         let range = self.raws[i].range.clone();
         let text = self.text(i).to_owned();
         let lower = text.to_lowercase();
+        if let Some(tz) = zones::abbreviation(&text).or_else(|| zones::city(&text))
+            && self.zone_context(i)
+        {
+            self.push(Tok::Zone(tz), range, SpanKind::DateTime);
+            return;
+        }
+        if matches!(lower.as_str(), "a" | "an") && self.prev() == Some(&Tok::Convert(ConvertWord::As)) {
+            // `as a % of`: the article is prose and leaves the context alone.
+            self.out.push(Item {
+                tok: Tok::Text,
+                range,
+                kind: SpanKind::Text,
+            });
+            return;
+        }
         if (self.ctx.is_variable)(&text) {
             self.push(Tok::Var(text), range, SpanKind::Variable);
             return;
@@ -599,12 +721,6 @@ impl Classifier<'_> {
         {
             *n *= factor;
             num_range.end = range.end;
-            return;
-        }
-        if let Some(tz) = zones::abbreviation(&text).or_else(|| zones::city(&text))
-            && self.zone_context(i)
-        {
-            self.push(Tok::Zone(tz), range, SpanKind::DateTime);
             return;
         }
         self.unit_or_text(i, &text, range);

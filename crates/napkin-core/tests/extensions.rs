@@ -263,19 +263,112 @@ fn global_variables() {
             "{bad:?}"
         );
     }
-    engine
-        .set_global_variable(
-            "broken",
-            ExtValue {
-                double: 1.0,
-                unit_id: Some("nope".to_owned()),
-            },
-        )
-        .expect("valid name");
+    let unknown_unit = ExtValue {
+        double: 1.0,
+        unit_id: Some("nope".to_owned()),
+    };
     assert!(
-        last(&engine, "broken + 1").starts_with("error"),
-        "unknown unit ids fail where used"
+        engine.set_global_variable("broken", unknown_unit).is_err(),
+        "unknown unit id"
     );
+    let not_finite = ExtValue {
+        double: f64::NAN,
+        unit_id: None,
+    };
+    assert!(
+        engine.set_global_variable("nan", not_finite).is_err(),
+        "not finite"
+    );
+    for keyword in ["k", "hex", "what", "PST", "thousand"] {
+        let value = ExtValue {
+            double: 1.0,
+            unit_id: None,
+        };
+        assert!(
+            engine.set_global_variable(keyword, value).is_err(),
+            "{keyword} is a keyword"
+        );
+    }
+}
+
+#[test]
+fn extensions_cannot_take_over_units_keywords_or_each_other() {
+    let mut engine = common::engine();
+    engine
+        .register_unit(unit("horse", &["horse"], "m", 2.4, "hrs"))
+        .expect("valid unit");
+    assert!(
+        engine
+            .register_unit(unit("pony", &["horse"], "m", 1.0, "p"))
+            .is_err(),
+        "phrase taken"
+    );
+    assert!(
+        engine
+            .register_unit(unit("USD", &["usd thing"], "USD", 1.0, "u"))
+            .is_err(),
+        "currency id"
+    );
+    assert!(
+        engine
+            .register_unit(unit("m", &["metreish"], "m", 1.0, "m"))
+            .is_err(),
+        "Numi base id"
+    );
+    let one = |_: &[ExtValue]| {
+        Ok(ExtValue {
+            double: 1.0,
+            unit_id: None,
+        })
+    };
+    for phrase in ["cm", "m", "EUR", "k", "in", "pi", "today", "hex"] {
+        let taken = engine.register_function(function(&format!("f-{phrase}"), &[phrase], one));
+        assert!(taken.is_err(), "{phrase} must stay what it is");
+    }
+    engine
+        .register_function(function("mylog", &["log"], one))
+        .expect("built-in functions may be replaced");
+    assert_eq!(last(&engine, "log(100)"), "1");
+    assert!(
+        engine
+            .register_function(function("other", &["LOG"], one))
+            .is_err(),
+        "phrase taken"
+    );
+    engine
+        .register_function(function("phrase", &["my func"], |_| {
+            Ok(ExtValue {
+                double: 7.0,
+                unit_id: None,
+            })
+        }))
+        .expect("multi-word phrase");
+    assert_eq!(last(&engine, "my func(1)"), "7");
+}
+
+#[test]
+fn custom_unit_phrases_with_symbols() {
+    let mut engine = common::engine();
+    engine
+        .register_unit(unit(
+            "npm2",
+            &["N/m2", "newton per square meter"],
+            "npm2",
+            1.0,
+            "N/m²",
+        ))
+        .expect("valid");
+    engine
+        .register_unit(unit(
+            "psi",
+            &["psi", "Pound-force per square inch"],
+            "npm2",
+            6894.76,
+            "psi",
+        ))
+        .expect("valid");
+    assert_eq!(last(&engine, "1 psi in N/m2"), "6,894.76 N/m²");
+    assert_eq!(last(&engine, "2 Pound-force per square inch in psi"), "2 psi");
 }
 
 #[test]

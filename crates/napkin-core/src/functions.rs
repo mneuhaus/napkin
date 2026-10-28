@@ -157,6 +157,9 @@ pub(crate) fn apply(
         },
         Sin | Cos | Tan => {
             let x = radians(one(args)?, angle_unit, to_radians)?;
+            if function == Tan && x.cos().abs() < ROUNDING_NOISE {
+                return Err(EvalError::new("tan is undefined there"));
+            }
             let y = match function {
                 Sin => x.sin(),
                 Cos => x.cos(),

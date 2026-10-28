@@ -313,12 +313,12 @@ static TABLES: LazyLock<Tables> = LazyLock::new(|| {
         if CITY_AREAS.contains(&area)
             && let Some(city) = name.rsplit('/').next()
         {
-            cities.entry(city.replace('_', " ").to_lowercase()).or_insert(tz);
+            cities.entry(fold(&city.replace('_', " "))).or_insert(tz);
         }
     }
     for (alias, zone) in ALIASES {
         if let Ok(tz) = zone.parse::<Tz>() {
-            cities.entry((*alias).to_owned()).or_insert(tz);
+            cities.entry(fold(alias)).or_insert(tz);
         }
     }
     let abbreviations = ABBREVIATIONS
@@ -335,9 +335,31 @@ static TABLES: LazyLock<Tables> = LazyLock::new(|| {
 /// The most words a city name or alias has (`Ho Chi Minh City`, `Salt Lake City`).
 pub(crate) const MAX_CITY_WORDS: usize = 4;
 
-/// A city or alias (`Berlin`, `New York`, `San Francisco`), any case, words separated by spaces.
+/// A city or alias (`Berlin`, `New York`, `São Paulo`), any case and with or without
+/// diacritics, words separated by spaces.
 pub(crate) fn city(words: &str) -> Option<Tz> {
-    TABLES.cities.get(&words.to_lowercase()).copied()
+    TABLES.cities.get(&fold(words)).copied()
+}
+
+/// Lowercase without diacritics, so `São Paulo` finds `Sao_Paulo`.
+fn fold(text: &str) -> String {
+    text.chars()
+        .flat_map(char::to_lowercase)
+        .map(|c| match c {
+            'à' | 'á' | 'â' | 'ã' | 'ä' | 'å' | 'ā' => 'a',
+            'ç' | 'č' | 'ć' => 'c',
+            'è' | 'é' | 'ê' | 'ë' | 'ē' | 'ě' => 'e',
+            'ì' | 'í' | 'î' | 'ï' | 'ī' => 'i',
+            'ñ' | 'ń' => 'n',
+            'ò' | 'ó' | 'ô' | 'õ' | 'ö' | 'ø' | 'ō' => 'o',
+            'ù' | 'ú' | 'û' | 'ü' | 'ū' | 'ů' => 'u',
+            'ý' | 'ÿ' => 'y',
+            'ś' | 'š' => 's',
+            'ź' | 'ż' | 'ž' => 'z',
+            'ł' => 'l',
+            other => other,
+        })
+        .collect()
 }
 
 /// A full IANA name (`Europe/Berlin`), any case.
@@ -366,6 +388,8 @@ mod tests {
         assert_eq!(city("New York"), Some(Tz::America__New_York));
         assert_eq!(city("hong kong"), Some(Tz::Asia__Hong_Kong));
         assert_eq!(city("San Francisco"), Some(Tz::America__Los_Angeles));
+        assert_eq!(city("São Paulo"), Some(Tz::America__Sao_Paulo));
+        assert_eq!(city("Köln"), Some(Tz::Europe__Berlin));
         assert_eq!(city("Buenos Aires"), Some(Tz::America__Argentina__Buenos_Aires));
         assert_eq!(iana("europe/berlin"), Some(Tz::Europe__Berlin));
         assert_eq!(abbreviation("PST"), Some(Tz::America__Los_Angeles));

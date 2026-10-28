@@ -154,7 +154,10 @@ impl Units<'_> {
         }
         if let (Some(from_offset), Some(to_offset)) = (temperature(&quantity.unit), temperature(to)) {
             let kelvin = (quantity.value + from_offset.1) * from_offset.0;
-            return Ok(kelvin / to_offset.0 - to_offset.1);
+            let value = kelvin / to_offset.0 - to_offset.1;
+            // `32 °F in °C` is 0, not 5.7e-14.
+            let noise = (kelvin / to_offset.0).abs() * 1e-12;
+            return Ok(if value.abs() <= noise { 0.0 } else { value });
         }
         Ok(quantity.value * self.factor(&quantity.unit)? / self.factor(to)?)
     }
@@ -320,16 +323,17 @@ impl Units<'_> {
         if let Some((unit, power)) = custom::numi_base(id) {
             return Some(Unit::power_of(unit, power, Form::Default));
         }
-        if let Some(index) = self.custom.unit_by_id(id).or_else(|| self.custom.unit(id)) {
-            return Some(Unit::simple(UnitRef::Custom(index), Form::Default));
+        if let Some(index) = BUILTINS.by_id(id) {
+            return Some(Unit::simple(UnitRef::Builtin(index), Form::Default));
         }
         if let Some(code) = currency::canonical(id) {
             return Some(Unit::simple(UnitRef::Currency(code.to_owned()), Form::Default));
         }
-        let index = BUILTINS
-            .by_id(id)
-            .or_else(|| BUILTINS.lookup(id).map(|hit| hit.index))?;
-        Some(Unit::simple(UnitRef::Builtin(index), Form::Default))
+        if let Some(index) = self.custom.unit_by_id(id).or_else(|| self.custom.unit(id)) {
+            return Some(Unit::simple(UnitRef::Custom(index), Form::Default));
+        }
+        let hit = BUILTINS.lookup(id)?;
+        Some(Unit::simple(UnitRef::Builtin(hit.index), Form::Default))
     }
 }
 
@@ -360,10 +364,12 @@ fn display_moment(moment: &Moment, time_format: TimeFormat, now: DateTime<Utc>) 
     };
     match moment.kind {
         MomentKind::Time => {
-            if naive.date() == moment.zone.naive(now).date() {
-                time
-            } else {
-                format!("{} {time}", naive.format("%a"))
+            // Today shows the time; within a week the weekday is unambiguous; beyond, the date.
+            let days_away = (naive.date() - moment.zone.naive(now).date()).num_days().abs();
+            match days_away {
+                0 => time,
+                1..=6 => format!("{} {time}", naive.format("%a")),
+                _ => format!("{} {time}", naive.format("%a, %-d %b %Y")),
             }
         }
         MomentKind::Date => naive.format("%a, %-d %b %Y").to_string(),

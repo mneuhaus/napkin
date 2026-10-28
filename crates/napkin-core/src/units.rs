@@ -209,6 +209,16 @@ struct Prefix {
 
 const SI_PREFIXES: &[Prefix] = &[
     Prefix {
+        symbols: &["Q"],
+        names: &["quetta"],
+        factor: 1e30,
+    },
+    Prefix {
+        symbols: &["R"],
+        names: &["ronna"],
+        factor: 1e27,
+    },
+    Prefix {
         symbols: &["Y"],
         names: &["yotta"],
         factor: 1e24,
@@ -308,6 +318,16 @@ const SI_PREFIXES: &[Prefix] = &[
         names: &["yocto"],
         factor: 1e-24,
     },
+    Prefix {
+        symbols: &["r"],
+        names: &["ronto"],
+        factor: 1e-27,
+    },
+    Prefix {
+        symbols: &["q"],
+        names: &["quecto"],
+        factor: 1e-30,
+    },
 ];
 
 const IEC_PREFIXES: &[Prefix] = &[
@@ -349,24 +369,8 @@ enum Prefixes {
     None,
     /// Every SI prefix.
     All,
-    /// Prefixes below one (`ms`, `ns`), to keep `ks`, `Ms` from shadowing words.
-    Small,
-    /// Common litre prefixes (`ml`, `cl`, `dl`, `hl`, `kl`).
-    Litre,
     /// Kilo and up, plus the binary IEC prefixes (`kB`, `GiB`).
     Data,
-}
-
-impl Prefixes {
-    fn accepts(self, prefix: &Prefix) -> bool {
-        match self {
-            Self::None | Self::Data => false,
-            Self::All => true,
-            Self::Small => prefix.factor < 1.0 && prefix.factor >= 1e-15,
-            Self::Litre => ["kilo", "hecto", "deca", "deci", "centi", "milli", "micro", "nano"]
-                .contains(&prefix.names[0]),
-        }
-    }
 }
 
 /// A built-in unit definition before prefixes are expanded.
@@ -640,7 +644,7 @@ fn specs() -> Vec<Spec> {
             1e-3,
             &["l", "L"],
             &["liter", "liters", "litre", "litres"],
-            Prefixes::Litre,
+            Prefixes::All,
         ),
         word(
             "pint",
@@ -780,7 +784,7 @@ fn specs() -> Vec<Spec> {
             symbols: &["s"],
             names: &["second", "seconds"],
             abbrevs: &["sec", "secs"],
-            prefixes: Prefixes::Small,
+            prefixes: Prefixes::All,
         },
         word(
             "min",
@@ -828,6 +832,33 @@ fn specs() -> Vec<Spec> {
             &["year", "years"],
             &["yr", "yrs"],
         ),
+        word(
+            "fortnight",
+            "fortnight",
+            ("fortnight", "fortnights"),
+            TIME,
+            14.0 * DAY,
+            &["fortnight", "fortnights"],
+            &[],
+        ),
+        word(
+            "decade",
+            "decade",
+            ("decade", "decades"),
+            TIME,
+            3650.0 * DAY,
+            &["decade", "decades"],
+            &[],
+        ),
+        word(
+            "century",
+            "century",
+            ("century", "centuries"),
+            TIME,
+            36_500.0 * DAY,
+            &["century", "centuries"],
+            &[],
+        ),
         // Frequency and speed.
         symbol("Hz", "Hz", FREQUENCY, 1.0, &["Hz"], &["hertz"], Prefixes::All),
         symbol("mph", "mph", SPEED, 0.447_04, &["mph"], &[], Prefixes::None),
@@ -863,7 +894,7 @@ fn specs() -> Vec<Spec> {
             symbols: &["K"],
             names: &["kelvin", "kelvins"],
             abbrevs: &[],
-            prefixes: Prefixes::None,
+            prefixes: Prefixes::All,
         },
         Spec {
             id: "°C",
@@ -875,7 +906,7 @@ fn specs() -> Vec<Spec> {
                 factor: 1.0,
                 offset: 273.15,
             },
-            symbols: &["°C", "C", "℃"],
+            symbols: &["°C", "C", "℃", "ºC"],
             names: &[
                 "celsius",
                 "degc",
@@ -896,7 +927,7 @@ fn specs() -> Vec<Spec> {
                 factor: 5.0 / 9.0,
                 offset: 459.67,
             },
-            symbols: &["°F", "F", "℉"],
+            symbols: &["°F", "F", "℉", "ºF"],
             names: &["fahrenheit", "degf", "degrees fahrenheit", "degree fahrenheit"],
             abbrevs: &[],
             prefixes: Prefixes::None,
@@ -909,7 +940,7 @@ fn specs() -> Vec<Spec> {
             1.0,
             &["rad"],
             &["radian", "radians", "rads"],
-            Prefixes::None,
+            Prefixes::All,
         ),
         Spec {
             id: "°",
@@ -918,7 +949,7 @@ fn specs() -> Vec<Spec> {
             style: Attached,
             dim: ANGLE,
             scale: Scale::Factor(PI / 180.0),
-            symbols: &["°"],
+            symbols: &["°", "º"],
             names: &["degree", "degrees", "deg", "degs"],
             abbrevs: &[],
             prefixes: Prefixes::None,
@@ -960,6 +991,9 @@ impl Builtins {
             table.add_spec(&spec);
         }
         table.by_symbol.insert("KB".to_owned(), table.by_symbol["kB"]);
+        table.by_symbol.insert("mcg".to_owned(), table.by_symbol["µg"]);
+        // German `qm` (Quadratmeter) means m², not quectometres.
+        table.by_symbol.remove("qm");
         table.by_symbol.insert("Kb".to_owned(), table.by_symbol["kb"]);
         table.max_words = table
             .by_name
@@ -1016,8 +1050,10 @@ impl Builtins {
                 },
             );
         }
-        for prefix in SI_PREFIXES.iter().filter(|p| spec.prefixes.accepts(p)) {
-            self.add_prefixed(spec, prefix);
+        if spec.prefixes == Prefixes::All {
+            for prefix in SI_PREFIXES {
+                self.add_prefixed(spec, prefix);
+            }
         }
         if spec.prefixes == Prefixes::Data {
             let large = SI_PREFIXES.iter().filter(|p| p.factor >= 1e3);
@@ -1028,8 +1064,13 @@ impl Builtins {
     }
 
     fn add_prefixed(&mut self, spec: &Spec, prefix: &Prefix) {
-        let Scale::Factor(factor) = spec.scale else {
-            return;
+        let scale = match spec.scale {
+            Scale::Factor(factor) => Scale::Factor(factor * prefix.factor),
+            Scale::Temperature { factor, offset: 0.0 } => Scale::Temperature {
+                factor: factor * prefix.factor,
+                offset: 0.0,
+            },
+            Scale::Temperature { .. } | Scale::Pixel | Scale::Em => return,
         };
         let symbol = format!("{}{}", prefix.symbols[0], spec.symbol);
         let index = self.push(UnitDef {
@@ -1039,7 +1080,7 @@ impl Builtins {
             plural: "",
             style: Style::Symbol,
             dim: dims(spec.dim),
-            scale: Scale::Factor(factor * prefix.factor),
+            scale,
         });
         let hit = Hit {
             index,

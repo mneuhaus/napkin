@@ -37,6 +37,8 @@ cases), `tests/extensions.rs` (hooks with closures), `tests/performance.rs` (ign
 - [x] extension hooks
 - [x] tests (acceptance 40 rows / 63 lines all passing, semantics, extensions, perf)
 - [x] gate (fmt, clippy -D warnings, test, doc)
+- [x] adversarial review round (independent reviewer probed the spec and Numi semantics;
+      fixes below, pinned in `tests/semantics.rs::review_regressions`)
 
 ## Decisions
 
@@ -81,6 +83,36 @@ cases), `tests/extensions.rs` (hooks with closures), `tests/performance.rs` (ign
 - **Variable names** may not be units (incl. one-letter symbols such as `b`, `g`, `h`),
   currencies, keywords, functions or constants; `m = 5` and `hours = 5` are errors.
 - `Clock::System` uses chrono's `Local` for the local zone (no extra dependency).
+- **Prose gaps**: when ignored words separate two operands, the parser sees a `Gap` token and
+  does not multiply across it (`3 apples 4 pears` → 3, `$275 for the Model 227` → $275);
+  operators across prose still work (`3 apples + 4 apples` → 7).
+- **Malformed numbers** (`3:4`, `1.2.3`, `31.02.2026`) are prose, not arithmetic. A grouping
+  separator not followed by exactly three digits reads as a decimal separator in every style
+  (`3,25` → 3.25 in English style; `1.5` in German style). No-break spaces group digits.
+- **Robustness limits**: at most 300 significant tokens per line and 100 levels of nesting;
+  beyond that the line is an error (checked on a 512 KB thread).
+- **Floating-point noise**: `a ± b` smaller than 1e-12 of its operands is 0; same for
+  temperature conversions (`32 °F in °C` → `0 °C`). `tan` at 90° is an error.
+- **Rounding** is half away from zero everywhere (`0.125` → `0.13`), precision is clamped to
+  10, and precision 0 shows whole numbers only. Crypto shows up to 8 fixed decimals.
+- **Units after a number absorb `/unit`** (`60 km/h` is one unit), so `30 km / 60 km/h` = 0.5 h.
+- **Every SI prefix** on metre, gram, second, litre, hertz, kelvin, radian, including
+  quetta/ronna/ronto/quecto; `qm` stays the German m². `Pm` is petametre (am/pm must be all
+  lower or all upper case). Aliases `mcg`, `fortnight`, `decade`, `century`, `ºC`.
+- **A date next to a zoned time uses the time's zone** (`2027-01-15 9:00 EST in Berlin`).
+- **Times more than six days away** show the full date instead of a weekday prefix.
+- **Zones**: city lookup ignores diacritics (`São Paulo`) and dots (`St. Petersburg`);
+  `UTC+2`, `GMT-5` and `Etc/GMT+5` work. Zone names beat same-named variables in zone context.
+- **Reserved names** (variables, globals, extension function phrases): keywords, scales (`k`,
+  `M`, `thousand`), formats (`hex`), `what`/`is`, units, currencies, zone abbreviations.
+  Extension functions may replace built-in function names (Numi's community
+  `LogarithmTotalCalculator` registers `log`). Custom unit ids may not be Numi base ids or
+  currency codes; unit and function phrases may not collide across extensions; custom unit
+  phrases may contain symbols (`N/m2`, `Pound-force per square inch`); function phrases may be
+  several words. Globals must be finite with a resolvable unit id. Unit-id lookup prefers
+  built-in ids over custom ids.
+- `prev` with nothing above is prose (`None`); `sum`/`average` of an empty block are 0.
+- `ppi` needs a plain number; `2abc = 4` is an invalid assignment (error).
 
 ## Spec rows
 
@@ -90,5 +122,7 @@ No spec row needed changing. All 63 checked lines of the acceptance table pass.
 
 - No derived SI units beyond the spec (newton, watt, joule, pascal); extensions can add them.
 - No data-rate units (`Mbps`); extensions can add them.
-- Custom function phrases are single words.
-- English-style `1,5` reads as `1 5` (= 5), as there is no decimal comma in English style.
+- Unknown words before a conversion are dropped, so `1 furlongz in m` reads as `1 in m` →
+  `1 m` (a plain number takes the target unit). Same for unknown currency codes.
+- Functions drop physical units (spec row `round(1 month in days)` → `30`), keeping only
+  currency and percent for `round`/`ceil`/`floor`/`abs`.

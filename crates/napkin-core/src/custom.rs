@@ -48,10 +48,12 @@ fn phrases(raw: &[String]) -> Vec<String> {
 }
 
 /// Rough token count of a phrase as the lexer will split it (words and punctuation).
+/// An upper bound on how many raw tokens the lexer splits a phrase into: each symbol inside a
+/// word can split it in two (`fl.oz.`, `Pound-force`).
 fn token_count(phrase: &str) -> usize {
     phrase
         .split_whitespace()
-        .map(|w| 1 + w.chars().filter(|c| !c.is_alphanumeric()).count())
+        .map(|w| 1 + 2 * w.chars().filter(|c| !c.is_alphanumeric()).count())
         .sum()
 }
 
@@ -69,12 +71,19 @@ impl Registry {
         if id.is_empty() {
             return Err(RegisterError::new("unit id is empty"));
         }
-        if self.units.iter().any(|u| u.id == id) {
+        let base_id = numi_base(&id).is_some() || currency::canonical(&id).is_some();
+        if base_id || self.units.iter().any(|u| u.id == id) {
             return Err(RegisterError::new(format!("unit id `{id}` is already taken")));
         }
         let names = phrases(&raw_phrases);
         if names.is_empty() {
             return Err(RegisterError::new(format!("unit `{id}` has no phrases")));
+        }
+        if let Some(phrase) = names.iter().find(|p| self.unit_phrases.contains_key(p.as_str())) {
+            let other = &self.units[self.unit_phrases[phrase.as_str()]].id;
+            return Err(RegisterError::new(format!(
+                "phrase `{phrase}` already names unit `{other}`"
+            )));
         }
         if !ratio.is_finite() || ratio <= 0.0 {
             return Err(RegisterError::new(format!(
@@ -91,7 +100,9 @@ impl Registry {
         self.units.push(UnitDef { id, format, base });
         for phrase in names {
             self.max_phrase_tokens = self.max_phrase_tokens.max(token_count(&phrase));
-            self.unit_phrases_folded.insert(phrase.to_lowercase(), index);
+            self.unit_phrases_folded
+                .entry(phrase.to_lowercase())
+                .or_insert(index);
             self.unit_phrases.insert(phrase, index);
         }
         Ok(())
@@ -158,6 +169,18 @@ impl Registry {
         let names = phrases(&function.phrases);
         if names.is_empty() {
             return Err(RegisterError::new(format!("function `{id}` has no phrases")));
+        }
+        for phrase in &names {
+            if self.function_phrases.contains_key(&phrase.to_lowercase()) {
+                return Err(RegisterError::new(format!(
+                    "phrase `{phrase}` already names a function"
+                )));
+            }
+            if crate::classify::is_reserved(phrase) {
+                return Err(RegisterError::new(format!(
+                    "phrase `{phrase}` is a unit, keyword or currency, not a function name"
+                )));
+            }
         }
         let index = self.functions.len();
         for phrase in names {

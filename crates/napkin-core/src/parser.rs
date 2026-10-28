@@ -74,9 +74,17 @@ const JUXTAPOSE: u8 = 8;
 const POW: u8 = 9;
 const PREFIX: u8 = 10;
 
+/// Deepest nesting of parentheses, signs and operators a line may have; keeps parsing and
+/// evaluation from exhausting the stack on pathological input.
+const MAX_DEPTH: usize = 100;
+
 /// Parses a whole token list.
 pub(crate) fn parse(tokens: &[Tok]) -> Result<Expr, EvalError> {
-    let mut parser = Parser { tokens, pos: 0 };
+    let mut parser = Parser {
+        tokens,
+        pos: 0,
+        depth: 0,
+    };
     let expr = parser.expr(0)?;
     match parser.peek() {
         None => Ok(expr),
@@ -97,6 +105,8 @@ fn describe(tok: &Tok) -> &'static str {
 struct Parser<'a> {
     tokens: &'a [Tok],
     pos: usize,
+    /// Current nesting of `expr` calls, bounded by [`MAX_DEPTH`].
+    depth: usize,
 }
 
 /// How an infix token combines its operands.
@@ -107,7 +117,7 @@ enum Infix {
     Juxtapose,
 }
 
-fn starts_operand(tok: &Tok) -> bool {
+pub(crate) fn starts_operand(tok: &Tok) -> bool {
     matches!(
         tok,
         Tok::Num(_)
@@ -176,6 +186,16 @@ impl<'a> Parser<'a> {
     }
 
     fn expr(&mut self, min_bp: u8) -> Result<Expr, EvalError> {
+        self.depth += 1;
+        if self.depth > MAX_DEPTH {
+            return Err(EvalError::new("expression nested too deeply"));
+        }
+        let result = self.expr_inner(min_bp);
+        self.depth -= 1;
+        result
+    }
+
+    fn expr_inner(&mut self, min_bp: u8) -> Result<Expr, EvalError> {
         let mut lhs = self.prefix()?;
         while let Some(tok) = self.peek() {
             if let Some(next) = self.postfix(&lhs)? {
@@ -218,7 +238,14 @@ impl<'a> Parser<'a> {
                 Expr::Binary(BinOp::Pow, lhs(), boxed(Expr::Num(power)))
             }
             Tok::Unit(_) | Tok::Power(_) => {
-                let unit = self.unit_factor()?;
+                // `60 km/h` is one unit, so `30 km / 60 km/h` divides by a speed.
+                let mut unit = self.unit_factor()?;
+                while self.peek() == Some(&Tok::Op(Op::Div))
+                    && matches!(self.peek_at(1), Some(Tok::Unit(_) | Tok::Power(_)))
+                {
+                    self.pos += 1;
+                    unit = unit.times(&self.unit_factor()?.pow(-1));
+                }
                 Expr::WithUnit(lhs(), unit)
             }
             Tok::Zone(tz) => {

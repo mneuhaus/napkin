@@ -4,6 +4,7 @@ use chrono::{DateTime, Days, Months, NaiveTime, TimeDelta, Utc};
 use chrono_tz::Tz;
 
 use crate::classify::{DocRef, Func, PercentOp};
+use crate::format::{self, Radix};
 use crate::functions::{self, Builtin};
 use crate::num;
 use crate::parser::{BinOp, Expr, Target};
@@ -14,6 +15,9 @@ use crate::{CustomFunction, EvalError, ExtValue, Settings};
 
 /// Seconds per day.
 const DAY_SECONDS: f64 = 86_400.0;
+
+/// Sums smaller than this fraction of their operands are rounding noise and become 0.
+const CANCELLATION_NOISE: f64 = 1e-12;
 
 /// Looks up a variable: `None` when the name is unknown.
 pub(crate) type Lookup<'a> = &'a dyn Fn(&str) -> Option<Result<Value, EvalError>>;
@@ -40,10 +44,16 @@ enum Sign {
 }
 
 impl Sign {
+    /// `a ± b`, with floating-point cancellation noise (`0.1 + 0.2 - 0.3`) snapped to zero.
     fn apply(self, a: f64, b: f64) -> f64 {
-        match self {
+        let result = match self {
             Self::Plus => a + b,
             Self::Minus => a - b,
+        };
+        if result.abs() <= CANCELLATION_NOISE * a.abs().max(b.abs()) {
+            0.0
+        } else {
+            result
         }
     }
 }
@@ -308,14 +318,15 @@ impl Env<'_> {
             (Value::Moment(date), Value::Moment(time)) | (Value::Moment(time), Value::Moment(date))
                 if date.kind == MomentKind::Date && time.kind == MomentKind::Time =>
             {
+                // The time's zone wins: `2027-01-15 9:00 EST` is 9:00 in New York.
                 let naive = date.naive().date().and_time(time.naive().time());
-                let instant = date
+                let instant = time
                     .zone
                     .instant(naive)
                     .ok_or_else(|| EvalError::new("that time does not exist"))?;
                 Ok(Value::Moment(Moment {
                     instant,
-                    zone: date.zone,
+                    zone: time.zone,
                     kind: MomentKind::DateTime,
                 }))
             }
@@ -338,10 +349,9 @@ impl Env<'_> {
     /// (`$30 CAD`), anything else multiplies (`5 kW h`).
     fn attach(&self, q: Quantity, unit: &Unit) -> Result<Quantity, EvalError> {
         if q.is_plain() {
-            return Ok(Quantity {
-                unit: unit.clone(),
-                ..q
-            });
+            let radix = q.radix;
+            let quantity = self.combine(q, Quantity::new(1.0, unit.clone()))?;
+            return Ok(Quantity { radix, ..quantity });
         }
         if q.unit.currency().is_some() && unit.currency().is_some() {
             return Ok(Quantity::new(q.value, unit.clone()));
@@ -358,10 +368,16 @@ impl Env<'_> {
                 zone: Zone::Named(*tz),
                 ..m
             })),
-            (Value::Quantity(q), Target::Radix(radix)) => Ok(Value::Quantity(Quantity {
-                radix: Some(*radix),
-                ..q
-            })),
+            (Value::Quantity(q), Target::Radix(radix)) => {
+                let integer_base = matches!(radix, Radix::Hex | Radix::Binary | Radix::Octal);
+                if integer_base && format::radix(q.value, *radix).is_none() {
+                    return err("the number is out of range for this base");
+                }
+                Ok(Value::Quantity(Quantity {
+                    radix: Some(*radix),
+                    ..q
+                }))
+            }
             (Value::Quantity(q), Target::Unit(unit)) => Ok(Value::Quantity(self.convert_quantity(q, unit)?)),
             (Value::Moment(_), _) => err("dates and times can only be converted to a time zone"),
             (Value::Quantity(_), Target::Zone(_)) => err("only times can be converted to a time zone"),
@@ -403,27 +419,7 @@ impl Env<'_> {
         };
         Ok(Quantity::new(x.value * factor, x.unit))
     }
-}
 
-fn percent_what(op: PercentOp, p: &Quantity, x: Quantity) -> Result<Quantity, EvalError> {
-    {
-        if !p.is_percent() {
-            return err("`of what is` needs a percentage");
-        }
-        let share = p.value / 100.0;
-        let divisor = match op {
-            PercentOp::Of => share,
-            PercentOp::On => 1.0 + share,
-            PercentOp::Off => 1.0 - share,
-        };
-        if divisor == 0.0 {
-            return err("division by zero");
-        }
-        Ok(Quantity::new(x.value / divisor, x.unit))
-    }
-}
-
-impl Env<'_> {
     fn as_percent(&self, op: PercentOp, x: Quantity, y: Quantity) -> Result<Quantity, EvalError> {
         let ratio = self.divide(x, y)?;
         if !ratio.is_plain() {
@@ -465,61 +461,7 @@ impl Env<'_> {
         };
         Ok(Moment { instant, kind, ..m })
     }
-}
 
-fn shift_calendar(m: Moment, unit_id: &str, amount: f64) -> Option<Moment> {
-    {
-        let count = num::to_i64(amount)?;
-        let naive = m.naive();
-        let magnitude = u32::try_from(count.unsigned_abs()).ok()?;
-        let shifted = match unit_id {
-            "month" | "year" => {
-                let months = Months::new(if unit_id == "year" {
-                    magnitude.checked_mul(12)?
-                } else {
-                    magnitude
-                });
-                if count >= 0 {
-                    naive.checked_add_months(months)
-                } else {
-                    naive.checked_sub_months(months)
-                }
-            }
-            "day" | "week" => {
-                let days = Days::new(u64::from(magnitude) * if unit_id == "week" { 7 } else { 1 });
-                if count >= 0 {
-                    naive.checked_add_days(days)
-                } else {
-                    naive.checked_sub_days(days)
-                }
-            }
-            _ => None,
-        }?;
-        Some(Moment {
-            instant: m.zone.instant(shifted)?,
-            ..m
-        })
-    }
-}
-
-/// The wall-clock difference between two moments, in days, hours or minutes.
-fn difference(a: &Moment, b: &Moment) -> Quantity {
-    {
-        let seconds = num::from_i64((a.naive() - b.naive()).num_milliseconds()) / 1000.0;
-        let (id, size) = if a.kind == MomentKind::Date && b.kind == MomentKind::Date
-            || seconds.abs() >= 2.0 * DAY_SECONDS
-        {
-            ("day", DAY_SECONDS)
-        } else if seconds.abs() >= 3600.0 {
-            ("h", 3600.0)
-        } else {
-            ("min", 60.0)
-        };
-        Quantity::new(seconds / size, builtin_unit(id))
-    }
-}
-
-impl Env<'_> {
     fn doc(&self, doc: DocRef) -> Result<Value, EvalError> {
         match doc {
             DocRef::Prev => self
@@ -626,6 +568,69 @@ impl Env<'_> {
             }
         }
     }
+}
+
+fn percent_what(op: PercentOp, p: &Quantity, x: Quantity) -> Result<Quantity, EvalError> {
+    if !p.is_percent() {
+        return err("`of what is` needs a percentage");
+    }
+    let share = p.value / 100.0;
+    let divisor = match op {
+        PercentOp::Of => share,
+        PercentOp::On => 1.0 + share,
+        PercentOp::Off => 1.0 - share,
+    };
+    if divisor == 0.0 {
+        return err("division by zero");
+    }
+    Ok(Quantity::new(x.value / divisor, x.unit))
+}
+
+fn shift_calendar(m: Moment, unit_id: &str, amount: f64) -> Option<Moment> {
+    let count = num::to_i64(amount)?;
+    let naive = m.naive();
+    let magnitude = u32::try_from(count.unsigned_abs()).ok()?;
+    let shifted = match unit_id {
+        "month" | "year" => {
+            let months = Months::new(if unit_id == "year" {
+                magnitude.checked_mul(12)?
+            } else {
+                magnitude
+            });
+            if count >= 0 {
+                naive.checked_add_months(months)
+            } else {
+                naive.checked_sub_months(months)
+            }
+        }
+        "day" | "week" => {
+            let days = Days::new(u64::from(magnitude) * if unit_id == "week" { 7 } else { 1 });
+            if count >= 0 {
+                naive.checked_add_days(days)
+            } else {
+                naive.checked_sub_days(days)
+            }
+        }
+        _ => None,
+    }?;
+    Some(Moment {
+        instant: m.zone.instant(shifted)?,
+        ..m
+    })
+}
+
+/// The wall-clock difference between two moments, in days, hours or minutes.
+fn difference(a: &Moment, b: &Moment) -> Quantity {
+    let seconds = num::from_i64((a.naive() - b.naive()).num_milliseconds()) / 1000.0;
+    let (id, size) =
+        if a.kind == MomentKind::Date && b.kind == MomentKind::Date || seconds.abs() >= 2.0 * DAY_SECONDS {
+            ("day", DAY_SECONDS)
+        } else if seconds.abs() >= 3600.0 {
+            ("h", 3600.0)
+        } else {
+            ("min", 60.0)
+        };
+    Quantity::new(seconds / size, builtin_unit(id))
 }
 
 fn power(base: Quantity, exponent: Quantity) -> Result<Quantity, EvalError> {

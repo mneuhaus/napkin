@@ -129,7 +129,7 @@ fn case_sensitive_one_letter_units_and_scales() {
             ("5 m", "5 m"),
             ("5 M", "5,000,000"),
             ("5 MB", "5 MB"),
-            ("5 Mb in MB", "0.62 MB"),
+            ("5 Mb in MB", "0.63 MB"),
             ("5 mm", "5 mm"),
             ("2k", "2,000"),
             ("300 K in C", "26.85 °C"),
@@ -440,4 +440,272 @@ fn evaluate_expression_reports_errors_and_nothing() {
     );
     assert!(engine.evaluate_expression("5 m + 3 kg").is_err());
     assert!(engine.evaluate_expression("hello").is_err());
+}
+
+/// Fragments the fuzz test glues together.
+const PIECES: &[&str] = &[
+    "1",
+    "0",
+    "5 300",
+    "2.5",
+    "1e400",
+    "0x",
+    "0xFF",
+    "0b2",
+    "12:3",
+    "2:30",
+    "pm",
+    "am",
+    "12.03.2026",
+    "3/12/",
+    "2026-13-45",
+    "$",
+    "€",
+    "₿",
+    "%",
+    "+",
+    "-",
+    "*",
+    "/",
+    "^",
+    "**",
+    "(",
+    ")",
+    "[",
+    "!",
+    ";",
+    "=",
+    "²",
+    "³",
+    "°",
+    "°C",
+    "K",
+    "k",
+    "M",
+    "m",
+    "in",
+    "to",
+    "as",
+    "of",
+    "what",
+    "is",
+    "on",
+    "off",
+    "sq",
+    "cubic",
+    "sqrt",
+    "log",
+    "root",
+    "fromunix",
+    "fact",
+    "round",
+    "today",
+    "now",
+    "time",
+    "New",
+    "York",
+    "Berlin",
+    "PST",
+    "HKT",
+    "Europe",
+    "/",
+    "Berlin",
+    "EUR",
+    "usd",
+    "CUP",
+    "cup",
+    "pound",
+    "sum",
+    "avg",
+    "prev",
+    "pi",
+    "e",
+    "x",
+    "v",
+    "\"",
+    "“",
+    "//",
+    ":",
+    ",",
+    ".",
+    "#",
+    "ü",
+    "日本",
+    "🙂",
+    "\t",
+    " ",
+    "  ",
+    "mod",
+    "xor",
+    "<<",
+    ">>",
+    "&",
+    "|",
+    "fl",
+    "oz",
+    "March",
+    "12",
+    "2026",
+    "hex",
+    "sci",
+    "a",
+    "%",
+    "em",
+    "ppi",
+    "1e-9",
+    "999999999999999999",
+];
+
+/// Random token soup never panics, and spans stay valid.
+#[test]
+fn arbitrary_input_never_panics() {
+    let engine = common::engine();
+    let mut state: u64 = 0x2545_f491_4f6c_dd1d;
+    let mut next = |bound: usize| {
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        usize::try_from(state % u64::try_from(bound).expect("small bound")).expect("fits")
+    };
+    for _ in 0..3000 {
+        let count = 1 + next(9);
+        let line: Vec<&str> = (0..count).map(|_| PIECES[next(PIECES.len())]).collect();
+        let separator = if next(2) == 0 { " " } else { "" };
+        let line = line.join(separator);
+        let document = format!("{line}\nprev\nsum\n{line} in cm");
+        for (text, output) in document.split('\n').zip(engine.evaluate(&document)) {
+            for span in &output.spans {
+                assert!(span.range.end <= text.len(), "{text:?}: {:?}", output.spans);
+                assert!(
+                    text.is_char_boundary(span.range.start) && text.is_char_boundary(span.range.end),
+                    "{text:?}"
+                );
+            }
+            let mut ends = output.spans.iter().map(|s| (s.range.start, s.range.end));
+            let mut last_end = 0;
+            assert!(
+                ends.all(|(start, end)| {
+                    let ok = start >= last_end && start <= end;
+                    last_end = end;
+                    ok
+                }),
+                "{text:?}: {:?}",
+                output.spans
+            );
+        }
+    }
+}
+
+#[test]
+fn system_clock_uses_the_local_zone() {
+    let engine = Engine::new();
+    let outputs = engine.evaluate("now\ntoday\nnow in UTC\n1 USD in EUR");
+    for output in &outputs {
+        assert!(
+            matches!(output.result, LineResult::Value(_)),
+            "{:?}",
+            output.result
+        );
+    }
+    let LineResult::Value(now) = &outputs[0].result else {
+        unreachable!("checked above")
+    };
+    let (hours, minutes) = now.text.split_once(':').expect("a time of day like 13:00");
+    assert!(hours.parse::<u32>().is_ok_and(|h| h < 24) && minutes.parse::<u32>().is_ok_and(|m| m < 60));
+}
+
+/// Findings of an adversarial review, pinned.
+#[test]
+fn review_regressions() {
+    let engine = common::engine();
+    check(
+        &engine,
+        &[
+            // Cancellation noise is zero.
+            ("32 °F in °C", "0 °C"),
+            ("1 ft - 12 inches", "0 inches"),
+            ("0.1 + 0.2 - 0.3", "0"),
+            // Separators between digits are not multiplication.
+            ("12,99 EUR + 3,50 EUR", "€16.49"),
+            ("3,25", "3.25"),
+            ("Ratio 3:4", "none"),
+            ("version 1.2.3", "none"),
+            ("24:00", "00:00"),
+            ("5\u{a0}300", "5,300"),
+            ("5 — 3", "2"),
+            // Undefined and out-of-range results are errors.
+            ("tan 90", "error: tan is undefined there"),
+            ("1e30 in hex", "error: the number is out of range for this base"),
+            // Zoned times keep their zone next to a date.
+            ("2027-01-15 9:00 EST in Berlin", "Fri, 15 Jan 2027 15:00"),
+            ("tomorrow 9am EST in Berlin", "Thu, 29 Oct 2026 14:00"),
+            // A compound unit after a number is one unit.
+            ("30 km / 60 km/h", "0.5 h"),
+            ("100 km / 50 km/h in min", "120 min"),
+            ("100 GB / 10 MB/s", "10,000 s"),
+            ("$5 $5", "$10"),
+            // Every SI prefix, and the 2022 ones.
+            ("1 megaliter in l", "1,000,000 l"),
+            ("1 ks in s", "1,000 s"),
+            ("1 mK in K", "0.001 K"),
+            ("1 mrad in rad", "0.001 rad"),
+            ("1 Qm in Rm", "1,000 Rm"),
+            ("1 Pm in Tm", "1,000 Tm"),
+            ("11 qm", "11 m²"),
+            ("1 mcg in µg", "1 µg"),
+            ("1 fortnight in days", "14 days"),
+            ("20 ºC in F", "68 °F"),
+            // Cities with diacritics and abbreviations with dots.
+            ("São Paulo time", "09:00"),
+            ("St. Petersburg time", "15:00"),
+            ("UTC+2 time", "14:00"),
+            ("Etc/GMT+5 time", "07:00"),
+            ("50 as a percent of 200", "25%"),
+            ("0.0000001 BTC", "0.0000001 BTC"),
+            ("prev", "none"),
+            ("2abc = 4", "error: `2abc` is not a valid variable name"),
+            ("ppi = 2 cm", "error: `ppi` needs a plain number"),
+            ("2026-10-28T14:30", "Wed, 28 Oct 2026 14:30"),
+            ("now + 2 weeks", "Wed, 11 Nov 2026 13:00"),
+            // Prose between numbers does not multiply.
+            ("3 apples 4 pears", "3"),
+            ("$275 for the Model 227", "$275"),
+        ],
+    );
+    for name in ["k", "hex", "what", "PST", "thousand"] {
+        assert!(is_error(&engine, &format!("{name} = 7")), "{name} is a keyword");
+    }
+    assert_eq!(
+        last(&engine, "Berlin = 3\nBerlin time"),
+        "13:00",
+        "zones win in zone context"
+    );
+}
+
+/// Pathological lines are refused, not a stack overflow, even on a small thread.
+#[test]
+fn deep_or_long_lines_do_not_overflow_the_stack() {
+    let lines = [
+        format!("{}1", "(".repeat(5000)),
+        format!("{}5", "-".repeat(5000)),
+        format!("1{}", " + 1".repeat(20_000)),
+        "5 apples ".repeat(20_000),
+        "1,".repeat(50_000),
+        format!("{}1{}", "(".repeat(90), ")".repeat(90)),
+    ];
+    let worker = std::thread::Builder::new()
+        .stack_size(512 * 1024)
+        .spawn(move || {
+            let engine = common::engine();
+            lines
+                .iter()
+                .map(|line| engine.evaluate(line).remove(0).result)
+                .collect::<Vec<_>>()
+        })
+        .expect("thread starts");
+    let results = worker.join().expect("no stack overflow");
+    assert!(
+        matches!(results[5], LineResult::Value(_)),
+        "90 levels of parentheses are fine"
+    );
 }

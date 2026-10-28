@@ -7,6 +7,9 @@ use crate::num;
 /// Values at or above this magnitude are shown in scientific notation.
 const SCIENTIFIC_ABOVE: f64 = 1e15;
 
+/// The most decimal places a result shows (the settings range is 0 to 10).
+const MAX_PRECISION: u8 = 10;
+
 /// Nonzero values below this magnitude are shown in scientific notation.
 const SCIENTIFIC_BELOW: f64 = 1e-6;
 
@@ -69,7 +72,10 @@ fn group(digits: &str, separator: &str) -> String {
 /// Formats `x` with exactly `decimals` places, grouped per `style`, optionally trimming zeros.
 fn fixed(x: f64, decimals: u8, style: NumberStyle, trim: Trim) -> String {
     let (group_sep, decimal_sep) = separators(style);
-    let text = format!("{:.*}", usize::from(decimals), x.abs());
+    // Round half away from zero (`0.125` → `0.13`, like money), then print.
+    let scale = 10f64.powi(i32::from(decimals));
+    let rounded = (x.abs() * scale).round() / scale;
+    let text = format!("{:.*}", usize::from(decimals), rounded);
     let (int, frac) = text.split_once('.').unwrap_or((&text, ""));
     let frac = match trim {
         Trim::Zeros => frac.trim_end_matches('0'),
@@ -96,6 +102,7 @@ enum Trim {
 /// to zero keep `precision` significant digits (`0.002`); very large and very small values use
 /// scientific notation.
 pub(crate) fn number(x: f64, precision: u8, style: NumberStyle) -> String {
+    let precision = precision.min(MAX_PRECISION);
     let abs = x.abs();
     if x == 0.0 {
         return "0".to_owned();
@@ -104,7 +111,7 @@ pub(crate) fn number(x: f64, precision: u8, style: NumberStyle) -> String {
         return scientific(x, precision, style);
     }
     let smallest = 0.5 * 10f64.powi(-i32::from(precision));
-    if abs < smallest {
+    if abs < smallest && precision > 0 {
         let leading_zeros = num::to_i64(-abs.log10().floor())
             .and_then(|z| u8::try_from(z).ok())
             .unwrap_or(0);
@@ -116,6 +123,7 @@ pub(crate) fn number(x: f64, precision: u8, style: NumberStyle) -> String {
 
 /// Scientific notation: `5.3e3`, `-1.5e-7`.
 pub(crate) fn scientific(x: f64, precision: u8, style: NumberStyle) -> String {
+    let precision = precision.min(MAX_PRECISION);
     if x == 0.0 {
         return "0".to_owned();
     }
@@ -147,6 +155,8 @@ pub(crate) fn radix(x: f64, radix: Radix) -> Option<String> {
 pub(crate) fn currency(x: f64, code: &str, style: NumberStyle) -> String {
     let amount = if x.abs() >= SCIENTIFIC_ABOVE {
         scientific(x, 2, style)
+    } else if currency::is_crypto(code) && x.abs() >= 0.5e-8 {
+        fixed(x, CRYPTO_DECIMALS, style, Trim::Zeros)
     } else if currency::is_crypto(code) {
         number(x, CRYPTO_DECIMALS, style)
     } else {
@@ -180,6 +190,10 @@ mod tests {
         assert_eq!(number(1.5e-7, 2, NumberStyle::English), "1.5e-7");
         assert_eq!(number(-2.0, 2, NumberStyle::English), "-2");
         assert_eq!(number(123_456_789.0, 0, NumberStyle::English), "123,456,789");
+        assert_eq!(number(0.125, 2, NumberStyle::English), "0.13");
+        assert_eq!(number(0.5, 0, NumberStyle::English), "1");
+        assert_eq!(number(0.4, 0, NumberStyle::English), "0");
+        assert_eq!(number(1.0 / 3.0, 30, NumberStyle::English), "0.3333333333");
     }
 
     #[test]
@@ -197,6 +211,10 @@ mod tests {
         assert_eq!(currency(-5.0, "USD", NumberStyle::English), "-$5");
         assert_eq!(currency(27.531, "CHF", NumberStyle::English), "27.53 CHF");
         assert_eq!(currency(0.0005, "BTC", NumberStyle::English), "0.0005 BTC");
+        assert_eq!(
+            currency(0.000_000_1, "BTC", NumberStyle::English),
+            "0.0000001 BTC"
+        );
         assert_eq!(currency(2.999, "USD", NumberStyle::English), "$3");
     }
 }

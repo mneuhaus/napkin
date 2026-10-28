@@ -115,34 +115,54 @@ impl Engine {
 
     /// Registers a ratio-based custom unit (Numi `numi.addUnit`).
     ///
+    /// Besides Numi's base unit ids, `base_unit_id` may name an earlier custom unit, a currency
+    /// code or a built-in unit id (`cm`, `kg`). A unit based on its own id starts a dimension of
+    /// its own. Phrases take precedence over built-in unit names (Numi's sample uses `hrs`).
+    ///
     /// # Errors
     ///
-    /// Returns [`RegisterError`] when the id is already taken, `phrases` is empty, the ratio is
-    /// not finite and positive, or `base_unit_id` is not a known base unit.
-    ///
-    /// A unit whose `base_unit_id` is its own id starts a new dimension of its own (other
-    /// units can then be based on it).
+    /// Returns [`RegisterError`] when the id is already taken (by another custom unit, a Numi
+    /// base unit id or a currency code), `phrases` is empty, a phrase already names another
+    /// custom unit, the ratio is not finite and positive, or `base_unit_id` is not a known base
+    /// unit.
     pub fn register_unit(&mut self, unit: CustomUnit) -> Result<(), RegisterError> {
         self.custom.add_unit(unit)
     }
 
-    /// Registers a custom function (Numi `numi.addFunction`).
+    /// Registers a custom function (Numi `numi.addFunction`). Phrases match in any case and may
+    /// replace a built-in function (`log`), but not a unit, keyword or currency.
     ///
     /// # Errors
     ///
-    /// Returns [`RegisterError`] when the id is already taken or `phrases` is empty.
+    /// Returns [`RegisterError`] when the id is already taken, `phrases` is empty, or a phrase
+    /// already names another function or is a unit, keyword or currency.
     pub fn register_function(&mut self, function: CustomFunction) -> Result<(), RegisterError> {
         self.custom.add_function(function)
     }
 
     /// Declares a global variable visible in every document (Numi `numi.setVariable`).
+    /// Documents may shadow it with their own assignment.
     ///
     /// # Errors
     ///
     /// Returns [`RegisterError`] when `name` is not a valid variable name or names a unit,
-    /// keyword or function.
+    /// keyword or function, when the number is not finite, or when `unit_id` names no unit.
     pub fn set_global_variable(&mut self, name: &str, value: ExtValue) -> Result<(), RegisterError> {
         document::check_variable_name(name, &self.custom).map_err(RegisterError::new)?;
+        if !value.double.is_finite() {
+            return Err(RegisterError::new(format!("`{name}` needs a finite number")));
+        }
+        if let Some(id) = &value.unit_id {
+            let units = value::Units {
+                custom: &self.custom,
+                rates: &self.rates,
+                ppi: 96.0,
+                em_px: 16.0,
+            };
+            if units.unit_for_id(id).is_none() {
+                return Err(RegisterError::new(format!("unknown unit id `{id}` for `{name}`")));
+            }
+        }
         self.globals.insert(name.to_owned(), value);
         Ok(())
     }

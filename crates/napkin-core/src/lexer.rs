@@ -83,7 +83,16 @@ enum Meridiem {
     Pm,
 }
 
+/// Whether a byte separates digits inside a number-like run.
+fn is_separator(byte: Option<u8>) -> bool {
+    matches!(byte, Some(b'.' | b',' | b':' | b'\''))
+}
+
+/// `am`/`pm` in all lowercase or all uppercase (so `Pm` stays petametres).
 fn meridiem(word: &str) -> Option<Meridiem> {
+    if word != word.to_ascii_lowercase() && word != word.to_ascii_uppercase() {
+        return None;
+    }
     match word.to_ascii_lowercase().as_str() {
         "am" | "a.m." => Some(Meridiem::Am),
         "pm" | "p.m." => Some(Meridiem::Pm),
@@ -164,7 +173,7 @@ impl Lexer<'_> {
             ('<', Some('<')) => (Some(Sym::Shl), 2),
             ('>', Some('>')) => (Some(Sym::Shr), 2),
             ('+', _) => (Some(Sym::Plus), 1),
-            ('-' | '−' | '–', _) => (Some(Sym::Minus), 1),
+            ('-' | '−' | '–' | '—', _) => (Some(Sym::Minus), 1),
             ('*' | '×' | '·' | '⋅', _) => (Some(Sym::Star), 1),
             ('/' | '÷' | '∕', _) => (Some(Sym::Slash), 1),
             ('^', _) => (Some(Sym::Caret), 1),
@@ -190,12 +199,22 @@ impl Lexer<'_> {
             .or_else(|| self.date(start))
             .or_else(|| self.clock(start))
         {
+            let iso_time_follows = self.byte(end) == Some(b'T') && self.digit_at(end + 1);
             self.i = end;
             self.push(kind, start);
+            if iso_time_follows {
+                self.i = end + 1;
+            }
             return;
         }
         let (value, end, integer) = self.decimal(start);
         self.i = end;
+        if is_separator(self.byte(end)) && self.digit_at(end + 1) {
+            // `3:4`, `1.2.3`, `31.02.2026`: not a number we can read, so not a calculation.
+            self.i = self.run_end(end);
+            self.push(RawKind::Other, start);
+            return;
+        }
         if let Some((time, end)) = integer.and_then(|hour| self.hour_ampm(hour, end)) {
             self.i = end;
             self.push(RawKind::Time(time), start);
@@ -243,7 +262,8 @@ impl Lexer<'_> {
         let third_at = second_at + second + 1;
         let third = self.digits_from(third_at);
         let end = third_at + third;
-        if self.peek(end).is_some_and(char::is_alphanumeric) {
+        let iso_time = self.byte(end) == Some(b'T') && self.digit_at(end + 1);
+        if self.peek(end).is_some_and(char::is_alphanumeric) && !iso_time {
             return None;
         }
         let part = |at: usize, len: usize| self.s[at..at + len].parse::<u32>().ok();
@@ -289,6 +309,11 @@ impl Lexer<'_> {
         if self.peek(end).is_some_and(char::is_alphanumeric) {
             return None;
         }
+        let hour = if (hour, minute, second) == (24, 0, 0) {
+            0
+        } else {
+            hour
+        };
         Some((RawKind::Time(NaiveTime::from_hms_opt(hour, minute, second)?), end))
     }
 
@@ -331,13 +356,14 @@ impl Lexer<'_> {
 
     /// A decimal number per the number style: (value, end, the integer value if it is a plain
     /// integer without grouping, decimals or exponent).
+    ///
+    /// A grouping separator that is not followed by a group of three digits is read as a decimal
+    /// separator (`3,14` in English style, `1.5` in German style), apostrophes excepted.
     fn decimal(&self, start: usize) -> (f64, usize, Option<u32>) {
-        let (group_sep, decimal_sep) = match self.style {
-            NumberStyle::English => (Some(b','), b'.'),
-            NumberStyle::German => (Some(b'.'), b','),
-            NumberStyle::Swiss => (Some(b'\''), b'.'),
-            NumberStyle::French => (None, b','),
-            NumberStyle::Plain => (None, b'.'),
+        let (group_seps, decimal_sep): (&[u8], u8) = match self.style {
+            NumberStyle::English | NumberStyle::Plain => (b",", b'.'),
+            NumberStyle::Swiss => (b"',", b'.'),
+            NumberStyle::German | NumberStyle::French => (b".", b','),
         };
         let mut digits = String::new();
         let mut i = start;
@@ -346,13 +372,13 @@ impl Lexer<'_> {
         i += first;
         let mut plain = first > 0;
         if (1..=3).contains(&first) {
-            let (grouped, end) = self.groups(i, group_sep, &mut digits);
+            let (grouped, end) = self.groups(i, group_seps, &mut digits);
             plain &= !grouped;
             i = end;
         }
         let decimal_at = |i: usize| {
             let b = self.byte(i)?;
-            let lenient = matches!(self.style, NumberStyle::German | NumberStyle::French) && b == b'.';
+            let lenient = b != b'\'' && group_seps.contains(&b);
             ((b == decimal_sep || lenient) && self.digit_at(i + 1)).then_some(i + 1)
         };
         if let Some(frac_at) = decimal_at(i) {
@@ -377,20 +403,34 @@ impl Lexer<'_> {
         (value, i, integer)
     }
 
-    /// Digit groups of exactly three after the first group: `1,000,000`, `5 300`.
-    fn groups(&self, mut i: usize, group_sep: Option<u8>, digits: &mut String) -> (bool, usize) {
+    /// Digit groups of exactly three after the first group: `1,000,000`, `5 300` (also with a
+    /// no-break space).
+    fn groups(&self, mut i: usize, group_seps: &[u8], digits: &mut String) -> (bool, usize) {
         let mut grouped = false;
-        while let Some(b) = self.byte(i) {
-            let is_separator = Some(b) == group_sep || b == b' ';
-            let group_ok = self.digits_from(i + 1) == 3 && !matches!(self.byte(i + 4), Some(b':'));
+        while let Some(c) = self.peek(i) {
+            let is_separator = matches!(c, ' ' | '\u{a0}' | '\u{202f}')
+                || u8::try_from(c).is_ok_and(|b| group_seps.contains(&b));
+            let group_at = i + c.len_utf8();
+            let group_ok = self.digits_from(group_at) == 3 && !matches!(self.byte(group_at + 3), Some(b':'));
             if !is_separator || !group_ok {
                 break;
             }
-            digits.push_str(&self.s[i + 1..i + 4]);
-            i += 4;
+            digits.push_str(&self.s[group_at..group_at + 3]);
+            i = group_at + 3;
             grouped = true;
         }
         (grouped, i)
+    }
+
+    /// The end of a run of digits and separators (`1.2.3`, `3:4`).
+    fn run_end(&self, mut i: usize) -> usize {
+        loop {
+            let continues = self.digit_at(i) || (is_separator(self.byte(i)) && self.digit_at(i + 1));
+            if !continues {
+                return i;
+            }
+            i += 1;
+        }
     }
 }
 
@@ -421,6 +461,11 @@ mod tests {
         assert_eq!(numbers("1,000,000", NumberStyle::English), [1e6]);
         assert_eq!(numbers("5 300", NumberStyle::English), [5300.0]);
         assert_eq!(numbers("1 2", NumberStyle::English), [1.0, 2.0]);
+        assert_eq!(numbers("3,25", NumberStyle::English), [3.25]);
+        assert_eq!(numbers("1,000", NumberStyle::Plain), [1000.0]);
+        assert_eq!(numbers("5\u{a0}300", NumberStyle::English), [5300.0]);
+        assert_eq!(kinds("3:4", NumberStyle::English), [RawKind::Other]);
+        assert_eq!(kinds("1.2.3", NumberStyle::English), [RawKind::Other]);
         assert_eq!(numbers("2.5E-4", NumberStyle::English), [2.5e-4]);
         assert_eq!(numbers("1.234,5", NumberStyle::German), [1234.5]);
         assert_eq!(numbers("1,5", NumberStyle::German), [1.5]);
@@ -439,11 +484,21 @@ mod tests {
         assert_eq!(kinds("2pm", NumberStyle::English), [t(14, 0)]);
         assert_eq!(kinds("12am", NumberStyle::English), [t(0, 0)]);
         assert_eq!(kinds("14:30", NumberStyle::English), [t(14, 30)]);
+        assert_eq!(kinds("24:00", NumberStyle::English), [t(0, 0)]);
+        assert_eq!(
+            kinds("2 Pm", NumberStyle::English).len(),
+            2,
+            "Pm is petametres, not pm"
+        );
         let d = |y, m, day| RawKind::Date(NaiveDate::from_ymd_opt(y, m, day).expect("valid"));
         assert_eq!(kinds("2026-03-12", NumberStyle::English), [d(2026, 3, 12)]);
         assert_eq!(kinds("12.03.2026", NumberStyle::German), [d(2026, 3, 12)]);
         assert_eq!(kinds("3/12/2026", NumberStyle::English), [d(2026, 3, 12)]);
         assert_eq!(kinds("3/12/2026", NumberStyle::German), [d(2026, 12, 3)]);
+        assert_eq!(
+            kinds("2026-03-12T14:30", NumberStyle::English),
+            [d(2026, 3, 12), t(14, 30)]
+        );
     }
 
     #[test]
