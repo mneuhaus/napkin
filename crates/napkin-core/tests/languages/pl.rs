@@ -6,12 +6,12 @@ use crate::Expect::{Nothing, Text};
 use crate::{Table, assert_table};
 
 const POLISH: Table = &[
-    // Operators and conversion (`z` is plus between numbers, `of` after a percentage)
+    // Operators and conversion
     (
         &[
             "5 plus 3",
             "5 i 3",
-            "5 z 3",
+            "5 dodać 3",
             "10 minus 3",
             "10 bez 4",
             "3 razy 4",
@@ -82,7 +82,7 @@ const POLISH: Table = &[
             "20 procent z 50",
             "20% z 50",
             "20 % od 50",
-            "10 % do 50",
+            "10 % narzut na 50",
             "10 % więcej niż 50",
             "10 % mniej niż 50",
             "6 % rabatu od 40 €",
@@ -103,7 +103,7 @@ const POLISH: Table = &[
         &[
             "25 jako % z 50",
             "25 jako procent od 50",
-            "75 jako % wzrostu do 50",
+            "75 jako % wzrostu od 50",
             "25 jako % zmniejszenia z 50",
         ],
         &[Text("50%"), Text("50%"), Text("50%"), Text("50%")],
@@ -111,9 +111,9 @@ const POLISH: Table = &[
     (
         &[
             "20 % z czego jest 10",
-            "20 % którego jest 10",
-            "25 % po dodaniu to 125",
-            "20 % po odjęciu to 80",
+            "20 % z czego to 10",
+            "25 % po dodaniu czego jest 125",
+            "20 % po odjęciu czego jest 80",
         ],
         &[Text("50"), Text("50"), Text("100"), Text("100")],
     ),

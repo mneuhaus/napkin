@@ -2,9 +2,9 @@
 
 # Arithmetic
 plus = pluss, og, med, lagt til, addert med
-minus = fratrukket, trukket fra, subtrahert med, subtrahert, uten
-times = ganger, gange, ganget med, multiplisert med, multiplisert, multiplikert med, multiplikert
-divide = delt på, delt med, dele på, dele med, dividert med, dividert, dele
+minus = fratrukket, trukket fra, uten
+times = ganger, gange, ganget med, multiplisert med, multiplisert
+divide = delt på, delt med, dividert med, dividert
 per = pr{,.}
 modulo = modulo
 convert = i, til, som, omregnet til
@@ -36,16 +36,16 @@ yesterday = i går, igår
 day.2 = i overmorgen, overmorgen
 day.-2 = i forgårs, forgårs
 now = nå, tid, klokka, klokken
-local = lokal, lokal tid, lokaltid, lokal tidssone, lokal tidsone
+local = lokal, lokal tid, lokaltid, lokal tidssone
 midnight = midnatt
 
 # Document references
 prev = forrige, foregående
-sum = summer, total, totalt, i alt
-average = gjennomsnitt, gj.snitt, gj. snitt, gj snitt, snitt, middelverdi
+sum = total, totalt, i alt
+average = gjennomsnitt, gj.snitt, snitt, middelverdi
 
 # Functions and formats
-function.sqrt = kvadratrot, andrerot, rot
+function.sqrt = kvadratrot, rot
 function.cbrt = kubikkrot, tredjerot
 function.round = avrund, avrundet
 function.abs = absoluttverdi
@@ -67,7 +67,6 @@ show.h = time | timer
 show.day = dag | dager
 unit.day = døgn
 show.week = uke | uker
-unit.week = u
 show.month = måned | måneder
 unit.month = md{,.}, mnd{,.}
 show.year = år | år
@@ -86,9 +85,8 @@ show.yard = yard | yard
 unit.yard = yards
 show.scandinavian mile = mil | mil
 show.mile = engelsk mil | engelske mil
-unit.mile = amerikansk{,e} mil
 show.nautical mile = nautisk mil | nautiske mil
-unit.nautical mile = sjømil, kvartmil
+unit.nautical mile = sjømil
 show.light year = lysår | lysår
 unit.px = piksler
 
@@ -99,7 +97,7 @@ unit.m2 = kvm
 unit.ha = hektar
 show.are = ar | ar
 show.acre = acre | acre
-unit.acre = acres, åker
+unit.acre = acres
 show.ping = ping | ping
 
 # Volume
@@ -127,7 +125,6 @@ show.stone = stone | stone
 # Temperature, angles, data, speed
 unit.°C = grader celsius, grader C
 unit.°F = grader fahrenheit, grader F
-unit.K = grader K
 unit.° = grad, grader
 unit.rad = radianer
 unit.b = biter
@@ -142,7 +139,7 @@ currency.ISK = islandsk{,e} krone{,r}
 currency.EUR = euro{,s}
 currency.USD = dollar{,s}, amerikansk{,e} dollar{,s}, US-dollar{,s}
 currency.GBP = pund, britisk{,e} pund, pund sterling
-currency.CHF = sveitsisk{,e} franc{,s}, sveitserfranc{,s}, Swiss franc{,s}
+currency.CHF = sveitsisk{,e} franc{,s}, sveitserfranc{,s}
 currency.JPY = japansk{,e} yen
 currency.CNY = kinesisk{,e} yuan
 currency.CAD = kanadisk{,e} dollar{,s}
@@ -150,11 +147,11 @@ currency.AUD = australsk{,e} dollar{,s}
 currency.PLN = polsk{,e} zloty
 currency.CZK = tsjekkisk{,e} koruna
 currency.HUF = ungarsk{,e} forint
-currency.RUB = rubel, rubler, russisk{,e} rub{e,}l{,er}
+currency.RUB = rubel, rubler, russisk{,e} rub{el,ler}
 currency.UAH = ukrainsk{,e} hryvnja
 currency.TRY = tyrkisk{,e} lira
 currency.INR = indisk{,e} rupi{,er}
-currency.CLP = chilensk{,e} peso{,s}, Chilean peso{,s}
+currency.CLP = chilensk{,e} peso{,s}
 
 # Time zones: Norwegian names of cities and countries
 zone.Europe/Oslo = Bergen, Trondheim, Stavanger, Tromsø, Kristiansand, Norge

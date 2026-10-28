@@ -105,8 +105,7 @@ unit.nautical mile = nautičk{u,om} milj{u,om}, morsk{a,e,ih,u} milj{a,e,u}
 show.light year = svjetlosna godina | svjetlosne godine | svjetlosnih godina
 unit.light year = svjetlosn{u,om,im} godin{u,om,ama}
 unit.pt = tačk{a,e,i,u}, točk{a,e,i,u}
-unit.px = piksel{,i,a,ima}, pixel{,i,a}, pixselima, pks
-unit.em = emovi, emova, emovima
+unit.px = piksel{,i,a,ima}
 
 # Area (kvadratni metar, metar na kvadrat)
 square = kvadratn{i,a,ih,og,e,im,u} *, * na kvadrat, kv{,.} *
@@ -114,9 +113,9 @@ unit.ha = hektar{,a,i,e,u,om,ima}
 show.are = ar | ara | ari
 unit.are = ar{u,om,ima}
 show.acre = aker | akera | akera
-unit.acre = aker{i,u,om,ima}, acres
+unit.acre = aker{i,u,om,ima}
 show.ping = ping | pinga | pingova
-unit.ping = píng, pings, píngs, pingovi, píngovi, píngova, pingove, píngove, pingovima, píngovima
+unit.ping = pingov{i,e,ima}
 
 # Volume
 cubic = kubn{i,a,ih,og,e,im,u} *, * na kub
@@ -155,7 +154,7 @@ unit.rad = radijan{,i,a,ima}
 
 # Data, frequency, speed
 unit.b = bit{,a,ovi,ova,ovima}
-unit.B = bajt{,a,ovi,ova,ovima}, byte{,s}
+unit.B = bajt{,a,ovi,ova,ovima}
 unit.Hz = herc{,a,i}
 per.h = na sat, po satu, na čas
 per.min = u minuti, po minuti, na minutu
@@ -173,7 +172,7 @@ currency.BAM = KM, mark{a,e,i,u,ama}, maraka, konvertibiln{a,e,ih,u,oj,im} mark{
 currency.EUR = euro, eur{a,i,e,u,ima}, evr{o,a,i,e,u,ima}
 currency.USD = dolar{,a,i,e,u,ima}, američk{i,a,ih,im,og} dolar{,a,i,e,ima}, US dolar{,a,i}
 currency.GBP = funt{a,e,i,u,ama}, britansk{a,e,ih,im,u} funt{a,e,i,u,ama}, funt{a,e,i} sterling{,a}
-currency.CHF = {švicarsk,švajcarsk}{i,a,ih,im,og} fran{ak,ka,ci,aka,cima}, fran{ak,ka,ci,aka,cima}, SFr{,.}
+currency.CHF = {švicarsk,švajcarsk}{i,a,ih,im,og} fran{ak,ka,ci,aka,cima}, fran{ak,ka,ci,aka,cima}
 currency.HRK = hrvatsk{a,e,ih,im,u} kun{a,e,u,ama}, kun{a,e,u,ama}
 currency.RSD = {srbijansk,srpsk}{i,a,ih,im,e,og} dinar{,a,i,e,u,ima}, dinar{,a,i,e,u,ima}
 currency.MKD = makedonsk{i,a,ih,im} denar{,a,i,ima}, denar{,a,i}
@@ -189,7 +188,7 @@ currency.SEK = švedsk{a,e,ih,u} krun{a,e,i,u,ama}, švedskih kruna
 currency.NOK = norvešk{a,e,ih,u} krun{a,e,i,u,ama}, norveških kruna
 currency.DKK = dansk{a,e,ih,u} krun{a,e,i,u,ama}, danskih kruna
 currency.HUF = forint{,a,i,ima}, mađarsk{i,a,ih} forint{,a,i}
-currency.BTC = bitcoin{,a,i,ima,ovi,ova,ovima}, bitcons, Bitcoins, B⃦
+currency.BTC = bitcoin{,a,i,ima,ovi,ova,ovima}
 
 # Time zones: Bosnian names of cities and countries (with the locative, `u Sarajevu`)
 zone.Europe/Sarajevo = Sarajev{o,a,u}, Banj{a,oj} Luk{a,e,ci}, Banjaluk{a,e}, Banjaluci, Mostar{,a,u}, Tuzl{a,e,i},

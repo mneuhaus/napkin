@@ -12,7 +12,13 @@ const DUTCH: Table = &[
         &[Text("12"), Text("4"), Text("21"), Text("3")],
     ),
     (
-        &["5 en 3", "5 met 3", "10 minder 3", "10 zonder 4", "5 € met 2 €"],
+        &[
+            "5 en 3",
+            "5 vermeerderd met 3",
+            "10 minder 3",
+            "10 verminderd met 4",
+            "5 € opgeteld bij 2 €",
+        ],
         &[Text("8"), Text("8"), Text("7"), Text("6"), Text("€ 7")],
     ),
     // `min` subtracts only between two operands and stays minutes otherwise
@@ -21,7 +27,12 @@ const DUTCH: Table = &[
         &[Text("7"), Text("10 min"), Text("70 min"), Text("4"), Text("3")],
     ),
     (
-        &["5 inch naar cm", "5 inch in cm", "1 mijl als km", "1 m op cm"],
+        &[
+            "5 inch naar cm",
+            "5 inch in cm",
+            "1 mijl als km",
+            "1 m omgerekend naar cm",
+        ],
         &[Text("12,7 cm"), Text("12,7 cm"), Text("1,61 km"), Text("100 cm")],
     ),
     (
@@ -64,7 +75,7 @@ const DUTCH: Table = &[
         &[
             "20 % van wat is 10",
             "25 % bij wat is 125",
-            "20 % afgetrokken wat is 80",
+            "20 % afgetrokken van wat is 80",
         ],
         &[Text("50"), Text("100"), Text("100")],
     ),
@@ -223,7 +234,7 @@ const DUTCH: Table = &[
         ],
     ),
     (
-        &["1 seconde", "10 sec", "1 week", "2 weken", "1 jaar", "3 j"],
+        &["1 seconde", "10 sec", "1 week", "2 weken", "1 jaar", "3 jr"],
         &[
             Text("1 seconde"),
             Text("10 seconden"),
@@ -368,7 +379,7 @@ const AFRIKAANS: Table = &[
             "3 maal 4",
             "8 gedeel deur 2",
             "5 en 3",
-            "10 sonder 4",
+            "10 verminder met 4",
             "5 duim na cm",
         ],
         &[Text("12"), Text("4"), Text("8"), Text("6"), Text("12,7 cm")],

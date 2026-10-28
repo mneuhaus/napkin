@@ -8,7 +8,7 @@ divide = divideret med, delt med, divideret, delt
 per = pr{,.}
 modulo = modulo
 convert = i, til, som, omregnet til
-assign = er lig med, er lig, lig med, er, giver
+assign = er lig med, lig med, er
 
 # Percentages
 percent = procent, pct{,.}
@@ -25,7 +25,7 @@ what-is.off = fratrukket hvad er, rabat på hvad er
 # Scales (long scale: milliard = 10^9, billion = 10^12)
 scale.1e3 = tusind{,e}
 scale.1e6 = million{,er}, mio{,.}
-scale.1e9 = milliard{,er}, mia{,.}, mdr{,.}
+scale.1e9 = milliard{,er}, mia{,.}
 scale.1e12 = billion{,er}
 scale.1e15 = billiard{,er}
 
@@ -66,7 +66,7 @@ show.day = dag | dage
 unit.day = døgn
 show.week = uge | uger
 show.month = måned | måneder
-unit.month = monthes, md{,.}, mdr{,.}
+unit.month = md{,.}, mdr{,.}
 show.year = år | år
 show.decade = årti | årtier
 show.century = århundrede | århundreder
@@ -86,7 +86,7 @@ show.mile = engelsk mil | engelske mil
 unit.mile = mile, miles
 show.nautical mile = sømil | sømil
 show.light year = lysår | lysår
-unit.pt = point{,s}, punkt{,er}
+unit.pt = punkt{,er}
 unit.px = pixel{,s}
 
 # Area
@@ -105,9 +105,9 @@ show.cubic = kubik*
 unit.l = liter
 show.cup = kop | kopper
 show.tablespoon = spiseske | spiseskeer
-unit.tablespoon = spsk{,.}, table spoon{,s}
+unit.tablespoon = spsk{,.}
 show.teaspoon = teske | teskeer
-unit.teaspoon = tsk{,.}, tea spoon{,s}
+unit.teaspoon = tsk{,.}
 show.pint = pint | pints
 show.gallon = gallon | gallons
 show.quart = quart | quarts
@@ -118,7 +118,6 @@ show.pound = pund | pund
 show.ounce = ounce | ounces
 unit.ounce = unse{,r}
 show.centner = centner | centner
-unit.centner = centners, quintals, hkg
 show.carat = karat | karat
 show.stone = stone | stone
 
@@ -146,11 +145,11 @@ currency.AUD = australsk{,e} dollar{,s}
 currency.PLN = polsk{,e} zloty
 currency.CZK = tjekkisk{,e} koruna, tjekkisk{,e} kron{e,er}
 currency.HUF = ungarsk{,e} forint
-currency.RUB = rubel, rubler, russisk{,e} rub{e,}l{,er}
+currency.RUB = rubel, rubler, russisk{,e} rub{el,ler}
 currency.UAH = ukrainsk{,e} hryvnia
 currency.TRY = tyrkisk{,e} lira
 currency.INR = indisk{,e} rupee{,s}
-currency.BYN = hviderussisk{,e} rub{e,}l{,er}
+currency.BYN = hviderussisk{,e} rub{el,ler}
 currency.AED = UAE-dirham
 currency.AFN = afghani
 currency.ALL = lek, albansk{,e} lek

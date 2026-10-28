@@ -40,9 +40,14 @@ const SPANISH: Table = &[
             "5 pulgadas en cm",
             "5 pulgadas a cm",
             "1 milla como km",
-            "1 milla para km",
+            "1 km convertido a millas",
         ],
-        &[Text("12,7 cm"), Text("12,7 cm"), Text("1,61 km"), Text("1,61 km")],
+        &[
+            Text("12,7 cm"),
+            Text("12,7 cm"),
+            Text("1,61 km"),
+            Text("0,62 millas"),
+        ],
     ),
     (
         &["60 km por hora", "120 km / 2 horas"],
@@ -77,7 +82,7 @@ const SPANISH: Table = &[
     (
         &[
             "25 como % de 50",
-            "75 como % incremento de 50",
+            "75 como incremento porcentual de 50",
             "25 como un % de descuento de 50",
             "0,25 como %",
             "0,25 en %",
@@ -87,7 +92,7 @@ const SPANISH: Table = &[
     (
         &[
             "20 % de qué es 10",
-            "25 % sobre lo que es 125",
+            "25 % sobre qué es 125",
             "20 % de descuento sobre qué es 80",
         ],
         &[Text("50"), Text("100"), Text("100")],

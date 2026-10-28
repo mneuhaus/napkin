@@ -2,30 +2,24 @@
 
 # Arithmetic. `min` is both minus and minutes: as a contested word it subtracts only between two
 # operands (`10 min 3` = 7) and stays minutes otherwise (`10 min`, `1 uur 10 min`).
-plus = en, met, opgeteld bij, opgeteld met, vermeerderd met
-minus = min, minder, zonder, aftrekken, trek af, afgetrokken met, verminderd met
-times = maal, keer, vermenigvuldigd met, vermenigvuldigen met, vermenigvuldigt met,
-    vermenigvuldigen, vermenigvuldigt, vermenigvuldig met
-# Truncations of `vermenigvuldigen` that mean nothing else
-times = vermen, vvuld, vuld, vuldig
-divide = gedeeld door, gedeeld, delen door, deel door, delen, deel
+plus = en, opgeteld bij, opgeteld met, vermeerderd met
+minus = min, minder, afgetrokken met, verminderd met
+times = maal, keer, vermenigvuldigd met, vermenigvuldig met
+divide = gedeeld door, gedeeld, delen door
 modulo = modulo
-# `op` also means `on` after a percentage (`5% op 30`); as a contested word it converts only when
-# a unit, currency, zone or format follows (`1 m op cm`).
-convert = naar, als, zoals, omgerekend naar, omgerekend in, uitgedrukt in, aan, op, voor
-assign = is gelijk aan, zijn gelijk aan, is gelijk, zijn gelijk, gelijk aan, gelijk, is, zijn,
-    bedraagt
+convert = naar, als, omgerekend naar, omgerekend in, uitgedrukt in
+assign = is gelijk aan, zijn gelijk aan, gelijk aan, is, zijn, bedraagt
 
 # Percentages
-percent = procent, pct{,.}, pc{,.}
-percent.of = van, uit
+percent = procent, pct{,.}
+percent.of = van
 percent.on = bij, erbij, erbovenop, bovenop, op, opslag op
 percent.off = afgetrokken van, korting op, korting van, af van, eraf
-as-percent.of = {als,in} {%,procent,percentage,een percentage,een procent} van
-as-percent.off = als {%,procent,percentage,een percentage,een procent} afgetrokken van
-as-percent.on = als {%,procent,percentage,een percentage,een procent} {bij,erbij}
+as-percent.of = {als,in} {%,procent,percentage} van, als een percentage van
+as-percent.off = als {%,procent,percentage,een percentage} afgetrokken van
+as-percent.on = als {%,procent,percentage,een percentage} {bij,erbij}
 what-is.of = van wat is
-what-is.off = afgetrokken wat is, afgetrokken van wat is
+what-is.off = afgetrokken van wat is
 what-is.on = bij wat is, erbij wat is, op wat is
 
 # Scales (Dutch uses the long scale: miljard = 10^9, biljoen = 10^12)
@@ -43,18 +37,18 @@ day.2 = overmorgen
 day.-2 = eergisteren
 now = nu, tijd, huidige tijd
 local = lokaal, lokale, lokale tijd, lokale tijdzone, plaatselijk, plaatselijke,
-    plaatselijke tijd, plaatselijke tijdzone, locatie
+    plaatselijke tijd, plaatselijke tijdzone
 noon = middag
 midnight = middernacht
 
 # Document references
 prev = vorig{,e}, vorige uitkomst, vorig resultaat
 sum = som, totaal, totale, in totaal, totaalbedrag
-average = gemiddeld{,e}, gem{,.}, gemi, gemd, gemde
+average = gemiddeld{,e}, gem{,.}
 
 # Functions and formats
-function.sqrt = vierkantswortel{,s}, wortel
-function.cbrt = derdemachtswortel, kubieke wortel, kubiekswortel
+function.sqrt = vierkantswortel, wortel
+function.cbrt = derdemachtswortel, kubieke wortel
 function.round = afronden, afgerond
 function.ceil = naar boven afronden, omhoog afronden
 function.floor = naar beneden afronden, omlaag afronden
@@ -71,7 +65,7 @@ format.sci = wetenschappelijk, wetenschappelijke notatie
 
 # Time
 show.s = seconde | seconden
-unit.s = secondes, sec{,.}, secs, secn
+unit.s = secondes, sec{,.}
 show.min = minuut | minuten
 unit.min = min.
 show.h = uur | uur
@@ -80,9 +74,9 @@ show.day = dag | dagen
 unit.day = etmaal, etmalen
 show.week = week | weken
 show.month = maand | maanden
-unit.month = md{,.}, mnd{,.}
+unit.month = mnd{,.}
 show.year = jaar | jaar
-unit.year = jaren, j, jr{,.}
+unit.year = jaren, jr{,.}
 show.decade = decennium | decennia
 unit.decade = decenniën
 show.century = eeuw | eeuwen
@@ -92,18 +86,18 @@ unit.m = meter{,s}
 show.inch = inch | inch
 unit.inch = duim{,en}, inches, ″
 show.foot = voet | voet
-unit.foot = voeten, vt{,.}
+unit.foot = voeten
 show.yard = yard | yard
 unit.yard = yards
 show.mile = mijl | mijl
-unit.mile = mijlen, mj{,.}
+unit.mile = mijlen
 show.nautical mile = zeemijl | zeemijl
 unit.nautical mile = zeemijlen, NM
 show.league = league | league
-unit.league = leagues, leuga{,'s}
+unit.league = leagues
 show.furlong = furlong | furlong
 show.chain = chain | chain
-unit.chain = chains, ch
+unit.chain = chains
 show.cable = kabellengte | kabellengte
 unit.cable = kabellengten, kabellengtes, kabel{,s}
 show.hand = hand | hand
@@ -112,7 +106,7 @@ unit.light year = lichtjaren, lj
 unit.pt = punt{,en}
 
 # Area
-square = vierkante *, vierkant *, vrknt *
+square = vierkante *
 show.square = vierkante *
 unit.ha = hectare{,n,s}
 show.are = are | are
@@ -122,17 +116,16 @@ unit.acre = acres
 show.ping = ping | ping
 
 # Volume
-cubic = kubieke *, kubiek *, kub{,.} *, kbk *
+cubic = kubieke *
 show.cubic = kubieke *
 unit.l = liter{,s}
-unit.inch3 = kd, ki, KI
 unit.cm3 = cc
 show.cup = kop | koppen
 unit.cup = kopje{,s}
 show.tablespoon = eetlepel | eetlepels
-unit.tablespoon = el, EL, etpl{,.}, tbl, tbs
+unit.tablespoon = el, EL
 show.teaspoon = theelepel | theelepels
-unit.teaspoon = tl, TL, tlp{,.}, tpl{,.}
+unit.teaspoon = tl, TL
 show.quart = quart | quart
 unit.quart = quarts
 show.pint = pint | pint
@@ -147,210 +140,189 @@ unit.hg = ons, onsen
 unit.kg = kilo{,'s}
 unit.t = ton{,nen}, metrieke ton{,nen}
 show.stone = stone | stone
-unit.stone = stones, steen, stenen
+unit.stone = stones
 show.carat = karaat | karaat
-unit.carat = karaten, ct{,.}, crt{,.}, krt{,.}
+unit.carat = karaten, ct{,.}, krt{,.}
 show.pound = pond | pond
 unit.pound = ponden, pd{,.}
 show.centner = kwintaal | kwintaal
-unit.centner = kwintalen, quintaal, quintalen, qtl
+unit.centner = kwintalen
 show.ounce = ounce | ounce
 unit.ounce = ounces
 
 # Temperature, angles, speed
-unit.°C = graden Celsius, graad Celsius, ºC
-unit.°F = Fahrenheits, graden Fahrenheit, graad Fahrenheit, ºF
+unit.°C = graden Celsius, graad Celsius
+unit.°F = graden Fahrenheit, graad Fahrenheit
 unit.K = graden Kelvin
-unit.° = graad, graden, booggraad, booggraden, º
+unit.° = graad, graden, booggraad, booggraden
 unit.rad = radiaal, radialen, rad.
 unit.km/h = km/u, kilometer per uur
 show.knot = knoop | knopen
 
 # Currencies: the region's and the major ones first, then the rest of the world by name
 currency.EUR = euro's
-currency.USD = Amerikaanse dollar{,s}, {US,USA,VS,VSA}{-, }dollar{,s}, US$
-currency.GBP = pond{,en}, Britse pond{,en}, Brits pond, pond{,en} sterling, sterling,
-    {Verenigd Koninkrijk,Groot-Brittannië,Groot-Brittannie}{-, }{pond,pond sterling,sterling}, ￡
-currency.CHF = Zwitserse frank{,en}, Zwitserland{-, }frank{,en}, frank{,en}, Fr{,.}, SFr{,.}
-currency.JPY = Japanse yen, Japan{-, }yen, 円
-currency.CAD = Canadese dollar{,s}, Canada{-, }dollar{,s}, C$, CA$
-currency.AUD = Australische dollar{,s}, Australi{ë,e}{-, }dollar{,s}, $A, AU $, AU$
-currency.CNY = Chinese {renminbi,yuan}, renminbi, yuan, RMB, 人民幣, 人民币
-currency.SEK = Zweedse kro{on,nen}, Zweden{-, }kro{on,nen}
-currency.NOK = Noorse kro{on,nen}, Noorwegen{-, }kro{on,nen}
-currency.DKK = Deense kro{on,nen}, Denemarken{-, }kro{on,nen}, dansk krone, donsk króna,
-    danskinut koruuni, kr.
-currency.ISK = IJslandse kro{on,nen}, IJsland{-, }kro{on,nen}
-currency.PLN = Poolse z{ł,l}oty{,'s}, Polen{-, }z{ł,l}oty, z{ł,l}oty, zl, zł
-currency.CZK = Tsjechische kro{on,nen}, koruna{,s}, Kč
+currency.USD = Amerikaanse dollar{,s}, US{-, }dollar{,s}, US$
+currency.GBP = pond{,en}, Britse pond{,en}, Brits pond, pond{,en} sterling, sterling
+currency.CHF = Zwitserse frank{,en}, frank{,en}, Fr{,.}, SFr{,.}
+currency.JPY = Japanse yen
+currency.CAD = Canadese dollar{,s}, C$, CA$
+currency.AUD = Australische dollar{,s}, AU$
+currency.CNY = Chinese {renminbi,yuan}, renminbi, yuan, RMB
+currency.SEK = Zweedse kro{on,nen}
+currency.NOK = Noorse kro{on,nen}
+currency.DKK = Deense kro{on,nen}, kr.
+currency.ISK = IJslandse kro{on,nen}
+currency.PLN = Poolse z{ł,l}oty{,'s}, z{ł,l}oty, zl, zł
+currency.CZK = Tsjechische kro{on,nen}, Kč
 currency.HUF = Hongaarse forint{,en,s}, forint{,en}
-currency.RON = Roemeense {leu,lei}, Roemeni{ë,e}{-, }{leu,lei}, leu, lei
-currency.BGN = Bulgaarse lev{,a}, Bulgarije{-, }lev{,a}, lev{,a}, Lv, лев, лв{,.}
-currency.HRK = Kroatische kuna, Kroati{ë,e}{-, }kuna, kuna
-currency.RSD = Servische dinar{,s}, Servi{ë,e}{-, }dinar{,s}
-currency.MKD = Macedonische denar{,s}, Macedoni{ë,e}{-, }denar, denar{,s}, den{,.}
-currency.ALL = Albanese lek{,ë}, Albani{ë,e}{-, }lek{,ë}, lek{,ë}
-currency.BAM = Bosnische {inwisselbare,converteerbare,inwisselbare converteerbare} mark,
-    {converteerbare,inwisselbare} mark, maraka, marka, KM
-currency.MDL = Moldavische {leu,lei}, Moldavi{ë,e}{-, }{leu,lei}
-currency.UAH = Oekraïense {grivna,grivnya,hryvnja,hryvnia}, grivna, grivnya, hryvnja, grn
-currency.BYN = Wit{-, }Russische roebel{,s}, Wit{-, }Rusland{-, }roebel, Belarussische roebel{,s}
-currency.RUB = Russische roebel{,s}, Rusland{-, }roebel{,s}, roebel{,s}
+currency.RON = Roemeense {leu,lei}, leu, lei
+currency.BGN = Bulgaarse lev{,a}, lev{,a}, лв{,.}
+currency.HRK = Kroatische kuna, kuna
+currency.RSD = Servische dinar{,s}
+currency.MKD = Macedonische denar{,s}, denar{,s}
+currency.ALL = Albanese lek, lek
+currency.BAM = Bosnische {inwisselbare,converteerbare} mark, {converteerbare,inwisselbare} mark, KM
+currency.MDL = Moldavische {leu,lei}
+currency.UAH = Oekraïense {hryvnja,hryvnia}, hryvnja, grn
+currency.BYN = Wit-Russische roebel{,s}, Belarussische roebel{,s}
+currency.RUB = Russische roebel{,s}, roebel{,s}
 currency.TRY = Turkse lira{,'s}
-currency.GEL = Georgische lari, Georgi{ë,e}{-, }lari, lari
-currency.AMD = Armeense dram, Armeni{ë,e}{-, }dram, dram
-currency.AZN = Azerbeidzjaanse manat, Azerbeidzjan{-, }manat, manat
-currency.ANG = Antilliaanse gulden{,s}, Nederlandse Antillen{-, }gulden{,s}, gulden{,s}, NAƒ
-currency.AWG = Arubaanse {florin,florijn}{,s}, Aruba{-, }{florin,florijn}, Afl{,.}
-currency.SRD = Surinaamse dollar{,s}, Suriname{-, }dollar{,s}
+currency.GEL = Georgische lari, lari
+currency.AMD = Armeense dram, dram
+currency.AZN = Azerbeidzjaanse manat, manat
+currency.ANG = Antilliaanse gulden{,s}, gulden{,s}, NAƒ
+currency.AWG = Arubaanse {florin,florijn}{,s}, Afl{,.}
+currency.SRD = Surinaamse dollar{,s}
 
 # Americas
-currency.MXN = Mexicaanse peso{,'s}, Mexico{-, }peso{,'s}
-currency.ARS = Argentijnse peso{,'s}, Argentini{ë,e}{-, }peso{,'s}, arg{,.} $
-currency.BRL = Braziliaanse real{,s}, Brazili{ë,e}{-, }real, real, R$
-currency.CLP = Chileense peso{,'s}, Chili{-, }peso{,'s}, chil$
-currency.COP = Colombiaanse peso{,'s}, Colombia{-, }peso{,'s}, COL$
-currency.CUP = Cubaanse peso{,'s}, Cuba{-, }peso{,'s}, $MN
+currency.MXN = Mexicaanse peso{,'s}
+currency.ARS = Argentijnse peso{,'s}
+currency.BRL = Braziliaanse real{,s}, real, R$
+currency.CLP = Chileense peso{,'s}
+currency.COP = Colombiaanse peso{,'s}, COL$
+currency.CUP = Cubaanse peso{,'s}
 currency.CUC = {Cubaanse ,}convertibele peso{,'s}
 currency.DOP = Dominicaanse peso{,'s}, RD$
-currency.UYU = Uruguayaanse peso{,'s}, Uruguay{-, }peso{,'s}, $S, U$, $U
-currency.PEN = Peruviaanse {sol,soles,nieuwe sol,nieuwe soles,nuevo sol,nuevos soles},
-    nieuwe sol{,es}, nuevo sol, nuevos soles, S/., Sl/.
-currency.BOB = Boliviaanse boliviano{,'s}, Bolivia{-, }boliviano, boliviano{,'s}, Bs
-currency.PYG = Paraguayaanse guarani{,'s}, Paraguay{-, }guarani, guarani{,'s}, ₲
-currency.CRC = Costa Ricaanse col{o,ó}n{,es}, Costa Rica{-, }col{o,ó}n, ₡
+currency.UYU = Uruguayaanse peso{,'s}, $U
+currency.PEN = Peruviaanse {sol,nieuwe sol}, nieuwe sol, S/.
+currency.BOB = Boliviaanse boliviano{,'s}, boliviano{,'s}, Bs
+currency.PYG = Paraguayaanse guarani{,'s}, guarani{,'s}, ₲
+currency.CRC = Costa Ricaanse col{o,ó}n{,es}, ₡
 currency.NIO = Nicaraguaanse c{ó,o}rdoba{,s}, c{ó,o}rdoba{,s}
-currency.GTQ = Guatemalteekse quetzal{,s}, Guatema{la,lta}{-, }quetzal, quetzal{,s}
-currency.HNL = Hondurese lempira{,s}, Honduras{-, }lempira{,s}, lempira{,s}
-currency.PAB = Panamese balboa{,'s}, Panama{-, }balboa, balboa{,'s}, B/.
-currency.HTG = Haïtiaanse gourde{,s}, Haïti{-, }gourde, gourde{,s}, Gde
-currency.JMD = Jamaicaanse dollar{,s}, Jamaica{-, }dollar{,s}, J$
-currency.BBD = Barbadiaanse dollar{,s}, Barbados{-, }dollar{,s}, Bds$
-currency.BSD = Bahamaanse dollar{,s}, {Bahama's,Bahamas}{-, }dollar{,s}
-currency.BZD = Belizaanse dollar{,s}, Belize{-, }dollar{,s}, BZ$
-currency.BMD = Bermudaanse dollar{,s}, Bermuda{-, }dollar{,s}
-currency.KYD = {Caymaneilandse,Kaaimaneilandse} dollar{,s},
-    {Caymaneilanden,Kaaimaneilanden}{-, }dollar{,s}
-currency.TTD = Trinidad en Tobago{-, }dollar{,s}, Trinidad en Tobagodollar, TT$
-currency.XCD = Oost{-, }Caribische dollar{,s},
-    {Caraïben,Caraïbische eilanden,Caribisch gebied}{-, }dollar{,s}, EC$
-currency.GYD = Guyaanse dollar{,s}, Guyana{-, }dol{,l}ar{,s}, G$
-currency.FKP = Falklandeilands{,e} {pond,pond sterling,sterling},
-    Falklandeilanden{-, }{pond,pond sterling,sterling}
+currency.GTQ = Guatemalteekse quetzal{,s}, quetzal{,s}
+currency.HNL = Hondurese lempira{,s}, lempira{,s}
+currency.PAB = Panamese balboa{,'s}, balboa{,'s}, B/.
+currency.HTG = Haïtiaanse gourde{,s}, gourde{,s}, Gde
+currency.JMD = Jamaicaanse dollar{,s}, J$
+currency.BBD = Barbadiaanse dollar{,s}, Bds$
+currency.BSD = Bahamaanse dollar{,s}
+currency.BZD = Belizaanse dollar{,s}, BZ$
+currency.BMD = Bermudaanse dollar{,s}
+currency.KYD = {Caymaneilandse,Kaaimaneilandse} dollar{,s}
+currency.TTD = Trinidad en Tobago-dollar{,s}, Trinidad en Tobagodollar, TT$
+currency.XCD = Oost-Caribische dollar{,s}, EC$
+currency.GYD = Guyaanse dollar{,s}, G$
+currency.FKP = Falklandeilands{,e} pond
 
 # Africa
-currency.ZAR = Zuid{-, }Afrikaanse{-, }rand, Zuid{-, }Afrika{-, }rand
-currency.EGP = Egyptisch{,e} {pond,pond sterling,sterling}, Egypte{-, }{pond,pond sterling,sterling}, LE
-currency.MAD = Marokkaanse dirham{,s}, Marokko{-, }dirham{,s}, Dh
-currency.DZD = Algerijnse dinar{,s}, Algerije{-, }dinar{,s}, DA
-currency.TND = Tunesische dinar{,s}, Tunesi{ë,e}{-, }dinar{,s}
-currency.LYD = Libische dinar{,s}, {Libië,Lybië}{-, }dinar{,s}, Ld, LD
+currency.ZAR = Zuid-Afrikaanse rand
+currency.EGP = Egyptisch{,e} pond, LE
+currency.MAD = Marokkaanse dirham{,s}, Dh
+currency.DZD = Algerijnse dinar{,s}, DA
+currency.TND = Tunesische dinar{,s}
+currency.LYD = Libische dinar{,s}, LD
 currency.NGN = Nigeriaanse naira, naira, ₦
-currency.GHS = Ghanese cedi{,'s}, Ghana{-, }cedi{,'s}, cedi{,'s}, GH₵
-currency.KES = Keniaanse shilling{,s}, Kenia{-, }shilling{,s}, Ksh
-currency.TZS = Tanzaniaanse shilling{,s}, Tanzania{-, }shilling{,s}
-currency.UGX = Oegandese shilling{,s}, Oeganda{-, }shilling{,s}, Ush, UGS
-currency.SOS = Somalische shilling{,s}, Somali{ë,e}{-, }shilling{,s}, SoSh
-currency.ETB = Ethiopische birr, Ethiopi{ë,e}{-, }birr, birr, Br
-currency.ERN = Eritrese nakfa, Eritrea{-, }nakfa, nakfa, Nfa, Nfk
-currency.DJF = Djiboutiaanse frank{,en}, Djibouti{-, }frank{,en}, FD, Fdj
-currency.SDG = Soedanees pond, Soedanese pond{,en}, Soedan{-, }pond, Sp, £Sp
-currency.SSP = Zuid{-, }Soedanees {pond,pond sterling,sterling},
-    Zuid{-, }Soedanees-sterling, Zuid{-, }Soedan{-, }{pond,pond sterling,sterling}
-currency.AOA = Angolese kwanza{,'s}, Angola{-, }kwanza, kwanza{,'s}
-currency.NAD = Namibische dollar{,s}, Namibi{ë,e}{-, }dollar{,s}, N$
-currency.BWP = Botswaanse pula, Botswana{-, }pula, pula
-currency.LSL = Lesothaanse {loti,maloti}, Lesotho{-, }{loti,maloti}, loti, maloti
+currency.GHS = Ghanese cedi{,'s}, cedi{,'s}, GH₵
+currency.KES = Keniaanse shilling{,s}, Ksh
+currency.TZS = Tanzaniaanse shilling{,s}
+currency.UGX = Oegandese shilling{,s}, Ush
+currency.SOS = Somalische shilling{,s}
+currency.ETB = Ethiopische birr, birr, Br
+currency.ERN = Eritrese nakfa, nakfa, Nfk
+currency.DJF = Djiboutiaanse frank{,en}, Fdj
+currency.SDG = Soedanees pond, Soedanese pond{,en}
+currency.SSP = Zuid-Soedanees pond
+currency.AOA = Angolese kwanza{,'s}, kwanza{,'s}
+currency.NAD = Namibische dollar{,s}, N$
+currency.BWP = Botswaanse pula, pula
+currency.LSL = Lesothaanse {loti,maloti}, loti, maloti
 currency.SZL = Swazische {lilangeni,emalangeni}, lilangeni, emalangeni
-currency.MZN = Mozambikaanse {metical,meticais}, Mozambique{-, }{metical,meticais}, metical,
-    meticais, MT
-currency.ZMW = Zambiaanse kwacha, {Zambia,Zambië}{-, }kwacha, ZK
-currency.MWK = Malaw{,a}ische kwacha, Malawi{-, }kwacha, MK
-currency.MGA = Malagassische ariary, {Madagaskar,Malagasië}{-, }ariary, ariary, Ar
-currency.MUR = Mauritiaanse roepie{,s}, Mauritius{-, }roepie{,s}
-currency.SCR = Seychelse roepie{,s}, Seychellen{-, }roepie{,s}, SRe
+currency.MZN = Mozambikaanse {metical,meticais}, metical, meticais, MT
+currency.ZMW = Zambiaanse kwacha, ZK
+currency.MWK = Malawische kwacha, MK
+currency.MGA = Malagassische ariary, ariary, Ar
+currency.MUR = Mauritiaanse roepie{,s}
+currency.SCR = Seychelse roepie{,s}, SRe
 currency.CDF = Congolese frank{,en}
-currency.RWF = Rwandese frank{,en}, Rwanda{-, }frank{,en}, RF
-currency.BIF = Burundese frank{,en}, Burundi{-, }frank{,en}, FBu
-currency.KMF = Comorese frank{,en}, Comoren{-, }frank{,en}
-currency.GNF = Guineese frank{,en}, Guinee{-, }frank{,en}, FG
-currency.GMD = Gambiaanse dalasi, Gambia{-, }dalasi, dalasi
+currency.RWF = Rwandese frank{,en}, RF
+currency.BIF = Burundese frank{,en}, FBu
+currency.KMF = Comorese frank{,en}
+currency.GNF = Guineese frank{,en}, FG
+currency.GMD = Gambiaanse dalasi, dalasi
 currency.SLL = Sierra Leoonse leone{,s}, leone{,s}, Le
-currency.LRD = Liberiaanse dollar{,s}, Liberia{-, }dollar{,s}, L$, Lib$
-currency.CVE = Kaapverdische escudo{,'s}, Kaapverdi{ë,e}{-, }escudo,
-    Kaapverdische Eilanden{-, }escudo, escudo{,'s}, CVEsc, CV Esc{,.}, Esc
-currency.XAF = CFA{-, }frank {BEAC,(BEAC)}, Frank CFA BEAC, Centraal{-, }Afrikaanse CFA{-, }frank
-currency.XOF = CFA{-, }frank {(West-Afrika),West-Afrika,BCEAO},
-    West{-, }Afrikaanse {frank,CFA-frank,CFA frank}
+currency.LRD = Liberiaanse dollar{,s}, L$
+currency.CVE = Kaapverdische escudo{,'s}, escudo{,'s}, Esc
+currency.XAF = CFA{-, }frank BEAC, Centraal-Afrikaanse CFA{-, }frank
+currency.XOF = CFA{-, }frank BCEAO, West-Afrikaanse {frank,CFA-frank,CFA frank}
 
 # Asia and the Middle East
 currency.INR = Indiase roepie{,s}, roepie{,s}
-currency.PKR = Pakistaanse roepie{,s}, Pakistan{-, }roepie{,s}
-currency.NPR = Nepalese roepie{,s}, Nepal{-, }roepie{,s}, NRs, ₨
-currency.LKR = Sri{-, }Lankaanse roepie{,s}, Sri{-, }Lanka{-, }roepie{,s}, SLR, Rs
-currency.MVR = Maldivische {rufiyaa,roepie,roepies}, Maldiven{-, }{rufiyaa,roepie,roepies},
-    rufiyaa, Rf
-currency.BDT = Bengalese taka, Bangladeshi taka, taka, Tk, ৳
-currency.BTN = Bhutaanse ngultrum, Bhutan{-, }ngultrum, ngultrum, Ch.
-currency.IDR = Indonesische {roepia,roepie,roepies,rupiah},
-    Indonesi{ë,e}{-, }{roepia,roepie,roepies,rupiah}, Rp
-currency.MYR = Maleisische ringgit, {Maleisië,Maleizen}{-, }ringgit, ringgit, RM
-currency.SGD = Singaporese dollar{,s}, Singapore{-, }dollar{,s}, S$
+currency.PKR = Pakistaanse roepie{,s}
+currency.NPR = Nepalese roepie{,s}, NRs, ₨
+currency.LKR = Sri Lankaanse roepie{,s}, Rs
+currency.MVR = Maldivische rufiyaa, rufiyaa, Rf
+currency.BDT = Bengalese taka, taka, Tk, ৳
+currency.BTN = Bhutaanse ngultrum, ngultrum
+currency.IDR = Indonesische {roepia,rupiah}, Rp
+currency.MYR = Maleisische ringgit, ringgit, RM
+currency.SGD = Singaporese dollar{,s}, S$
 currency.THB = Thaise baht
-currency.VND = Vietnamese {dong,đồng}, Vietnam{-, }{dong,đồng}, dong, đồng, ₫
-currency.KHR = Cambodjaanse riel{,s}, Cambodja{-, }riel, riel{,s}, CR, ៛
-currency.LAK = Laotiaanse kip, Laos{-, }kip, ₭
-currency.MMK = Myanmarese kyat, Myanmar{-, }kyat, Birmese kyat, kyat, Ks
-currency.PHP = Filipijnse peso{,'s}, {Filipijnen,Filippijnen}{-, }peso{,'s}, ₱
-currency.HKD = Hongkongse dollar{,s}, Hongkong{-, }dollar{,s}, HK$
-currency.MOP = Macause pataca{,'s}, Macau{-, }pataca, pataca{,'s}, MOP$, Pat{,.}, pat{,.}
-currency.TWD = {,nieuwe ,Nieuw }Taiwanese dollar{,s}, Taiwan{-, }dollar{,s}, NT$
-currency.KRW = Zuid{-, }Koreaanse won, Zuid{-, }Korea{-, }won
-currency.KPW = Noord{-, }Koreaanse won, Noord{-, }Korea{-, }won
-currency.MNT = Mongoolse tugrik, Mongoli{ë,e}{-, }tugrik, tugrik, ₮
-currency.KZT = Kazachse tenge, Kazachstan{-, }tenge, tenge
-currency.KGS = Kirgizische som, {Kirgizië,Kirgistan,Kygryztan}{-, }som, KS, K.S., сом, sом,
-    сому
-currency.UZS = Oezbeekse {sum,som,so'm}, Oezbekistan{-, }{sum,som,so'm}
-currency.TJS = Tadzjiekse somoni, Tadzjikistan{-, }{somoni,smoni}, somoni
-currency.TMT = Turkmeense manat, Turkmenistan{-, }manat
-currency.AFN = Afghaanse afghani{,'s}, Afghanistan{-, }afghani, afghani{,'s}, Af.
-currency.IRR = Iraanse {rial,riyal}{,s}, {Iran,iran}{-, }{rial,riyal}, IR, RI
-currency.IQD = Iraakse dinar{,s}, Irak{-, }dinar{,s}, ID
+currency.VND = Vietnamese {dong,đồng}, dong, đồng, ₫
+currency.KHR = Cambodjaanse riel{,s}, riel{,s}, ៛
+currency.LAK = Laotiaanse kip, ₭
+currency.MMK = Myanmarese kyat, Birmese kyat, kyat, Ks
+currency.PHP = Filipijnse peso{,'s}, ₱
+currency.HKD = Hongkongse dollar{,s}, HK$
+currency.MOP = Macause pataca{,'s}, pataca{,'s}, MOP$
+currency.TWD = {,nieuwe }Taiwanese dollar{,s}, NT$
+currency.KRW = Zuid-Koreaanse won
+currency.KPW = Noord-Koreaanse won
+currency.MNT = Mongoolse tugrik, tugrik, ₮
+currency.KZT = Kazachse tenge, tenge
+currency.KGS = Kirgizische som
+currency.UZS = Oezbeekse {sum,som}
+currency.TJS = Tadzjiekse somoni, somoni
+currency.TMT = Turkmeense manat
+currency.AFN = Afghaanse afghani{,'s}, afghani{,'s}, Af.
+currency.IRR = Iraanse {rial,riyal}{,s}
+currency.IQD = Iraakse dinar{,s}
 currency.SYP = Syrisch{,e} pond, S£
-currency.LBP = Libanees {pond,pond sterling,sterling}, Libanese pond{,en},
-    Libanon{-, }{pond,pond sterling,sterling}, L£
-currency.JOD = Jordaanse dinar{,s}, Jordani{ë,e}{-, }dinar{,s}, JD
-currency.ILS = {,nieuwe }Israëlische {,nieuwe }{sjekel,shekel}{,s}, nieuwe {sjekel,shekel}{,s},
-    sjekel{,s}, NIS
-currency.SAR = {Saoedi,Saudi}{-, }Arabische {riyal,rial}{,s}, {Saoedische,Saudische} {riyal,rial}{,s},
-    {Saoedi,Saudi}{-, }Arabië{-, }{riyal,rial}, SR
-currency.AED = {VAE,UAE}{-, }dirham{,s}, Emiraatse dirham{,s}
-currency.QAR = Qatarese {rial,riyal}{,s}, Qatar{-, }{rial,riyal}, QR
-currency.KWD = Koeweitse dinar{,s}, Koeweit{-, }dinar{,s}, KD
-currency.BHD = Bahreinse dinar{,s}, Bahrein{-, }dinar{,s}
-currency.OMR = Omaanse {rial,riyal}{,s}, Oman{-, }{rial,riyal}, RO, OR
-currency.YER = Jemenitische {rial,riyal}{,s}, Jemen{-, }{rial,riyal}, Rl, Y. Rl
-currency.BND = Bruneise dollar{,s}, Brunei{-, }dollar{,s}, B$, BR$
+currency.LBP = Libanees pond, Libanese pond{,en}, L£
+currency.JOD = Jordaanse dinar{,s}, JD
+currency.ILS = Israëlische {,nieuwe }{sjekel,shekel}{,s}, nieuwe Israëlische {sjekel,shekel}{,s},
+    nieuwe {sjekel,shekel}{,s}, sjekel{,s}, NIS
+currency.SAR = Saoedi-Arabische {riyal,rial}{,s}, Saoedische {riyal,rial}{,s}, SR
+currency.AED = VAE{-, }dirham{,s}, Emiraatse dirham{,s}
+currency.QAR = Qatarese {rial,riyal}{,s}, QR
+currency.KWD = Koeweitse dinar{,s}, KD
+currency.BHD = Bahreinse dinar{,s}
+currency.OMR = Omaanse {rial,riyal}{,s}, RO
+currency.YER = Jemenitische {rial,riyal}{,s}
+currency.BND = Bruneise dollar{,s}, B$
 
 # Oceania
-currency.NZD = Nieuw{-, }Zeelandse dollar{,s}, Nieuw{-, }Zeeland{-, }dollar{,s}, NZ$
-currency.FJD = Fiji{-, }dollar{,s}, Fijische dollar{,s}, FJ$
-currency.PGK = Papoea-Nieuw-Guinese kina, Papoea-Nieuw-Guinea{-, }kina, kina
-currency.SBD = {Salomon,Salomonseilanden,Solomoneilanden}{-, }dollar{,s}, Solomon Islands dollar,
-    SI$
-currency.VUV = Vanuatuaanse vatu, Vanuatu{-, }vatu, vatu, Vt, VT
-currency.WST = Samoaanse tala, Samoa{-, }tala, tala, WS$
+currency.NZD = Nieuw-Zeelandse dollar{,s}, NZ$
+currency.FJD = Fijische dollar{,s}, FJ$
+currency.PGK = Papoea-Nieuw-Guinese kina, kina
+currency.SBD = Salomonseilandse dollar{,s}, SI$
+currency.VUV = Vanuatuaanse vatu, vatu, VT
+currency.WST = Samoaanse tala, tala, WS$
 currency.TOP = Tongaanse pa{'a,a}nga, pa{'a,a}nga
-currency.XPF = CFP{-, }frank{,en}, francs pacifiques, CFP
+currency.XPF = CFP{-, }frank{,en}, CFP
 
 # Other territories
-currency.GIP = Gibraltarees {pond,pond sterling,sterling}, Gibraltar{-, }{pond,pond sterling,sterling}
-currency.SHP = Sint{-, }Heleens pond, Sint{-, }Helena{-, }{pond,pond sterling,sterling},
-    Sint{-, }Helena eiland pond
-
-# Crypto
-currency.BTC = B⃦
+currency.GIP = Gibraltarees pond
+currency.SHP = Sint-Heleens pond
 
 # Time zones: Dutch names of cities and countries
 zone.Europe/Amsterdam = Nederland, Holland, Den Haag, 's-Gravenhage, Eindhoven, Groningen

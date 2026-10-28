@@ -4,15 +4,11 @@ base = de
 
 # In Austria a Zentner is 100 kg, and 10 g is a Deka(gramm).
 show.centner = Zentner | Zentner
-unit.centner = zen{,.}, zent{,.}, Ztr{,.}, q
+unit.centner = Ztr{,.}
 unit.dag = Deka, dkg
 month.1 = Jänner, Jän{,.}
 month.2 = Feber
 months = Jän., Feb., März, Apr., Mai, Juni, Juli, Aug., Sep., Okt., Nov., Dez.
-
-# Misspellings that cannot mean anything else
-unit.s = Skeunden
-unit.teaspoon = Teëlöffel
 
 # Display
 money = {sign} {amount}

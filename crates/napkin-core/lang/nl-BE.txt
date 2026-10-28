@@ -2,11 +2,9 @@
 
 base = nl
 
-# `u` is the Flemish hour (`2 u`) and stands between hours and minutes in times (`14u30`);
-# `vorg` is a common slip for `vorige`.
+# `u` is the Flemish hour (`2 u`) and stands between hours and minutes in times (`14u30`).
 unit.h = u
 hour-mark = u
-prev = vorg
 
 # Flemish names of Belgian and French cities
 zone.Europe/Brussels = Bergen, Namen, Doornik, Kortrijk, Mechelen, Hasselt, Oostende

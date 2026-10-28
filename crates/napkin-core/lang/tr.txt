@@ -32,14 +32,14 @@ tomorrow = yarın, yarin
 yesterday = dün, dun
 day.2 = öbür gün, obur gun, yarından sonra
 day.-2 = evvelki gün, evvelsi gün, önceki gün, dünden önce
-now = şimdi, simdi, şu an, su an, şu anda, zaman, saati
+now = şimdi, simdi, şu an, su an, şu anda, saati
 local = yerel, yerel saat, yerel saat dilimi, yerel zaman
 noon = öğle, öğlen, ogle, oglen
 midnight = gece yarısı, gece yarisi
 
 # Document references
 prev = önceki, onceki, bir önceki
-sum = toplam, toplamı, toplami, total, sum
+sum = toplam, toplamı, toplami
 average = ortalama, ortalaması, ortalamasi
 
 # Functions and formats
@@ -71,9 +71,8 @@ unit.day = gun
 show.week = hafta
 unit.week = hf{,.}
 show.month = ay
-unit.month = ay.
 show.year = yıl
-unit.year = yil, sene, yl
+unit.year = yil, sene
 show.decade = onyıl
 unit.decade = onyil
 show.century = yüzyıl
@@ -105,7 +104,7 @@ unit.px = piksel
 # Area (metrekare, fit kare)
 square = *kare, * kare
 show.square = * kare
-unit.ha = hektar, hk
+unit.ha = hektar
 show.are = ar
 show.acre = akre
 show.dunam = dönüm
@@ -137,7 +136,7 @@ show.ounce = ons
 
 # Temperature and angles
 unit.°C = santigrat, derece santigrat, selsiyus, derece selsiyus, celsius
-unit.°F = fahrenhayt, fahrenayt, derece fahrenhayt
+unit.°F = fahrenhayt, derece fahrenhayt
 unit.K = kelvin
 unit.° = derece
 unit.rad = radyan
@@ -158,19 +157,19 @@ currency.GBP = sterlin, İngiliz sterlini, ingiliz sterlini, ingiliz pound{,u}
 currency.CHF = frank, İsviçre frang{ı,i}, isviçre frang{ı,i}, isvicre frangi
 currency.JPY = yen, japon yen{i,}
 currency.CNY = yuan, çin yuan{ı,i}, cin yuani
-currency.RUB = ruble, rus rubles{i,}
+currency.RUB = ruble, rus ruble{,si}
 currency.AED = dirhem, bae dirhem{i,}
 currency.SAR = riyal, suudi riyal{i,}
-currency.QAR = katar riyal{i,}, qatari rial{,s}
+currency.QAR = katar riyal{i,}
 currency.AZN = manat, azerbaycan manat{ı,i}
 currency.AUD = avustralya dolar{ı,i}
 currency.CAD = kanada dolar{ı,i}
 currency.BBD = barbados dolar{ı,i}
-currency.SGD = singapur dolar{ı,i}, singapore dollar{,s}
-currency.INR = hindistan rupi{si,}, indian rupee{,s}
-currency.LKR = sri lanka rupi{si,}, sri lanka rupee{,s}
-currency.THB = baht, tayland baht{ı,i}, thai baht
-currency.AFN = afgani, afgan afgani{,si}, Afs, Af, ؋
+currency.SGD = singapur dolar{ı,i}
+currency.INR = hindistan rupi{si,}
+currency.LKR = sri lanka rupi{si,}
+currency.THB = baht, tayland baht{ı,i}
+currency.AFN = afgani, afgan afgani{,si}
 currency.BTC = bitcoin
 
 # Time zones: Turkish names of cities and countries

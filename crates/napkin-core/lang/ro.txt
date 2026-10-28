@@ -7,30 +7,30 @@
 # Arithmetic. `e` is "is" and also Euler's number: it assigns only after a variable name.
 plus = {și,şi,si}, cu, adunat{, cu}, adăugat{, la}, adaugat{, la}, {mărit,marit} cu
 # (`mai puțin` is left out: `10 mai` is the 10th of May)
-minus = fără, fara, scăzut{, cu}, scazut{, cu}, substras, redus cu, {micșorat,micşorat,micsorat} cu
-times = ori, {înmulțit,înmulţit,inmultit} {cu,la}, multiplicat {cu,la}
-divide = {împărțit,împărţit,impartit}{, la, cu}, divizat{, la, cu}
+minus = fără, fara, scăzut{, cu}, scazut{, cu}, redus cu, {micșorat,micşorat,micsorat} cu
+times = ori, {înmulțit,înmulţit,inmultit} cu
+divide = {împărțit,împărţit,impartit}{, la}
 per = pe, per
 modulo = modulo, mod
-convert = în, ca, la, intro, intrun, {într,intr}-{o,un}, transformat în, convertit în
+convert = în, ca, la, transformat în, convertit în
 assign = egal{, cu}, {e,este} egal cu, egală cu, e, este, sunt
 
 # Percentages
-percent = procent{,e}, de procente, la {sută,suta}, pct{,.}, pc{,.}
+percent = procent{,e}, de procente, la {sută,suta}, pct{,.}
 percent.of = din
 percent.on = pe, la, peste, în plus {la,față de,fata de}, adaos {la,pe}, creștere la, majorare la
 percent.off = {reducere,discount,rabat} {din,la,de la}, scădere {din,la}, scăzut din, scazut din
-as-percent.of = ca{, și} {%,procent} din, în {%,procent,procente} din, ca procentaj din
-as-percent.on = ca{, și} {%,procent} la, ca{, și} {%,procent} {creștere,crestere} {din,la},
+as-percent.of = ca {%,procent} din, în {%,procent,procente} din, ca procentaj din
+as-percent.on = ca {%,procent} la, ca {%,procent} {creștere,crestere} {din,la},
     ca creștere procentuală {din,la}
-as-percent.off = ca{, și} {%,procent} {scădere,scadere,reducere} {din,la},
+as-percent.off = ca {%,procent} {scădere,scadere,reducere} {din,la},
     ca {reducere,scădere} procentuală {din,la}
 what-is.of = {de,din} {cât,cat} {este,e}
 what-is.on = {pe,peste} {cât,cat} {este,e}
 what-is.off = {reducere,scădere} {din,la} {cât,cat} {este,e}
 
 # Scales. Romanian uses the long scale: miliard = 10^9, bilion = 10^12, trilion = 10^18.
-scale.1e3 = mie, {,de }mii{, de}, miile, miilor
+scale.1e3 = mie, {,de }mii{, de}
 scale.1e6 = milion{, de}, {,de }milioane{, de}, mil{,.}, mln{,.}
 scale.1e9 = miliard{, de}, {,de }miliarde{, de}, mld{,.}, mlrd{,.}
 scale.1e12 = bilion{, de}, {,de }bilioane{, de}
@@ -48,14 +48,14 @@ noon = amiază, amiaza, prânz, pranz, miezul zilei
 midnight = miezul {nopții,nopţii,noptii}, miez de noapte
 
 # Document references
-prev = anterior, ant{,.}, precedent, rezultatul anterior
+prev = anterior, precedent, rezultatul anterior
 sum = {sumă,suma}{, totală, totala}, totalul, în total
-average = medie, media, mediu, med{,.}, valoarea medie, în medie
+average = medie, media, valoarea medie, în medie
 
 # Functions and formats
 function.sqrt = {rădăcina,rădăcină,radacina} {pătrată,patrata}{, din}, {rădăcina,radacina}{, din},
     radical{, din}, radical de ordin 2
-function.cbrt = {rădăcina,rădăcină,radacina} {cubică,cubica}{, din}, rădăcină cub, radical de ordin 3
+function.cbrt = {rădăcina,rădăcină,radacina} {cubică,cubica}{, din}, radical de ordin 3
 function.round = rotunjit, rotunjește, rotunjire
 function.ceil = rotunjit în sus
 function.floor = rotunjit în jos
@@ -80,11 +80,11 @@ show.min = minut | minute | de minute
 show.h = oră | ore | de ore
 unit.h = ora
 show.day = zi | zile | de zile
-unit.day = z, ziua
+unit.day = ziua
 show.week = săptămână | săptămâni | de săptămâni
 unit.week = {săptămâna,saptamana,saptamani,de saptamani}, {săpt,sapt}{,.}
 show.month = lună | luni | de luni
-unit.month = luna, lun{,.}
+unit.month = luna
 show.year = an | ani | de ani
 show.decade = deceniu | decenii | de decenii
 show.century = secol | secole | de secole
@@ -92,7 +92,7 @@ show.century = secol | secole | de secole
 now = ora
 
 # Length
-unit.m = metru, metri, metrii, de metri
+unit.m = metru, metri, de metri
 unit.km = de kilometri
 unit.cm = de centimetri
 unit.mm = de milimetri
@@ -100,11 +100,10 @@ show.inch = țol | țoli | de țoli
 unit.inch = ţol, ţoli, tol, toli, de toli, inch, inchi, inci, de inci
 show.foot = picior | picioare | de picioare
 show.yard = iard | iarzi | de iarzi
-unit.yard = irazi
 show.mile = milă | mile | de mile
 unit.mile = mila
 show.nautical mile = milă marină | mile marine | de mile marine
-unit.nautical mile = {milă,mila} {nautică,nautica,maritimă}, mile nautice, de mile nautice, mn{,.}
+unit.nautical mile = {milă,mila} {nautică,nautica,maritimă}, mile nautice, de mile nautice
 show.league = leghe | leghe | de leghe
 show.furlong = furlong | furlongi | de furlongi
 show.chain = lanț | lanțuri | de lanțuri
@@ -120,22 +119,19 @@ unit.px = pixeli, de pixeli
 square = * {pătrat,pătrați,pătraţi,pătrate,patrat,patrati,patrate}, * la pătrat
 unit.ha = hectar{,e}, de hectare
 show.are = ar | ari | de ari
-unit.are = arie, arii
 show.acre = acru | acri | de acri
 
 # Volume
 cubic = * {cub,cubi,cube,cubic,cubici,cubice}
-unit.l = litru, litri, litrii, de litri
+unit.l = litru, litri, de litri
 unit.ml = de mililitri
 unit.cm3 = cmc
 show.cup = cană | căni | de căni
-unit.cup = cupă, cupe, cana, cani
+unit.cup = cana, cani
 show.tablespoon = lingură | linguri | de linguri
-unit.tablespoon = lingura, lingură de supă, linguri de supă, măsură lingură, măsuri linguri
+unit.tablespoon = lingura, lingură de supă, linguri de supă
 show.teaspoon = linguriță | lingurițe | de lingurițe
-unit.teaspoon = lingurita, lingurite, lingură de ceai, linguri de ceai, măsură lingură de ceai,
-    măsuri linguri de ceai
-unit.quart = sfert{,uri}
+unit.teaspoon = lingurita, lingurite
 show.pint = pintă | pinte | de pinte
 show.gallon = galon | galoane | de galoane
 show.fluid ounce = uncie lichidă | uncii lichide | de uncii lichide
@@ -147,7 +143,7 @@ unit.mg = de miligrame
 unit.t = tonă, tona, tone, de tone
 show.carat = carat | carate | de carate
 show.pound = livră | livre | de livre
-unit.pound = livra, pounzi
+unit.pound = livra
 show.ounce = uncie | uncii | de uncii
 show.centner = chintal | chintale | de chintale
 
@@ -158,12 +154,12 @@ unit.K = kelvini, de kelvini
 unit.° = grad, grade, de grade, grad sexagesimal, grade sexagesimale
 unit.rad = radian{,i}, de radiani
 unit.b = biți, biţi, biti, de biți
-unit.B = octet, octeți, octeţi, octeti, de octeți, bait, baiți
+unit.B = octet, octeți, octeţi, octeti, de octeți
 unit.km/h = kilometri pe oră, km pe oră
 show.knot = nod | noduri | de noduri
 
 # Currencies. A bare `liră` is the pound sterling, `franc` the Swiss franc, `florin` the
-# forint, `rial` the Qatari riyal (as in Numi).
+# forint.
 currency.RON = leu, lei, de lei, ron, leu românesc, lei românești, lei romanesti
 currency.EUR = euro{,i}, de euro
 currency.USD = dolar{,i}, de dolari, dolar american, dolari americani, de dolari americani
@@ -185,32 +181,31 @@ currency.ISK = coroană islandeză, coroane islandeze
 currency.BGN = leva, leva bulgărească
 currency.RUB = {rublă,rubla}, ruble, {rublă,rubla} rusească, ruble rusești
 currency.BYN = {rublă,rubla} {belarusă,bielorusă}, ruble {belaruse,bieloruse}
-currency.UAH = {hrivnă,grivnă}, {hrivne,grivne}, {hrivnă,crivnă} ucraineană, hrivne ucrainene,
-    hivre ucrainiene, crvine ucrainiene, грн{,.}
+currency.UAH = {hrivnă,grivnă}, {hrivne,grivne}, hrivnă ucraineană, hrivne ucrainene
 currency.TRY = liră turcească, lire turcești
 currency.INR = rupie indiană, rupii indiene
 currency.LKR = rupie srilankeză, rupii srilankeze
 currency.AMD = drame, dram armean, drame armene
 currency.AFN = afghani
-currency.AOA = kwanza, kwanze
+currency.AOA = kwanza
 currency.BHD = {dinar,dinari} din Bahrain
-currency.BIF = franc burundez, franci {burundezi,burunezi}
+currency.BIF = franc burundez, franci burundezi
 currency.CDF = franc congolez, franci congolezi
 currency.GTQ = quetzal{,i}
 currency.GYD = dolar guyanez, dolari guyanezi
 currency.HRK = kuna croată, kune croate
-currency.ILS = shekel{,i}, {shekel-nou,shekel nou}{, israelean}, noul shekel
+currency.ILS = shekel{,i}, shekel nou, shekel nou israelian, noul shekel
 currency.LRD = dolar liberian, dolari liberieni
-currency.MMK = kyat{,} birmanez, kiat
-currency.NGN = naira, naira {nigeriană,nigereană}
+currency.MMK = kyat, kyat birmanez
+currency.NGN = naira, naira nigeriană
 currency.NIO = córdoba{, oro}, cordoba
 currency.PEN = sol nou peruvian, soli noi peruvieni
-currency.PGK = kina, kina papua noua guineeză
-currency.QAR = rial{,i}, rial qatarez, riali qatarezi
+currency.PGK = kina
+currency.QAR = rial qatarez, riali qatarezi
 currency.SDG = liră sudaneză, lire sudaneze
 currency.SGD = dolar singaporez, dolari singaporezi
 currency.SYP = liră siriană, lire siriene
-currency.SZL = lilangeni, lilangen
+currency.SZL = lilangeni
 currency.THB = baht{,i}, bahți, baht thailandez, bahți thailandezi
 currency.MXN = peso mexican, pesos mexicani
 currency.BRL = real brazilian, reali brazilieni

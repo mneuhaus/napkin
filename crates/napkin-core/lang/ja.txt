@@ -116,7 +116,6 @@ show.light year = 光年
 show.mil = ミル
 unit.pt = ポイント
 unit.px = ピクセル
-unit.em = エム
 
 # Area
 square = 平方*, 平方 *
@@ -155,7 +154,6 @@ show.stone = ストーン
 show.carat = カラット
 show.pound = ポンド
 show.centner = ツェントナー
-unit.centner = センテナー
 show.ounce = オンス
 
 # Temperature, angles, data, frequency, speed

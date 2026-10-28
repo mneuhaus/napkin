@@ -150,7 +150,7 @@ const BRAZILIAN: Table = &[
         ],
     ),
     (
-        &["agora", "hora", "tempo", "meio-dia", "hora + 2 horas"],
+        &["agora", "hora", "hora atual", "meio-dia", "hora + 2 horas"],
         &[
             Text("13:00"),
             Text("13:00"),
@@ -161,12 +161,12 @@ const BRAZILIAN: Table = &[
     ),
     (
         &[
-            "tempo em Viena",
+            "hora em Viena",
             "hora em Moscou",
             "agora em Pequim",
             "14:00 em Nova York",
-            "Zurique tempo",
-            "tempo no Cairo",
+            "Zurique agora",
+            "hora no Cairo",
         ],
         &[
             Text("13:00"),
@@ -193,12 +193,12 @@ const BRAZILIAN: Table = &[
     (
         &[
             "14:00 em Lisboa",
-            "tempo em Londres",
-            "tempo em Varsóvia",
-            "tempo em Bruxelas",
-            "tempo em Copenhague",
-            "tempo em Genebra",
-            "tempo em Munique",
+            "hora em Londres",
+            "hora em Varsóvia",
+            "hora em Bruxelas",
+            "hora em Copenhague",
+            "hora em Genebra",
+            "hora em Munique",
             "hora em Tóquio",
         ],
         &[
@@ -413,7 +413,7 @@ const EUROPEAN: Table = &[
         &[
             "agora em Moscovo",
             "14:00 em Nova Iorque",
-            "tempo em Copenhaga",
+            "hora em Copenhaga",
             "2 m",
             "50 libras em euros",
         ],

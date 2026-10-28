@@ -273,8 +273,8 @@ setting (`Settings::input_language`, `InputLanguage`, default English) with Numi
   numeral may carry known words (`오천원`, `만원`, `이십분`); a word that is only a numeral needs
   two syllables starting with a digit or `십` (`삼백`, `십만`; `천사` is an angel, `백조` a
   swan).
-- **Times of day with an o'clock word**: German `14 Uhr`, `14:30 Uhr`, `14.30 Uhr` (`Uhr` alone
-  is the current time), Chinese `下午3点半`, Japanese `午後3時15分`, Korean `오후 3시 30분`.
+- **Times of day with an o'clock word**: German `14 Uhr`, `14:30 Uhr`, `14.30 Uhr`, Chinese
+  `下午3点半`, Japanese `午後3時15分`, Korean `오후 3시 30분`.
 - **Times of day with an hour mark** (`hour-mark` in the vocabulary): French and Portuguese
   `14h30`, `14 h 30`, `9h05`, Flemish `14u30`, two-digit minutes after the mark; they convert
   like other times (`14h30 à New York`). The mark alone after a number stays the hour unit
@@ -301,10 +301,9 @@ setting (`Settings::input_language`, `InputLanguage`, default English) with Numi
   unchanged. The number style stays a separate setting.
 - Each language's vocabulary is a data file, `crates/napkin-core/lang/<tag>.txt`, in Napkin's
   own format (documented in `crates/napkin-core/src/vocab.rs`), with a sample note
-  `lang/<tag>.numi` (`InputLanguage::sample_note`). A compatibility test checks every phrase of
-  Numi's own vocabulary against an English reference when Numi's extracted engine strings are
-  present; the phrases Napkin reads differently on purpose are listed with reasons in
-  `crates/napkin-core/tests/numi_compat/<tag>.txt`.
+  `lang/<tag>.numi` (`InputLanguage::sample_note`). The vocabularies hold the words and
+  abbreviations native speakers write, no misspellings; acceptance tables per language live in
+  `crates/napkin-core/tests/languages/`.
 
 ### Acceptance examples
 

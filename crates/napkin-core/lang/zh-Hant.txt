@@ -10,7 +10,7 @@
 # the base first (`50的20%` is 20% of 50, so they multiply).
 plus = 加, 加上, 和, 增加, 外加, 再加
 minus = 減, 減去, 減掉, 減少, 扣除, 扣掉, 再減
-times = 乘, 乘以, 乘上, 的, 裡的, 裏的, 里的
+times = 乘, 乘以, 乘上, 的, 裡的, 裏的
 # Colloquially `6除3` is read like `6除以3` (strictly it means 3 ÷ 6).
 divide = 除以, 除
 per = 每
@@ -23,9 +23,8 @@ assign = 等於, 是, 為
 # like `百分比`.
 percent = 百分比, 百分之
 percent.before = 百分之
-percent.of = 的, 裡的, 裏的, 里的
-as-percent.of = 佔%, 佔比, 佔百分比, 佔, 占%, 占比
-as-percent.off = 差%, 差比
+percent.of = 的, 裡的, 裏的
+as-percent.of = 佔
 
 # Scales. 萬 is 10^4, 億 10^8 and 兆 10^12 (as in Taiwan); 千米 and 千克 stay kilometres and
 # kilograms (longest phrase).
@@ -33,10 +32,10 @@ scale.1e2 = 百, 佰
 scale.1e3 = 千, 仟
 scale.1e4 = 萬
 scale.1e5 = 十萬
-scale.1e6 = 百萬, 佰萬
-scale.1e7 = 千萬, 仟萬
+scale.1e6 = 百萬
+scale.1e7 = 千萬
 scale.1e8 = 億
-scale.1e9 = 十億, 拾億
+scale.1e9 = 十億
 scale.1e12 = 兆, 萬億
 
 # Chinese numerals (`三百五十`, `兩千`, `一萬五千`, `五點五`, `二〇二六`), also the financial forms.
@@ -126,7 +125,6 @@ show.cable = 纜
 show.light year = 光年
 show.mil = 密耳
 unit.px = 像素
-unit.em = 艾米
 
 # Area
 square = 平方*, 平方 *
@@ -234,7 +232,7 @@ currency.EUR = 歐元
 currency.GBP = 英鎊
 currency.JPY = 日圓, 日元, 日幣
 currency.KRW = 韓圜, 韓圓, 韓元, 韓幣
-currency.KPW = 北韓圓, 朝鮮圓, 朝鮮朝鮮圓
+currency.KPW = 北韓圓, 朝鮮圓
 currency.CHF = 瑞士法郎, 瑞郎, 法郎
 currency.CAD = 加拿大元, 加元, 加幣
 currency.AUD = 澳元, 澳幣, 澳大利亞元
@@ -242,7 +240,7 @@ currency.NZD = 紐西蘭元, 紐幣, 新西蘭元
 currency.SGD = 新加坡元, 新加坡幣, 新幣
 currency.RUB = 俄羅斯盧布, 盧布
 currency.BYN = 白俄羅斯盧布
-currency.UAH = 烏克蘭格里夫納, 烏克蘭格裡夫納, 格里夫納
+currency.UAH = 烏克蘭格里夫納, 格里夫納
 currency.INR = 印度盧比, 盧比
 currency.PKR = 巴基斯坦盧比
 currency.LKR = 斯里蘭卡盧比
@@ -255,7 +253,7 @@ currency.THB = 泰銖, 銖
 currency.MYR = 馬來西亞令吉, 令吉, 林吉特
 currency.PHP = 菲律賓披索, 菲律賓比索
 currency.MMK = 緬元, 緬甸元
-currency.KHR = 柬埔寨瑞爾, 瑞爾, 里耳
+currency.KHR = 柬埔寨瑞爾, 瑞爾
 currency.LAK = 寮國基普, 基普
 currency.MNT = 蒙古圖格里克, 圖格里克
 currency.KZT = 哈薩克坦吉, 坦吉
@@ -268,7 +266,7 @@ currency.GEL = 喬治亞拉里, 拉里
 currency.AMD = 亞美尼亞德拉姆, 德拉姆
 currency.AFN = 阿富汗尼
 currency.BDT = 孟加拉塔卡, 塔卡
-currency.BTN = 不丹努扎姆, 不丹努爾特魯姆
+currency.BTN = 不丹努爾特魯姆
 currency.MVR = 馬爾地夫拉菲亞
 currency.TRY = 土耳其里拉, 里拉
 currency.ILS = 以色列新謝克爾, 以色列謝克爾, 謝克爾
@@ -286,11 +284,11 @@ currency.LYD = 利比亞第納爾
 currency.TND = 突尼斯第納爾
 currency.DZD = 阿爾及利亞第納爾
 currency.RSD = 塞爾維亞第納爾
-currency.MKD = 北馬其頓代納爾, 前南馬其頓代納爾
+currency.MKD = 北馬其頓代納爾
 currency.MAD = 摩洛哥迪拉姆
 currency.EGP = 埃及鎊
-currency.SDG = 蘇丹鎊, 蘇丹蘇丹鎊
-currency.SSP = 南蘇丹鎊, 南蘇丹南蘇丹鎊
+currency.SDG = 蘇丹鎊
+currency.SSP = 南蘇丹鎊
 currency.SYP = 敘利亞鎊
 currency.LBP = 黎巴嫩鎊
 currency.FKP = 福克蘭鎊
@@ -318,7 +316,7 @@ currency.CUP = 古巴披索, 古巴比索
 currency.DOP = 多明尼加披索, 多明尼加比索
 currency.UYU = 烏拉圭披索, 烏拉圭比索
 currency.PEN = 秘魯新索爾, 秘魯索爾, 新索爾
-currency.BOB = 玻利維亞諾, 玻利維亞玻利維亞諾, 利維亞玻利維亞諾
+currency.BOB = 玻利維亞諾
 currency.PYG = 巴拉圭瓜拉尼, 瓜拉尼
 currency.VES = 委內瑞拉玻利瓦, 玻利瓦
 currency.CRC = 哥斯大黎加科郎
@@ -357,7 +355,7 @@ currency.ETB = 衣索比亞比爾
 currency.ERN = 厄利垂亞奈克法
 currency.XAF = 中非法郎
 currency.XOF = 西非法郎
-currency.CDF = 剛果法郎, 剛果民主共和國剛果法郎
+currency.CDF = 剛果法郎
 currency.BIF = 蒲隆地法郎
 currency.RWF = 盧安達法郎
 currency.DJF = 吉布地法郎

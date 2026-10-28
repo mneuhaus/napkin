@@ -2,38 +2,37 @@
 # Word units are shown in the CLDR plural categories one | few | many | other:
 # 1 godzina | 2 godziny | 5 godzin | 1,5 godziny.
 
-# Arithmetic (`z` is plus between numbers and `of` after a percentage: `5 z 3`, `20% z 50`)
-plus = plus, i, z, oraz, dodać, dodac, dodane do
-minus = minus, odjąć, odjac, odejmij, mniej, bez, różnica
-times = razy, pomnożone przez, pomnożone, mnożone przez, mnożone, przemnożone przez, przemnożone,
-    pomnożyć przez, mnóż
-divide = podzielić przez, podzielic przez, podzielone przez, dzielone przez, dzielone, podziel, przez
+# Arithmetic
+plus = plus, i, oraz, dodać, dodane do
+minus = minus, odjąć, mniej, bez
+times = razy, pomnożone przez, mnożone przez, przemnożone przez, pomnożyć przez
+divide = podzielić przez, podzielone przez, dzielone przez, przez
 per = za, na każd{y,ą,e}
 modulo = modulo, reszta z dzielenia przez
 convert = w, jako, do, na, zamień na, przelicz na
-assign = równa się, rowna sie, jest równe, wynosi, to
+assign = równa się, jest równe, wynosi, to
 
 # Percentages (`od` reads as `of`, as in `podatek 19% od dochodu`)
-percent = procent{,y,ów,a,ach,ami}, proc{,.}, prc{,.}
+percent = procent{,y,ów,a,ach,ami}, proc{,.}
 percent.of = z, od
-percent.on = do, dodane do, dodać do, narzut na, więcej niż
+percent.on = dodane do, dodać do, narzut na, więcej niż
 percent.off = odjęte od, odjąć od, mniej niż, rabatu od, rabat od, rabatu na, rabat na, zniżki od, zniżka od,
     zniżki na, zniżka na
 as-percent.of = jako {%,procent} {z,od}, jakim procentem jest, w procentach z
 as-percent.off = jako {%,procent} {zmniejszenia,spadku} {z,od}, jako {%,procent} rabatu od
-as-percent.on = jako {%,procent} do, jako {%,procent} {wzrostu,zwiększenia}{, do, od, z}
-what-is.of = którego jest, z czego jest, z czego to, czego jest
-what-is.off = po odjęciu to, po odjęciu czego jest
-what-is.on = procent wzrostu, po dodaniu to, po dodaniu czego jest
+as-percent.on = jako {%,procent} {wzrostu,zwiększenia} {od,z}
+what-is.of = z czego jest, z czego to, czego jest
+what-is.off = po odjęciu czego jest
+what-is.on = po dodaniu czego jest
 
 # Scales (long scale: miliard = 10^9, bilion = 10^12)
 scale.1e3 = tysiąc{,e,a,u,em,ach,ami}, tysięcy, tys{,.}
 scale.1e6 = milion{,y,ów,a,ie,em,ach,ami}, mln{,.}
-scale.1e9 = miliard{,y,ów,a,zie,em,ach,ami}, mld{,.}, mlrd{,.}
+scale.1e9 = miliard{,y,ów,a,zie,em,ach,ami}, mld{,.}
 scale.1e12 = bilion{,y,ów,a,ie,em,ach,ami}, bln{,.}
 
 # Dates and times
-today = dzisiaj, dziś, dzis
+today = dzisiaj, dziś
 tomorrow = jutro
 yesterday = wczoraj
 day.2 = pojutrze
@@ -47,12 +46,12 @@ midnight = północ
 # Document references
 prev = poprzedni{,e,a,ego}, poprzednia wartość, poprz{,.}
 sum = suma, razem, łącznie, ogółem, w sumie, suma całkowita
-average = średnia, srednia, średnio, srednio, średnia arytmetyczna
+average = średnia, średnio, średnia arytmetyczna
 
 # Functions and formats
 function.sqrt = pierwiastek kwadratowy{, z}, pierwiastek{, z}, pierwiastek drugiego stopnia{, z}
-function.cbrt = pierwiastek sześcienny{, z}, pierwiastek szescienny{, z}, pierwiastek trzeciego stopnia{, z}
-function.round = zaokrąglij, zaokrąglenie, zaokraglij
+function.cbrt = pierwiastek sześcienny{, z}, pierwiastek trzeciego stopnia{, z}
+function.round = zaokrąglij, zaokrąglenie
 function.ceil = zaokrąglij w górę
 function.floor = zaokrąglij w dół
 function.abs = wartość bezwzględna
@@ -103,37 +102,35 @@ unit.m = metr{,y,ów,a,ach,ami,em,ze,u,om}
 show.inch = cal | cale | cali | cala
 unit.inch = cal{u,ach,ami,em}
 show.foot = stopa | stopy | stóp | stopy
-unit.foot = stop{ę,ie,ach,ami,om}, stop
+unit.foot = stop{ę,ie,ach,ami,om}
 show.yard = jard | jardy | jardów | jarda
-unit.yard = jard{zie,ach,ami,em}, jar{,.}
+unit.yard = jard{zie,ach,ami,em}
 show.mile = mila | mile | mil | mili
 unit.mile = mil{ę,ach,ami,om}
 show.nautical mile = mila morska | mile morskie | mil morskich | mili morskiej
 unit.nautical mile = mil{ę,ach} morsk{ą,ich}
 show.league = liga | ligi | lig | ligi
-unit.league = lig{ę,ach}, {liga,ligi,lig} lądow{a,e,ych}
+unit.league = lig{ę,ach}
 show.furlong = furlong | furlongi | furlongów | furlonga
-unit.furlong = furling
 show.chain = łańcuch | łańcuchy | łańcuchów | łańcucha
 unit.chain = łańcuch{ach,ami}
 show.cable = kabel | kable | kabli | kabla
-unit.cable = kabl{ach,ami}, kab{,.}
+unit.cable = kabl{ach,ami}
 show.light year = rok świetlny | lata świetlne | lat świetlnych | roku świetlnego
 unit.light year = {rok,roku,lata,lat,latach} świetln{y,ego,e,ych}
 unit.pt = punkt{,y,ów,a}, pkt{,.}
-unit.px = piksel{,e,i,a,ach,ami}, pixel{,e,i}
-unit.em = emy, emów
+unit.px = piksel{,e,i,a,ach,ami}
 
 # Area (metr kwadratowy, m kw., km kw.)
 square = * kwadratow{y,e,ych,ego,ym,a}, kwadratow{y,e,ych,ego} *, * kw{,.}, kw{,.} *, kw*
 show.square = * kw.
 unit.ha = hektar{,y,ów,a,ach,ami,ze}
 show.are = ar | ary | arów | ara
-unit.are = are, ares, ar{ach,ami,ze}
+unit.are = ar{ach,ami,ze}
 show.acre = akr | akry | akrów | akra
 unit.acre = akr{ach,ami,ze}
 show.ping = ping | pingi | pingów | pinga
-unit.ping = píng, píngi, píngów, ping{ach,ami}
+unit.ping = ping{ach,ami}
 
 # Volume
 cubic = * sześcienn{y,e,ych,ego,ym,a}, sześcienn{y,e,ych,ego} *, * sześc{,.}, sześc{,.} *
@@ -142,13 +139,13 @@ unit.l = litr{,y,ów,a,ach,ami,em,ze,u,om}
 show.cup = szklanka | szklanki | szklanek | szklanki
 unit.cup = szklank{ę,ach,ami}, filiżank{a,i,ę,ek}
 show.tablespoon = łyżka | łyżki | łyżek | łyżki
-unit.tablespoon = łyżk{ę,ach,ami}, {łyżka,łyżki,łyżek,łyżkę} stołow{a,e,ych,ej,ą}, łyż{,.}, łyżk., łstoł{,.}, ł. stoł.
+unit.tablespoon = łyżk{ę,ach,ami}, {łyżka,łyżki,łyżek,łyżkę} stołow{a,e,ych,ej,ą}
 show.teaspoon = łyżeczka | łyżeczki | łyżeczek | łyżeczki
 unit.teaspoon = łyżeczk{ę,ach,ami}, łyżecz{,.}
 show.quart = kwarta | kwarty | kwart | kwarty
-unit.quart = kwart{ę,ach}, kwar{,.}, kwart.
+unit.quart = kwart{ę,ach}
 show.pint = pinta | pinty | pint | pinty
-unit.pint = pint{ę,ach}, półkwart{a,y,ę}, półkwart
+unit.pint = pint{ę,ach}
 show.gallon = galon | galony | galonów | galona
 unit.gallon = galon{ach,ami,ie}, gal{,.}
 show.fluid ounce = uncja płynu | uncje płynu | uncji płynu | uncji płynu
@@ -160,26 +157,26 @@ unit.dag = dekagram{,y,ów,a}, deko, deka, dkg
 unit.kg = kilo
 unit.t = ton{a,y,ę,ie,ach,ami}, ton
 show.carat = karat | karaty | karatów | karata
-unit.carat = karat{ach,ami}, kar{,.}
+unit.carat = karat{ach,ami}
 show.centner = kwintal | kwintale | kwintali | kwintala
 unit.centner = kwintal{ach,ami}, q
 show.pound = funt | funty | funtów | funta
-unit.pound = funt{ach,ami}, fnt{,.}
+unit.pound = funt{ach,ami}
 show.stone = kamień | kamienie | kamieni | kamienia
-unit.stone = kamieni{ach,ami}, kam{,.}
+unit.stone = kamieni{ach,ami}
 show.ounce = uncja | uncje | uncji | uncji
-unit.ounce = uncj{ę,ach,ami}, unc{,.}
+unit.ounce = uncj{ę,ach,ami}
 
 # Temperature and angles
-unit.°C = {stopień,stopnie,stopni,stopnia,stopniach} {Celsjusza,Celsiusza}, Celsjusz{,a,ach,em}, celsiusz{,a}
-unit.°F = {stopień,stopnie,stopni,stopnia} Fahrenheita, Fahrenheit{,a,ów,ach,em}, farenhait{,a,ów}
-unit.K = kelwin{,y,ów,a,ach}, kelvin{,y,ów,a}, klein
+unit.°C = {stopień,stopnie,stopni,stopnia,stopniach} Celsjusza, Celsjusz{,a,ach,em}
+unit.°F = {stopień,stopnie,stopni,stopnia} Fahrenheita, Fahrenheit{,a,ów,ach,em}
+unit.K = kelwin{,y,ów,a,ach}
 unit.° = stop{ień,nie,ni,nia,niach,niami}
-unit.rad = radian{,y,ów,a,ach,ami}, radians
+unit.rad = radian{,y,ów,a,ach,ami}
 
 # Data, frequency, speed
 unit.b = bit{,y,ów,ach}
-unit.B = bajt{,y,ów,a,ach}, baty
+unit.B = bajt{,y,ów,a,ach}
 unit.Hz = herc{,e,ów,a}
 per.h = na godzinę, na godz{,.}, za godzinę
 per.min = na minutę, za minutę
@@ -189,18 +186,18 @@ per.week = na tydzień, za tydzień, tygodniowo
 per.month = na miesiąc, za miesiąc, miesięcznie
 per.year = na rok, za rok, rocznie
 show.knot = węzeł | węzły | węzłów | węzła
-unit.knot = węzł{ach,ami}, w{ęz,ez}{,.}
+unit.knot = węzł{ach,ami}, węz{,.}
 
 # Currencies (adjectives after or before the noun: `dolar amerykański`, `amerykański dolar`)
-currency.PLN = złot{y,e,ych,ego,ym,ówka,ówki,ówek,ówkach}, zł{,.}, zloty, zlotych,
+currency.PLN = złot{y,e,ych,ego,ym,ówka,ówki,ówek,ówkach}, zł{,.},
     {złoty,złote,złotych} polsk{i,ie,ich}, polsk{i,ie,ich} {złoty,złote,złotych}
 currency.EUR = euro
 currency.USD = dolar{,y,ów,a,ach,ami}, {dolar,dolary,dolarów,dolara} {amerykański,amerykańskie,amerykańskich,amerykańskiego,USA},
     amerykańsk{i,ie,ich} dolar{,y,ów}
-currency.GBP = funt{,y,ów,a}, funt{,y,ów,a} szterling{,i,ów,a}, funty szterlingi, funtów szterlingów,
+currency.GBP = funt{,y,ów,a}, funt szterling, funta szterlinga, funty szterlingi, funtów szterlingów,
     {funt,funty,funtów,funta} brytyjsk{i,ie,ich,iego}, brytyjsk{i,ie,ich} funt{,y,ów}
 currency.CHF = frank{,i,ów,a}, {frank,franki,franków,franka} szwajcarsk{i,ie,ich,iego}, szwajcarsk{i,ie,ich} frank{,i,ów}
-currency.JPY = jen{,y,ów,a}, jen japoński, japońsk{i,ie,ich} jen{,y,ów}, yen
+currency.JPY = jen{,y,ów,a}, jen japoński, japońsk{i,ie,ich} jen{,y,ów}
 currency.CNY = juan{,y,ów,a}, {juan,juany,juanów} chińsk{i,ie,ich}, chińsk{i,ie,ich} juan{,y,ów}
 currency.CZK = {korona,korony,koron,koronę} czesk{a,ie,ich,ą}, czesk{a,ie,ich} {korona,korony,koron}
 currency.SEK = {korona,korony,koron,koronę} szwedzk{a,ie,ich,ą}, szwedzk{a,ie,ich} {korona,korony,koron}
@@ -208,48 +205,48 @@ currency.NOK = {korona,korony,koron,koronę} norwesk{a,ie,ich,ą}, norwesk{a,ie,
 currency.DKK = {korona,korony,koron,koronę} duńsk{a,ie,ich,ą}, duńsk{a,ie,ich} {korona,korony,koron}
 currency.UAH = hrywn{a,y,ę,ach}, hrywien, ukraińsk{a,ie,ich} hrywn{a,y}, ukraińskich hrywien
 currency.RUB = rubel, rubl{e,i,a}, {rubel,ruble,rubli} rosyjsk{i,ie,ich}, rosyjsk{i,ie,ich} {rubel,ruble,rubli}
-currency.BYN = {rubel,ruble,rubli} białorusk{i,ie,ich}, białorusk{i,ie,ich} {rubel,ruble,rubli}, biał{,.} {rubel,rubli,ruble}
+currency.BYN = {rubel,ruble,rubli} białorusk{i,ie,ich}, białorusk{i,ie,ich} {rubel,ruble,rubli}
 currency.HUF = forint{,y,ów,a}, {forint,forinty,forintów} węgiersk{i,ie,ich}, węgiersk{i,ie,ich} forint{,y,ów}
 currency.RON = {lej,leje,lejów} rumuńsk{i,ie,ich}, rumuńsk{i,ie,ich} {lej,leje,lejów}
 currency.TRY = {lira,liry,lir} tureck{a,ie,ich}, tureck{a,ie,ich} {lira,liry,lir}
 currency.HRK = kun{a,y}, {kuna,kuny,kun} chorwack{a,ie,ich}, chorwack{a,ie,ich} {kuna,kuny,kun}
 currency.ILS = szekel{,e,i,a}, {nowy,nowe,nowych} {,izraelski ,izraelskie ,izraelskich }szekel{,e,i}
 currency.INR = {rupia,rupie,rupii} indyjsk{a,ie,ich}, indyjsk{a,ie,ich} {rupia,rupie,rupii}
-currency.CAD = {dolar,dolary,dolarów,dolara} kanadyjsk{i,ie,ich,iego}, kanadyjsk{i,ie,ich} dolar{,y,ów}, CA$, $ CAD, $CAD
+currency.CAD = {dolar,dolary,dolarów,dolara} kanadyjsk{i,ie,ich,iego}, kanadyjsk{i,ie,ich} dolar{,y,ów}
 currency.AUD = {dolar,dolary,dolarów,dolara} australijsk{i,ie,ich,iego}, australijsk{i,ie,ich} dolar{,y,ów}
 currency.NZD = {,nowy ,nowe ,nowych }{dolar,dolary,dolarów,dolara} nowozelandzk{i,ie,ich,iego}, nowozelandzk{i,ie,ich} dolar{,y,ów}
 currency.HKD = {dolar,dolary,dolarów} hongkońsk{i,ie,ich}
 currency.SGD = {dolar,dolary,dolarów} singapursk{i,ie,ich}
-currency.BBD = {dolar,dolary,dolarów,bolary} barbadosk{i,ie,ich}
-currency.BMD = {dolar,dolary,dolarów} bermudzk{i,ie,ich}, BD$
-currency.BND = {dolar,dolary,dolarów} Brunei
+currency.BBD = {dolar,dolary,dolarów} barbadosk{i,ie,ich}
+currency.BMD = {dolar,dolary,dolarów} bermudzk{i,ie,ich}
+currency.BND = {dolar,dolary,dolarów} brunejsk{i,ie,ich}
 currency.GYD = {dolar,dolary,dolarów} gujańsk{i,ie,ich}, gujańsk{i,ie,ich} {dolar,dolary,dolarów}
 currency.ARS = peso, pes{a,ów}, {peso,pesa,pesów} argentyńsk{ie,ich}
 currency.CLP = {peso,pesa,pesów} chilijsk{ie,ich}, chilijsk{ie,ich} peso
 currency.MXN = {peso,pesa,pesów} meksykańsk{ie,ich}, meksykańsk{ie,ich} peso
-currency.BRL = {real,reale,reali,reala} brazylijsk{i,ie,ich}, R$
-currency.AED = dirham{,y,ów}, dircham{,y,ów}, {dirham,dirhamy,dirhamów,dircham,dirchamy,dirchamów} emirack{i,ie,ich}, UAE Dircham, Dhs, د.إ
-currency.AFN = afgan{,y,ów}, afgani, Afs, Af, ؋
+currency.BRL = {real,reale,reali,reala} brazylijsk{i,ie,ich}
+currency.AED = dirham{,y,ów}, {dirham,dirhamy,dirhamów} emirack{i,ie,ich}
+currency.AFN = afgani
 currency.ALL = lek{,i,ów}, {lek,leki,leków} albańsk{i,ie,ich}
-currency.AMD = dram{,y,ów,s}, {dram,dramy,dramów} armeńsk{i,ie,ich}, Դ
-currency.ANG = gulden{,y,ów}, {gulden,guldeny,guldenów} antylsk{i,ie,ich}, NAƒ, NAf
-currency.AOA = kwanz{a,e,y,ów,as}, {kwanza,kwanze,kwanzów} angolsk{a,i,ie,ich}, Kz
-currency.AWG = florin{,y,ów}, {florin,floriny,florinów} arubańsk{i,ie,ich}, Afl{,.}
-currency.AZN = manat{,y,ów}, {manat,manaty,manatów} azersk{i,ie,ich}, man.
-currency.BAM = {marka,marki,marek} zamienn{a,e,ych}, maraka
-currency.BDT = tak{a,i}, tak, {taka,taki,tak} bangladesk{a,ie,ich}, Tk, ৳
-currency.BGN = lew{,y,ów}, {lew,lewy,lewów} bułgarsk{i,ie,ich}, lev, leva, лв{,.}
+currency.AMD = dram{,y,ów}, {dram,dramy,dramów} armeńsk{i,ie,ich}
+currency.ANG = gulden{,y,ów}, {gulden,guldeny,guldenów} antylsk{i,ie,ich}
+currency.AOA = kwanz{a,y}, {kwanza,kwanzy} angolsk{a,ie}
+currency.AWG = florin{,y,ów}, {florin,floriny,florinów} arubańsk{i,ie,ich}
+currency.AZN = manat{,y,ów}, {manat,manaty,manatów} azerbejdżańsk{i,ie,ich}
+currency.BAM = {marka,marki,marek} zamienn{a,e,ych}
+currency.BDT = tak{a,i}, tak, {taka,taki,tak} bangladesk{a,ie,ich}
+currency.BGN = lew{,y,ów}, {lew,lewy,lewów} bułgarsk{i,ie,ich}
 currency.BHD = {dinar,dinary,dinarów} bahrajsk{i,ie,ich}, bahrajsk{i,ie,ich} {dinar,dinary,dinarów}
-currency.BIF = {frank,franki,franków} burundyjsk{i,ie,ich}, FBu
-currency.BOB = boliviano, bolivianów, boliviany, Bs
-currency.BTN = ngultrum{,y,ów}, Nu{,.}
+currency.BIF = {frank,franki,franków} burundyjsk{i,ie,ich}
+currency.BOB = boliviano
+currency.BTN = ngultrum{,y,ów}
 currency.CDF = {frank,franki,franków} kongijsk{i,ie,ich}
 currency.NGN = nair{a,y}, {naira,nairy} nigeryjsk{a,ie,ich}
-currency.PEN = {,peruwiański ,peruwiańskie }{nowy sol,nowe sole,nowych soli}{, peruwiański}
+currency.PEN = nowy sol{, peruwiański}, peruwiański nowy sol, nowe sole, nowych soli
 currency.QAR = {rial,riale,riali} katarsk{i,ie,ich}, katarsk{i,ie,ich} {rial,riale,riali}
 currency.SDG = {funt,funty,funtów} sudańsk{i,ie,ich}, sudańsk{i,ie,ich} {funt,funty,funtów}
 currency.SZL = lilangeni suazijski, suazijski lilangeni
-currency.BTC = bitcoin{,y,ów,a}, B⃦
+currency.BTC = bitcoin{,y,ów,a}
 
 # Time zones: Polish names of cities and countries (with the locative, `w Londynie`)
 zone.Europe/Warsaw = Warszaw{a,ie,y}, Krak{ów,owie}, Gdańsk{,u}, Wrocław{,iu}, Poznań, Poznaniu, Łódź, Łodzi,

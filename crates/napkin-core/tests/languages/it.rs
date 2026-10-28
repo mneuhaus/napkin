@@ -29,7 +29,7 @@ const ITALIAN: Table = &[
         ],
     ),
     (
-        &["5 pollici in cm", "5 pollici a cm", "1 miglio come km"],
+        &["5 pollici in cm", "5 pollici a cm", "1 miglio convertito in km"],
         &[Text("12,7 cm"), Text("12,7 cm"), Text("1,61 km")],
     ),
     (
@@ -118,7 +118,7 @@ const ITALIAN: Table = &[
         ],
     ),
     (
-        &["adesso", "tempo", "mezzogiorno + 2 ore", "mezzanotte"],
+        &["adesso", "ora corrente", "mezzogiorno + 2 ore", "mezzanotte"],
         &[Text("13:00"), Text("13:00"), Text("14:00"), Text("00:00")],
     ),
     (
@@ -127,8 +127,8 @@ const ITALIAN: Table = &[
             "l'ora a Londra",
             "adesso a Mosca",
             "14:00 a Nuova York",
-            "tempo a Pechino",
-            "Vienna tempo",
+            "che ore sono a Pechino",
+            "ora attuale a Vienna",
             "l'ora al Cairo",
         ],
         &[

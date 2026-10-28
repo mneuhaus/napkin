@@ -1,9 +1,7 @@
 # Languages worklog (multilingual input)
 
-Branch `main`. Goal: Napkin understands Numi's 28 input languages on top of English, shows
-word units and dates in the selected language, and accepts every phrase Numi's own vocabulary
-accepts (compatibility test against the Numi 3.34 app bundle in `tmp/numi-dmg/engine-strings`,
-reference only, never committed).
+Branch `main`. Goal: Napkin understands Numi's 28 input languages on top of English and shows
+word units and dates in the selected language.
 
 ## Status
 
@@ -13,7 +11,7 @@ reference only, never committed).
       CJK segmentation, word assignments, o'clock, local zone, localized units and dates
 - [x] German (de, de-AT, de-CH) and English extras, except currency names
 - [x] currency names for every language, all other languages (delegated, see below)
-- [x] test harness: `tests/languages/` (tables + sample notes), `tests/numi_compat.rs`
+- [x] test harness: `tests/languages/` (tables + sample notes), `tests/fuzz_languages.rs`
 - [x] app picker, CLI `--language` (+ `--number-style`), spec "Languages" section, README
 - [x] gate (fmt, clippy -D warnings, tests, docs), CLI demo, screenshots
       (`tmp/shots/languages-*.png`), final commit
@@ -26,24 +24,23 @@ reference only, never committed).
 - `crates/napkin-core/lang/<tag>.txt`: vocabulary per language; `lang/<tag>.numi`: sample note.
   `lang/en.txt` holds English phrases beyond the built-in grammar (always active).
 - `crates/napkin-core/tests/languages/`: per-language acceptance tables + sample-note test.
-- `crates/napkin-core/tests/numi_compat.rs`: Numi compatibility; explained misses per language in
-  `tests/numi_compat/<tag>.txt`. `NAPKIN_COMPAT_LANG=de cargo test -p napkin-core --test
-  numi_compat -- --nocapture` checks one language; the table lands in `tmp/numi-compat-coverage.md`.
+- `crates/napkin-core/tests/fuzz_languages.rs`: random soup of every language's words never
+  panics (`NAPKIN_FUZZ_ROUNDS=<n>` for a deeper run).
 
 ## Decisions
 
 - **Own data format, not Numi's**: `key = phrase, phrase` lines with `{a,b}` alternation, keys
   named after Napkin's concepts (`times`, `percent.of`, `unit.<id>`, `show.<id>`, `currency.<CODE>`,
   `zone.<IANA>`, `month.<n>`), prefix words (`prefix.c = Zenti`) and templates (`square =
-  Quadrat*`) generate compounds. Numi's `.strings` are only read by the compatibility test.
+  Quadrat*`) generate compounds.
 - **English is always on**; the selected language is consulted first, then English's extras
   (`lang/en.txt`), then the built-in English grammar.
 - **Precedence** (documented in `classify.rs` module docs):
   - longest phrase wins; a user variable shadows every language word;
   - short English unit symbols keep their meaning: a language word spelt like a ≤2-letter
     English symbol of a base unit or a common prefix (k, M, G, c, m, µ, n) cannot be a scale,
-    unit or currency (`m` stays metre, so German/French/Romanian `m` for million/thousand is an
-    explained miss; `kt` stays knot). Rare-prefix symbols give way (`Em` exametre → CSS em,
+    unit or currency (`m` stays metre, never million or thousand; `kt` stays knot).
+    Rare-prefix symbols give way (`Em` exametre → CSS em,
     `Tg` teragram → German Tag, `Grad` gigaradian → German degrees);
   - an operator word with another meaning (Italian `e` vs Euler's e, Dutch `min` vs minutes,
     Spanish `sin` vs sine, Chinese `和` plus vs sum) is an operator only between two operands
@@ -64,7 +61,7 @@ reference only, never committed).
   known phrase (`厘米`, `5千米`). Hangul words stay whole but break at digits (`5센티미터`).
   Words break at script changes (`5cm加3mm`). Dates `2026年3月12日`, `3月12号`, `2026년 3월 12일`.
   Full-width operators and `＃` headers work. Multi-character CJK variable names work.
-- **German specifics**: `14 Uhr`, `14:30 Uhr`, `14.30 Uhr` are times of day (`Uhr` alone = now),
+- **German specifics**: `14 Uhr`, `14:30 Uhr`, `14.30 Uhr` are times of day,
   `12. März 2026`, `übermorgen`/`vorgestern`, exonyms (`Wien`, `Moskau`, `Peking`, ...),
   `Zentner` only in de-AT/de-CH (100 kg there, 50 kg in Germany, so de leaves it unknown),
   `Deka` = 10 g in de-AT, `Fuss` display and `Fr.`/`Stutz` in de-CH, `Pfund` follows `pound`.
@@ -72,26 +69,26 @@ reference only, never committed).
   (one/few/many/other per language) and fall back to English words; squared/cubed word units
   use `show.square`/`show.cubic` (`Quadratfuß`), else symbols. Dates use the language's
   weekday/month names and pattern (`Mi., 28. Okt. 2026`). English output is unchanged.
-- **New built-in unit**: `ping` (坪, 400/121 m²) because Numi has it in several languages.
+- **New built-in unit**: `ping` (坪, 400/121 m², the floor-area unit of Taiwan and Japan).
 - `local` is a zone only in zone position (`in local`, `2pm local`, `local time` after a
   conversion); on its own it stays prose so English lines with "local" do not change.
-- **English extras** from Numi: `multiply`, `mult`, `square root`, `cube root`, `percents`,
-  `from` (percent of), `as a % decrease/increase of`, `milliard`, `local`, `exponent`, `w`,
-  `y`, `mon`, `″`, dotted abbreviations, `cc`, `ccm`, `CI`, `lbm`, `quintal`. Excluded on purpose:
-  `a` (are; article), `th`/`th.` (thousand; ordinals), `t.` (teaspoon; tonne).
+- **English extras**: `square root`, `cube root`, `as a % decrease/increase of`, `local`,
+  `exponent`, `w`, `y`, `″`, dotted abbreviations, `cc`, `ccm`, `CI`, `lbm`, `quintal`. Not
+  words on purpose: `a` (the article, not the are), `th`/`th.` (ordinals, not thousand), `t.`
+  (tonne, not teaspoon).
 
 ## Delegation (2026-10-28)
 
 Vocabulary authoring ran in six parallel subagents that only touched their own files
-(`lang/<tag>.txt`, `lang/<tag>.numi`, `tests/languages/<module>.rs`,
-`tests/numi_compat/<tag>.txt`) and reported engine gaps (`ENGINE:` misses) instead of editing
+(`lang/<tag>.txt`, `lang/<tag>.numi`, `tests/languages/<module>.rs`) and reported engine gaps
+instead of editing
 `src/`: a = en/de currencies, b = fr/it/es, c = pt-BR/pt-PT/ro, d = nl/nl-BE/af/da/no/sv/fi,
 e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `tmp/lang-work/`.
 
 ## Engine features added from the agents' gap reports
 
 - Uppercase currency codes beat a language's unit word (`5 SEK` vs Norwegian `sek` seconds,
-  `3 CUP` vs German `Cup`, `TON` vs Dutch `ton`).
+  `TON` vs Dutch `ton`).
 - `percent.before` (`百分之20`, the number after it counts as a share: `百分之20的50` = 10).
 - Chained scales (`2 mille miliardi`, `2 thousand million`, `5千万`).
 - `per.<id>`: a unit in the denominator (`100 рублей в час`, `all'ora`, `de l'heure`).
@@ -106,7 +103,7 @@ e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `t
 - East Asian time forms: `am`/`pm` before the hour (`下午3点`, `午後3時`, `오후 3시`),
   `half-hour` and minutes after o'clock (`3点半`, `3点20分`, `3시 30분`), `unit-before.<id>`
   (`摄氏100度`, `大さじ3`), `convert-after` (Korean `유로로`, Japanese `に`), `號` as a day marker.
-  A lone o'clock word is prose unless also listed under `now` (German `Uhr` is).
+  A lone o'clock word is prose unless also listed under `now`.
 - Korean words the vocabulary does not know are split into known words when they consist of
   them entirely (`인치를` → `인치` + `를`, `5만원`), so particles and attached units separate;
   other words (`초과`) stay whole.
@@ -133,7 +130,6 @@ e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `t
   minutes, `一点` "a little" is one o'clock); two Chinese digits in a row are a range (`三五个`,
   three or five) but end up multiplied (15). A lone Korean `십` stays prose (single syllables
   need a known word after them: `십분`).
-- Numbers in phrases like `3 Viertel` (German for 3/4) read as quarts (Numi's choice kept).
 
 ## Input parsing fixes (2026-10-28)
 
@@ -169,60 +165,48 @@ per language:
   when every part is a value. Decision for a value joined to an unknown word (`e-mail`,
   `price-discount`): one prose word, never a subtraction of prose.
 
-Numi compatibility after the fixes: de, de-AT, de-CH accept `El-Slavador-Colón` (3 phrases
-each; the obsolete SVC code and the joined word both read as plain prose, so they match), ro
-lists `tonă-kilometru` (a tonne-kilometre is transport work; it passed before only because
-`- kilometru` was trimmed). Every other language is unchanged, the CJK ones included.
+## Vocabulary cleanup (2026-10-28)
 
-## Coverage
+The vocabularies must stand on their own: every file now holds only the words and abbreviations
+a native speaker writes. All 28 files were reviewed entry by entry. Kinds of entries removed:
 
-Numi compatibility (`cargo test -p napkin-core --test numi_compat -- --nocapture`), every
-`*.variants` phrase of Numi 3.34's engine strings, probed against an English reference. Every
-phrase is either accepted or listed with its reason in `tests/numi_compat/<tag>.txt`; the test
-fails on any other miss and on listed misses that pass by now.
+- misspellings and typos (missing, extra or swapped letters, wrong diacritics), including the
+  sections of "misspellings" in the German files;
+- invented or nonstandard abbreviations, odd plurals and case forms, definite forms after a
+  number, case-only duplicates;
+- calques and mistranslations (everyday words standing in for imperial units, "weather"/"time"
+  words as the current time, a currency word under the wrong currency), ungrammatical operator
+  and percentage phrases (bare imperatives, missing prepositions, wrong agreement);
+- currency names that are not the language's own: country-name compounds the language does not
+  use (German keeps only the established ones like `Hongkong-Dollar`, `Kenia-Schilling`),
+  genitive constructions, names in other languages or scripts, Traditional characters in the
+  Simplified Chinese file, symbol drawings;
+- English words in other languages' files where the always-on English already covers them;
+- comments that described anything but the language itself.
 
-| Language | Accepted | Total | Coverage | Explained misses |
-|---|---|---|---|---|
-| en | 778 | 816 | 95.3% | 38 |
-| af | 1045 | 1086 | 96.2% | 41 |
-| bs-BA | 161 | 165 | 97.6% | 4 |
-| cs | 114 | 119 | 95.8% | 5 |
-| da | 74 | 83 | 89.2% | 9 |
-| de | 1587 | 1653 | 96.0% | 66 |
-| de-AT | 1570 | 1630 | 96.3% | 60 |
-| de-CH | 1583 | 1652 | 95.8% | 69 |
-| es | 683 | 724 | 94.3% | 41 |
-| fi | 96 | 97 | 99.0% | 1 |
-| fr | 1364 | 1394 | 97.8% | 30 |
-| he | 15 | 15 | 100.0% | 0 |
-| it | 1692 | 1725 | 98.1% | 33 |
-| ja | 54 | 55 | 98.2% | 1 |
-| ko | 283 | 289 | 97.9% | 6 |
-| nl | 1082 | 1125 | 96.2% | 43 |
-| nl-BE | 988 | 1028 | 96.1% | 40 |
-| no | 220 | 235 | 93.6% | 15 |
-| pl | 424 | 438 | 96.8% | 14 |
-| pt-BR | 1616 | 1672 | 96.7% | 56 |
-| pt-PT | 1619 | 1674 | 96.7% | 55 |
-| ro | 233 | 250 | 93.2% | 17 |
-| ru | 981 | 1009 | 97.2% | 28 |
-| sv | 75 | 83 | 90.4% | 8 |
-| tr | 90 | 95 | 94.7% | 5 |
-| uk | 75 | 75 | 100.0% | 0 |
-| zh-Hans | 634 | 673 | 94.2% | 39 |
-| zh-Hant | 247 | 255 | 96.9% | 8 |
-| **all** | **19383** | **20115** | **96.4%** | **732** |
+Correct standard forms were added only where a misspelt or nonstandard variant had stood in
+for them (80 phrases in all, mostly currency names). Removed phrases, counted after expanding `{a,b}` blocks:
 
-Reasons for the 732 explained misses, roughly: ~45% obsolete currency codes Napkin does not
-know (BYR, VEF, MRO, STD, SVC, ZMK; their names map to today's codes); short English unit
-symbols and articles that keep their meaning (`m` as million or thousand, `t`, `kt`, `a`, `'`);
-phrases Numi lists under two meanings or two currencies (Spanish `de` of/off, bare `manat`,
-`kwacha`, `leu`, `C$`); mistranslations that would compute wrong values (German `Zentner` 50 kg,
-Swedish `av`, Norwegian `subtrahert` as divide, Turkish `dönüm` as acre, Spanish `billón` 10^9);
-common words that would turn prose into numbers (`Real`, `Dram`, `Kip`, Dutch `ver`); broken
-entries (missing commas, `%@` templates, a URL, invisible characters).
+| Language | Removed | Language | Removed | Language | Removed |
+|---|---|---|---|---|---|
+| en | 88 | fr | 449 | pl | 213 |
+| af | 613 | he | 1 | pt-BR | 666 |
+| bs-BA | 23 | it | 916 | pt-PT | 1 |
+| cs | 21 | ja | 2 | ro | 91 |
+| da | 22 | ko | 6 | ru | 194 |
+| de | 1201 | nl | 856 | sv | 40 |
+| de-AT | 7 | nl-BE | 1 | tr | 20 |
+| de-CH | 6 | no | 26 | uk | 97 |
+| es | 41 | fi | 4 | zh-Hans | 107 |
+| | | | | zh-Hant | 23 |
 
-Performance (release, 500 lines): English 2.8 ms, German 3.0 ms, Chinese 1.9 ms, Russian 1.8 ms
+All languages: 5735 removed. Acceptance tables (de, es, fr, it, nl, nordic, pl, pt, ru, zh) and
+the Russian sample note now use standard phrases for the same features. Chinese has no natural
+phrase for "as a % off", so that key is gone in zh-Hans and zh-Hant (the English phrase works).
+
+## Performance
+
+Release, 500 lines: English 2.8 ms, German 3.0 ms, Chinese 1.9 ms, Russian 1.8 ms
 (`input_languages_stay_fast`, budget 10 ms). After the input parsing fixes, best of three runs
 on a busy machine: English 3.0 ms, German 3.2 ms, Chinese 1.9 ms, Russian 1.8 ms (the old build
 measured 2.7 / 3.0 / 1.9 / 1.8 ms in the same session).

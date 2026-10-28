@@ -4,12 +4,9 @@ base = de
 
 # In Switzerland a Zentner is 100 kg; Swiss spelling has no ß.
 show.centner = Zentner | Zentner
-unit.centner = zen{,.}, zent{,.}, Ztr{,.}, q
+unit.centner = Ztr{,.}
 show.foot = Fuss | Fuss
 currency.CHF = Fr{,.}, Stutz
-
-# Misspellings that cannot mean anything else
-unit.s = Skeunden
 
 # Display
 money = {sign} {amount}

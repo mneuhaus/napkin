@@ -93,7 +93,7 @@ const RUSSIAN: Table = &[
         ],
         &[Text("50"), Text("100"), Text("100"), Text("120 €")],
     ),
-    // Scales (short scale; `т` is the tonne, `М` the million, `м` the metre)
+    // Scales (short scale; `т` is the tonne, `м` the metre)
     (
         &[
             "2 миллиона",
@@ -102,7 +102,7 @@ const RUSSIAN: Table = &[
             "2 триллиона",
             "4 тысячи",
             "5 тыс.",
-            "2 М",
+            "2 млн.",
             "2 м",
             "2 т",
         ],
@@ -217,7 +217,7 @@ const RUSSIAN: Table = &[
         &[Text("850 €"), Text("64 €"), Text("457 €"), Text("457 €")],
     ),
     (
-        &["4 €", "6 €", "среднее", "пред * 2", "Всего: итого"],
+        &["4 €", "6 €", "среднее", "предыдущее * 2", "Всего: итого"],
         &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Time units and localized output (one | few | many | other)
@@ -247,7 +247,7 @@ const RUSSIAN: Table = &[
         &[
             "90 минут в часах",
             "1 час 30 минут",
-            "3 д",
+            "3 дн.",
             "2 нед",
             "1 год",
             "5 лет",

@@ -94,7 +94,7 @@ const GERMAN: Table = &[
     (
         &[
             "jetzt",
-            "Uhr",
+            "Uhrzeit",
             "Zeit",
             "14 Uhr",
             "14:30 Uhr",
@@ -185,7 +185,7 @@ const GERMAN: Table = &[
         ],
     ),
     (
-        &["1 Stunde 30 Minuten", "3 T", "2 W", "1 J", "2 Std", "10 Sek"],
+        &["1 Stunde 30 Minuten", "3 Tg.", "2 Wo.", "1 J", "2 Std", "10 Sek"],
         &[
             Text("90 Minuten"),
             Text("3 Tage"),

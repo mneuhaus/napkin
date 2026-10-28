@@ -95,7 +95,6 @@ show.nautical mile = meripeninkulma | meripeninkulmaa
 unit.nautical mile = mpk
 show.light year = valovuosi | valovuotta
 unit.px = pikseli, pikseliä
-unit.em = emejä
 
 # Area
 square = neliö*, neliö *, neliö-*
@@ -104,7 +103,6 @@ unit.ha = hehtaari, hehtaaria
 show.are = aari | aaria
 show.acre = eekkeri | eekkeriä
 show.ping = ping | pingiä
-unit.ping = píngiä
 
 # Volume
 cubic = kuutio*, kuutio *
@@ -166,7 +164,8 @@ currency.ARS = Argentiinan peso{,a}
 currency.AUD = Australian dollari{,a}
 currency.AWG = Aruban floriini{,a}
 currency.AZN = Azerbaidžanin manat{,ia}
-currency.BAM = Bosnian markka{,a}, Bosnian ja Hertsegovinan vaihdettava{,a} markka{,a}
+currency.BAM = Bosnian markka{,a}, Bosnian ja Hertsegovinan vaihdettava markka,
+    Bosnian ja Hertsegovinan vaihdettavaa markkaa
 currency.BBD = Barbadoksen dollari{,a}
 currency.BDT = Bangladeshin taka{,a}, takaa
 currency.BGN = Bulgarian leva{,a}, levaa, лв

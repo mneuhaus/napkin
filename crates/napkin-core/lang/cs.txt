@@ -36,7 +36,7 @@ tomorrow = zítra
 yesterday = včera
 day.2 = pozítří
 day.-2 = předevčírem
-now = teď, ted, nyní, čas, aktuální čas, kolik je hodin
+now = teď, nyní, čas, aktuální čas, kolik je hodin
 local = místní čas, lokální čas, místního času, místní časové pásmo, místně
 noon = poledne
 midnight = půlnoc
@@ -105,7 +105,7 @@ show.furlong = furlong | furlongy | furlongů | furlongu
 show.light year = světelný rok | světelné roky | světelných let | světelného roku
 unit.light year = světeln{ý,é,ých,ého,ém} {rok,roky,let,roku,letech}
 unit.pt = bod{,y,ů}, pt.
-unit.px = pixel{,y,ů,u,ech}, px.
+unit.px = pixel{,y,ů,u,ech}
 
 # Area (čtvereční metr, metrů čtverečních)
 square = čtvereční{,ch,m,ho,mu} *, * čtvereční{,ch,m,ho}, čtver{,.} *
@@ -115,7 +115,6 @@ unit.are = ar{ech,em}
 show.acre = akr | akry | akrů | akru
 unit.acre = akr{ech,em}
 show.ping = ping | pingy | pingů | pingu
-unit.ping = píng, píngy, píngů
 
 # Volume
 cubic = krychlov{ý,á,é,ých,ého,ou,ém} *, * krychlov{ý,á,é,ých,ého}, kubick{ý,á,é,ých,ého} *,
@@ -140,7 +139,7 @@ unit.t = tun{a,y,u,ou,ách}, tun
 show.carat = karát | karáty | karátů | karátu
 unit.carat = karát{em,ech}
 show.centner = metrák | metráky | metráků | metráku
-unit.centner = metrák{em,ech}, centnéř{,e,ů,ích}, metrick{ý,é,ých} cent{,y,ů}, q
+unit.centner = metrák{em,ech}, metrick{ý,é,ých} cent{,y,ů}, q
 show.pound = libra | libry | liber | libry
 unit.pound = libr{u,ou,ách}
 show.stone = stone | stony | stonů | stonu
@@ -156,7 +155,7 @@ unit.rad = radián{,y,ů,u,ech}
 
 # Data, frequency, speed
 unit.b = bit{,y,ů,u,ech}
-unit.B = bajt{,y,ů,u,ech}, byt{,y,ů,u}
+unit.B = bajt{,y,ů,u,ech}
 unit.Hz = hertz{,y,ů,u}
 per.h = za hodinu, v hodině, na hodinu
 per.min = za minutu, na minutu
@@ -186,8 +185,8 @@ currency.RUB = rubl{,y,ů,u}, rusk{ý,é,ých} rubl{,y,ů,u}
 currency.UAH = hřivn{a,y,u}, hřiven, ukrajinsk{á,é,ou,ých} hřivn{a,y,u}
 currency.TRY = tureck{á,é,ou,ých} lir{a,y,u}, tureckých lir
 currency.HRK = kun{a,y,u}, chorvatsk{á,é,ých} kun{a,y}
-currency.AED = dirham{,y,ů}, UAE dirham{,y,ů}, Dhs, د.إ
-currency.AFN = afghání, afghánsk{ý,é,ých} afghání, Afs, Af, ؋
+currency.AED = dirham{,y,ů}
+currency.AFN = afghání, afghánsk{ý,é,ých} afghání
 currency.BTC = bitcoin{,y,ů,u}
 
 # Time zones: Czech names of cities and countries (with the locative, `v Londýně`)

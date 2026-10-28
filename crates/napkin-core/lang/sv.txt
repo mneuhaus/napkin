@@ -25,7 +25,7 @@ what-is.off = rabatt på vad är
 # Scales (long scale: miljard = 10^9, biljon = 10^12). `kilo` is the kilogram in Swedish.
 scale.1e3 = tusen
 scale.1e6 = miljon{,er}, milj{,.}, mn
-scale.1e9 = miljard{,er,en,erna}, mdr{,.}
+scale.1e9 = miljard{,er}, mdr{,.}
 scale.1e12 = biljon{,er}
 scale.1e15 = biljard{,er}
 
@@ -36,7 +36,7 @@ yesterday = igår, i går
 day.2 = i övermorgon, övermorgon
 day.-2 = i förrgår, förrgår
 now = nu, tid, klockan
-local = lokal, lokal tid, lokaltid, lokal tidszon, lokal tidzon
+local = lokal, lokal tid, lokaltid, lokal tidszon
 midnight = midnatt
 
 # Document references
@@ -66,7 +66,6 @@ unit.h = tim{,.}
 show.day = dag | dagar
 unit.day = dygn
 show.week = vecka | veckor
-unit.week = veckan
 show.month = månad | månader
 unit.month = mån{,.}
 show.year = år | år
@@ -79,7 +78,7 @@ prefix.h = hekto
 prefix.µ = mikro
 
 # Length. A Swedish `mil` is the Scandinavian mile of 10 km; English miles are `engelsk mil`.
-unit.m = meter, metern, metrar, metrarna
+unit.m = meter
 show.inch = tum | tum
 show.foot = fot | fot
 show.yard = yard | yard
@@ -95,10 +94,8 @@ square = kvadrat*, kvadrat *, kv *, kv*
 show.square = kvadrat*
 unit.ha = hektar
 show.are = ar | ar
-unit.are = aret, aren
 show.acre = acre | acre
 show.ping = ping | ping
-unit.ping = pinga, pingar
 
 # Volume
 cubic = kubik*, kubik *
@@ -115,9 +112,9 @@ show.gallon = gallon | gallon
 show.quart = quart | quart
 
 # Weight. `hekto` is 100 g, `kilo` the kilogram.
-unit.kg = kilo, kilot
-unit.hg = hekto, hekton
-unit.t = ton{,net}
+unit.kg = kilo
+unit.hg = hekto
+unit.t = ton
 show.pound = pund | pund
 show.ounce = uns | uns
 show.centner = centner | centner
@@ -129,8 +126,7 @@ unit.°C = grader celsius
 unit.°F = grader fahrenheit
 unit.° = grad, grader
 unit.rad = radianer
-unit.b = biten, bitar
-unit.B = byten
+unit.b = bitar
 unit.km/h = kilometer i timmen, km i timmen
 show.knot = knop | knop
 
@@ -140,7 +136,7 @@ currency.NOK = norsk{,a} kron{a,or}
 currency.DKK = dansk{,a} kron{a,or}
 currency.ISK = isländsk{,a} kron{a,or}
 currency.EUR = euro{,s}
-currency.USD = dollar{,s}, amerikansk{,a} dollar, USA{-, }dollar
+currency.USD = dollar{,s}, amerikansk{,a} dollar, USA-dollar
 currency.GBP = pund, brittisk{,a} pund, pund sterling
 currency.CHF = schweizerfranc, schweizisk{,a} franc
 currency.JPY = japansk{,a} yen
@@ -150,14 +146,14 @@ currency.AUD = australisk{,a} dollar
 currency.PLN = polsk{,a} zloty
 currency.CZK = tjeckisk{,a} kron{a,or}
 currency.HUF = ungersk{,a} forint
-currency.RUB = rubel, rubler, rysk{,a} rub{e,}l{,er}
+currency.RUB = rubel, rysk{,a} rubel
 currency.UAH = ukrainsk{,a} hryvnja
 currency.TRY = turkisk{,a} lira
 currency.INR = indisk{,a} rupie{,r}
-currency.BYN = vitrysk{,a} rub{e,}l{,er}, belarusisk{,a} rub{e,}l{,er}
-currency.AFN = afghani, afghansk{,a} afghani, afganska afghani, AFS
+currency.BYN = vitrysk{,a} rubel, belarusisk{,a} rubel
+currency.AFN = afghani, afghansk{,a} afghani
 currency.ALL = albansk{,a} lek
-currency.AMD = armenisk{,a} dram, armensk{,a} dram
+currency.AMD = armenisk{,a} dram
 
 # Time zones: Swedish names of cities and countries
 zone.Europe/Stockholm = Göteborg, Malmö, Uppsala, Sverige

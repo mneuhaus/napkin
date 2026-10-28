@@ -153,20 +153,18 @@ unit.mg = ㎎
 unit.t = 톤, 톤{은,의}
 show.stone = 스톤
 show.carat = 캐럿
-unit.carat = 캐롯
 show.pound = 파운드
 unit.pound = 파운드는
 show.centner = 첸트너
-unit.centner = 챈트너
 show.ounce = 온스
-unit.ounce = 온즈, 온스는
+unit.ounce = 온스는
 
 # Temperature, angles, data, frequency, speed
 unit.°C = 섭씨, 섭씨온도, 섭씨도
 unit.°F = 화씨, 화씨온도, 화씨도
 unit.K = 켈빈
 unit.° = 도
-unit.rad = 라디안, 호도
+unit.rad = 라디안
 unit.b = 비트
 unit.B = 바이트, 바이트는
 unit.Hz = 헤르츠
@@ -219,7 +217,7 @@ currency.KRW = 원, 원{은,의}, 원화, 한국 원
 currency.USD = 달러, 달러{는,의}, 불, 미국 달러, 미 달러, 미화
 currency.EUR = 유로, 유로{는,의}, 유로화
 currency.JPY = 엔, 엔{은,의}, 엔화, 일본 엔
-currency.CNY = 위안, 위안{은,의}, 위안화, 인민폐, 元
+currency.CNY = 위안, 위안{은,의}, 위안화, 인민폐
 currency.GBP = 파운드, 파운드{는,의}, 영국 파운드
 currency.CHF = 스위스 프랑, 스위스프랑, 프랑
 currency.CAD = 캐나다 달러, 캐나다달러
@@ -249,7 +247,7 @@ currency.AED = 디르함, 아랍에미리트 디르함
 currency.SAR = 리얄, 사우디 리얄
 currency.ILS = 셰켈, 이스라엘 셰켈
 currency.ZAR = 랜드, 남아공 랜드
-currency.BTC = 비트코인, B⃦
+currency.BTC = 비트코인
 currency.ETH = 이더리움
 
 # Time zones: Korean names of cities and countries

@@ -1,7 +1,0 @@
-# Phrases of Numi's Turkish vocabulary that Napkin reads differently on purpose.
-# key<TAB>phrase<TAB>reason
-hour.variants	s	`s` is the second symbol (Numi lists it under seconds too); hours are `sa`/`saat`
-day.variants	g	`g` is the gram symbol; days are `gün`
-week.variants	h	`h` is the hour symbol; weeks are `hafta`
-foot.variants	adım	mistranslation: `adım` is a pace (about 0.75 m), not a foot; feet are `fit`/`ayak`
-acre.variants	dönüm	mistranslation: a dönüm is 1000 m² (an acre is about 4047 m²); `dönüm` is Napkin's dunam, acres are `akre`

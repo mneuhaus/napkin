@@ -104,7 +104,7 @@ const NORWEGIAN: Table = &[
             "3 ganger 4",
             "8 delt på 2",
             "5 og 3",
-            "10 subtrahert med 4",
+            "10 fratrukket 4",
             "5 tommer i cm",
         ],
         &[Text("12"), Text("4"), Text("8"), Text("6"), Text("12,7 cm")],

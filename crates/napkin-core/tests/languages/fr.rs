@@ -18,8 +18,8 @@ const FRENCH: Table = &[
     (
         &[
             "5 pouces en cm",
-            "5 pouces dans cm",
-            "1 mile comme km",
+            "5 pouces convertis en cm",
+            "1 mile exprimé en km",
             "1 mile vers km",
         ],
         &[Text("12,7 cm"), Text("12,7 cm"), Text("1,61 km"), Text("1,61 km")],
@@ -60,16 +60,16 @@ const FRENCH: Table = &[
     (
         &[
             "25 en % de 50",
-            "75 comme un % d'augmentation de 50",
-            "25 comme un % de réduction de 50",
+            "75 en % d'augmentation de 50",
+            "25 en pourcentage de réduction de 50",
             "0,25 en %",
         ],
         &[Text("50%"), Text("50%"), Text("50%"), Text("25%")],
     ),
     (
         &[
-            "20 % de quoi est 10",
-            "25 % sur ce qui est 125",
+            "20 % de quoi font 10",
+            "25 % de plus sur quoi fait 125",
             "20 % de réduction sur quoi est 80",
         ],
         &[Text("50"), Text("100"), Text("100")],
@@ -115,7 +115,13 @@ const FRENCH: Table = &[
         ],
     ),
     (
-        &["maintenant", "heure", "temps", "midi + 2 heures", "minuit"],
+        &[
+            "maintenant",
+            "heure",
+            "heure actuelle",
+            "midi + 2 heures",
+            "minuit",
+        ],
         &[
             Text("13:00"),
             Text("13:00"),
@@ -131,7 +137,7 @@ const FRENCH: Table = &[
             "heure à Moscou",
             "heure à Pékin",
             "14:00 à New York",
-            "Vienne temps",
+            "maintenant à Vienne",
             "heure au Caire",
         ],
         &[

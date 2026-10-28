@@ -8,9 +8,6 @@ scale.1e12 = bilião, biliões, bilião de, biliões de
 scale.1e15 = mil biliões, mil biliões de
 scale.1e18 = trilião, triliões, trilião de, triliões de
 
-# A missing `l` that only appears where a time zone is expected (`14h PST em loca`)
-local = loca
-
 show.cup = chávena | chávenas
 
 # Display: `quarta, 28/10/2026`

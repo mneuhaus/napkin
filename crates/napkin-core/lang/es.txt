@@ -5,10 +5,10 @@
 # (`60 km por hora`): it is listed under `times` first and under `per`. `entre` divides
 # (`6 entre 3`). `a` is the preposition and converts (`5 km a millas`), it is not the are.
 plus = más, mas, y, con, sumado a
-minus = menos, sin, extraer, restado
+minus = menos, sin, restado
 times = por, veces, multiplicado por, multiplicados por, multiplicar, multiplicar por
 divide = entre, dividido por, dividido entre, divididos por, divididos entre, dividir, dividir por,
-    dividir entre, divide por, divide entre, dividido
+    dividir entre, dividido
 per = por
 modulo = módulo, modulo
 # One of a unit after a price or speed (`100 km a la hora`, `3 € el kilo`, `10 € al día`)
@@ -21,9 +21,8 @@ per.month = al mes
 per.year = al año
 # `3 millones de dólares`, `2 kilos de tomates`
 filler = de
-convert = en, a, como, para, dentro, convertido a, convertido en, pasado a
-assign = es igual a, son iguales a, es igual, son iguales, igual a, igual, iguales, equivale a,
-    equivalen a, vale, valen, es, son
+convert = en, a, como, convertido a, convertido en, pasado a
+assign = es igual a, son iguales a, igual a, igual, equivale a, equivalen a, vale, valen, es, son
 
 # Percentages. `de` is a share of a base (`20 % de 50`), `en` the conversion; a share on top of a
 # base is `sobre`. `como %` alone converts (`0,25 como %`), so a share of a base needs `de`.
@@ -36,12 +35,12 @@ as-percent.of = como {%,porcentaje} {de,del}, como un {%,porcentaje} {de,del},
     en {%,porcentaje} {de,del}
 as-percent.off = como una disminución {del % de,porcentual de}, como una reducción {del % de,porcentual de},
     como un {%,porcentaje} de {descuento,disminución,reducción} {de,sobre}
-as-percent.on = como porcentaje en, como % incremento de, como {incremento,aumento} porcentual de,
+as-percent.on = como {incremento,aumento} porcentual de,
     como un {incremento,aumento} {del % de,porcentual de},
     como un {%,porcentaje} de {aumento,incremento} {de,sobre}
 what-is.of = de qué es, de que es, de cuánto es, de cuanto es
 what-is.off = de descuento sobre qué es, de descuento de qué es
-what-is.on = sobre lo que es, sobre qué es, de aumento sobre qué es
+what-is.on = sobre qué es, de aumento sobre qué es
 
 # Scales (Spanish uses the long scale: mil millones = millardo = 10^9, billón = 10^12; scales
 # chain, so `3 mil millones` is 3 * 10^9).
@@ -62,7 +61,7 @@ noon = mediodía, mediodia
 midnight = medianoche
 
 # Document references
-prev = previo, anterior, resultado anterior
+prev = anterior, resultado anterior
 sum = suma, total
 average = promedio, prom{,.}, media
 
@@ -124,7 +123,6 @@ show.nautical mile = milla náutica | millas náuticas
 unit.nautical mile = milla{,s} nautica{,s}
 show.league = legua | leguas
 show.furlong = furlong | furlongs
-unit.furlong = estadio{,s}
 show.chain = cadena | cadenas
 show.cable = cable | cables
 show.light year = año luz | años luz
@@ -184,9 +182,9 @@ currency.AUD = dólar{,es} australiano{,s}
 currency.JPY = yen{,es}, yen{,es} japonés, yenes japoneses
 currency.CNY = yuan{,es}, renminbi, {yuan,yuanes} {chino,chinos}
 currency.RUB = rublo{,s}, rublo{,s} ruso{,s}
-currency.BYN = rublo{,s} bielorruso{,s}, rublo{,s} de {Bielorrusia,Bielorussia}
-currency.AED = dírham{,s}, {dirham,dirhams} de {los ,}Emiratos Árabes Unidos, {EAU,UAE} {dirham,dirhams}
-currency.AFN = afganí{,s}, afgani{,s}, afganí afgán
+currency.BYN = rublo{,s} bielorruso{,s}, rublo{,s} de Bielorrusia
+currency.AED = dírham{,s}, {dirham,dirhams} de {los ,}Emiratos Árabes Unidos
+currency.AFN = afganí{,s}, afgani{,s}
 currency.ALL = lek{,s}, lek albanés, leks albaneses
 currency.AMD = dram{,s}, dram{,s} armenio{,s}
 currency.ANG = florín antillano holandés, florines antillanos holandeses
@@ -197,11 +195,11 @@ currency.AZN = manat{,s}, manat azerí, manats azeríes
 currency.BAM = marco{,s}, marco{,s} bosnioherzegovino{,s}, marco{,s} convertible{,s}
 currency.BBD = dólar{,es} de Barbados, dólar{,es} barbadense{,s}
 currency.BDT = taka{,s}, taka bangladesí, takas bangladesíes
-currency.BGN = lev{,s,a}, lev búlgaro, levs búlgaros, leva búlgara{,s}
+currency.BGN = lev{,s,a}, lev búlgaro, levs búlgaros
 currency.BHD = dinar bareiní, dinares bareiníes
 currency.BIF = franco{,s} de Burundi, franco burundés, francos burundeses
 currency.BMD = dólar{,es} bermudeño{,s}
-currency.BND = {dólar,dolar,dólares} de Brunéi
+currency.BND = dólar{,es} de Brunéi
 currency.BOB = boliviano{,s}, peso{,s} boliviano{,s}
 currency.BRL = real brasileño, reales brasileños
 currency.BSD = dólar{,es} bahameño{,s}
@@ -246,7 +244,7 @@ currency.ISK = corona{,s} islandesa{,s}, corona{,s} de Islandia
 currency.JMD = dólar{,es} de Jamaica, dólar{,es} jamaicano{,s}
 currency.JOD = dinar jordano, dinares jordanos
 currency.KES = chelín keniano, chelines kenianos
-currency.KGS = som{,s}, som kirguís, soms kirguises, soms kuirguisos
+currency.KGS = som{,s}, som kirguís, soms kirguises
 currency.KHR = riel{,es}, riel camboyano, rieles camboyanos
 currency.KMF = franco{,s} comorano{,s}
 currency.KPW = won norcoreano, wones norcoreanos
@@ -265,8 +263,8 @@ currency.MDL = leu moldavo, leus moldavos
 currency.MGA = ariary, ariary malgache
 currency.MKD = denar{,es} macedonio{,s}
 currency.MMK = kyat{,s}, kyat{,s} de Myanmar, kyat{,s} birmano{,s}
-currency.MNT = tugrik, tögrög, tugrik mongol
-currency.MOP = pataca{,s}, pataca{,s} macaense{,s}, pataca{,s} de {Macao,Macau}
+currency.MNT = tugrik, tugrik mongol
+currency.MOP = pataca{,s}, pataca{,s} macaense{,s}, pataca{,s} de Macao
 currency.MRU = uguiya{,s}, uguiya mauritana
 currency.MUR = rupia{,s} mauriciana{,s}, rupia{,s} de Mauricio
 currency.MVR = rufiyaa, rupia{,s} maldiva{,s}
@@ -281,7 +279,7 @@ currency.NOK = corona{,s} noruega{,s}
 currency.NPR = rupia nepalí, rupias nepalíes
 currency.NZD = dólar neozelandés, dólares neozelandeses
 currency.OMR = rial omaní, riales omaníes
-currency.PAB = balboa{,s}, balboa{,s} panameña{,s}, balboa panameño
+currency.PAB = balboa{,s}, balboa panameño, balboas panameños
 currency.PEN = sol{,es}, sol{,es} peruano{,s}, nuevo sol, nuevos soles
 currency.PGK = kina{,s}, kina de Papúa Nueva Guinea
 currency.PHP = peso{,s} filipino{,s}
@@ -289,7 +287,7 @@ currency.PKR = rupia pakistaní, rupias pakistaníes
 currency.PLN = esloti{,s}, esloti polaco, eslotis polacos
 currency.PYG = guaraní{,es,s}, guaraní paraguayo, guaraníes paraguayos
 currency.QAR = rial catarí, riales cataríes, riyal catarí
-currency.RON = leu rumano, leu rumanos, lei rumanos
+currency.RON = leu rumano, lei rumanos
 currency.RSD = dinar serbio, dinares serbios
 currency.RWF = franco ruandés, francos ruandeses
 currency.SAR = riyal saudí, riyales saudíes, rial saudí
@@ -305,7 +303,7 @@ currency.SRD = dólar surinamés, dólares surinameses
 currency.SSP = libra{,s} sursudanesa{,s}
 currency.STN = dobra{,s}, dobra santotomense, dobras santotomenses
 currency.SYP = libra{,s} siria{,s}
-currency.SZL = lilangeni, lilangeni suazi, emalangeni, emalengeni, emalangeni suazis, emelengeni suazis
+currency.SZL = lilangeni, lilangeni suazi, emalangeni, emalangeni suazis
 currency.THB = baht, baht tailandés, baht tailandeses
 currency.TJS = somoni, somoni tayiko
 currency.TMT = manat turkmeno, manats turkmenos
@@ -313,21 +311,21 @@ currency.TND = dinar tunecino, dinares tunecinos
 currency.TOP = pa'anga, pa'anga tongano
 currency.TRY = lira{,s} turca{,s}
 currency.TTD = dólar{,es} trinitense{,s}
-currency.TWD = dólar NT, nuevo dólar taiwanés, nuevos dólares taiwaneses, dólar taiwanés,
+currency.TWD = nuevo dólar taiwanés, nuevos dólares taiwaneses, dólar taiwanés,
     dólares taiwaneses
 currency.TZS = chelín tanzano, chelines tanzanos
 currency.UAH = grivna{,s}, grivna{,s} ucraniana{,s}
 currency.UGX = chelín ugandés, chelines ugandeses
-currency.UYU = U$, peso{,s} uruguayo{,s}
-currency.UZS = so'm, som uzbeko, som{,s} uzbekos
+currency.UYU = peso{,s} uruguayo{,s}
+currency.UZS = so'm, som uzbeko, soms uzbekos
 currency.VES = bolívar{,es} venezolano{,s}, bolívar{,es} soberano{,s}, bolívar{,es} digital{,es}
 currency.VND = dong, dong vietnamita, dong vietnamitas
 currency.VUV = vatu, vatu vanuatunense{,s}
 currency.WST = tala{,s}, tala samoano{,s}
-currency.XAF = franco{,s} CFA, franco CFA (Beac), franco CFA BEAC, franco{,s} CFA de África Central
+currency.XAF = franco{,s} CFA, franco CFA BEAC, franco{,s} CFA de África Central
 currency.XCD = dólar{,es} del Caribe Oriental
 currency.XOF = franco{,s} CFA de África Occidental, franco CFA BCEAO
-currency.XPF = franco{,s} CFP, franco{,s} del {pacífico,Pacífico}
+currency.XPF = franco{,s} CFP, franco{,s} del Pacífico
 currency.YER = rial yemení, riales yemeníes
 currency.ZAR = rand{,s}, rand sudafricano, rands sudafricanos
 currency.ZMW = kwacha zambiano, kwachas zambianos
