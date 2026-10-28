@@ -4,6 +4,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::Context as _;
+use napkin_core::InputLanguage;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 
@@ -95,6 +96,8 @@ pub(crate) struct AppSettings {
     pub(crate) font_size: f32,
     /// Precision, number style, angle unit and time format, handed to the engine.
     pub(crate) engine: napkin_core::Settings,
+    /// The input language; `None` is "Automatic" and follows the system language.
+    pub(crate) input_language: Option<InputLanguage>,
     /// Notes folder; `None` uses the default inside the support folder.
     pub(crate) notes_dir: Option<PathBuf>,
     /// Global show/hide hotkey (`Alt+Cmd+N`); `None` disables it.
@@ -111,6 +114,7 @@ impl Default for AppSettings {
             font: FontChoice::default(),
             font_size: DEFAULT_FONT_SIZE,
             engine: napkin_core::Settings::default(),
+            input_language: None,
             notes_dir: None,
             hotkey: Some(DEFAULT_HOTKEY.to_owned()),
             desktop: Desktop::default(),
@@ -120,6 +124,16 @@ impl Default for AppSettings {
 }
 
 impl AppSettings {
+    /// The settings handed to the engine, with "Automatic" resolved to the system language.
+    pub(crate) fn engine_settings(&self) -> napkin_core::Settings {
+        napkin_core::Settings {
+            input_language: self
+                .input_language
+                .unwrap_or_else(crate::platform::system_language),
+            ..self.engine.clone()
+        }
+    }
+
     /// The font size clamped to the supported range.
     pub(crate) fn clamped_font_size(&self) -> f32 {
         let (min, max) = FONT_SIZE_RANGE;

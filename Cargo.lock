@@ -3993,6 +3993,7 @@ dependencies = [
  "napkin-core",
  "napkin-extensions",
  "napkin-rates",
+ "objc2-foundation 0.3.2",
  "percent-encoding",
  "serde",
  "serde_json",

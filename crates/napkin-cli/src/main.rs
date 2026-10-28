@@ -5,8 +5,10 @@
 //! napkin < budget.numi             a document: `line  → result` per line
 //! napkin -f budget.numi --json     machine-readable
 //! napkin serve                     Numi's Alfred endpoint on 127.0.0.1:15055
+//! napkin --language de "5 Zoll in cm"   German words on top of English
 //! ```
 
+mod locale;
 mod output;
 mod serve;
 mod setup;

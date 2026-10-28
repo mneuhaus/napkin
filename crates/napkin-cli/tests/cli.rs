@@ -22,11 +22,13 @@ impl Sandbox {
         }
     }
 
-    /// `napkin` with an isolated home and rate cache.
+    /// `napkin` with an isolated home and rate cache, reading English whatever the system
+    /// language is.
     fn napkin(&self) -> Command {
         let mut command = Command::new(env!("CARGO_BIN_EXE_napkin"));
         command
             .env("HOME", self.home.path())
+            .env("NAPKIN_LANGUAGE", "en")
             .env("XDG_DATA_HOME", self.home.path().join("data"))
             .env("XDG_CACHE_HOME", self.home.path().join("cache"))
             .arg("--rates-cache")
@@ -91,6 +93,31 @@ fn one_shot_prints_the_result() {
 fn negative_numbers_are_expressions_not_flags() {
     let output = Sandbox::new().run(&["--no-extensions", "-5"]);
     assert_eq!(stdout(&output), "-5\n", "{}", stderr(&output));
+}
+
+#[test]
+fn language_and_number_style_options() {
+    let sandbox = Sandbox::new();
+    let german = sandbox.run(&[
+        "--no-extensions",
+        "--language",
+        "de",
+        "--number-style",
+        "german",
+        "1 Monat in Tagen",
+    ]);
+    assert_eq!(stdout(&german), "30,42 Tage\n", "{}", stderr(&german));
+    let auto = sandbox
+        .napkin()
+        .env("NAPKIN_LANGUAGE", "de_AT.UTF-8")
+        .args(["--no-extensions", "1 Tag"])
+        .output()
+        .expect("napkin runs");
+    assert_eq!(stdout(&auto), "1 Tag\n", "{}", stderr(&auto));
+    let english = sandbox.run(&["--no-extensions", "--language", "en", "1 month in days"]);
+    assert_eq!(stdout(&english), "30.42 days\n", "{}", stderr(&english));
+    let unknown = sandbox.run(&["--language", "xx", "1"]);
+    assert_eq!(unknown.status.code(), Some(2));
 }
 
 #[test]

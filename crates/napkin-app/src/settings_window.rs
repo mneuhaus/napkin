@@ -12,7 +12,7 @@ use gpui_kit::{
     StatefulInteractiveElement as _, Styled as _, Subscription, TitlebarOptions, Window, WindowBounds,
     WindowOptions, div, px, size,
 };
-use napkin_core::{AngleUnit, NumberStyle, TimeFormat};
+use napkin_core::{AngleUnit, InputLanguage, NumberStyle, TimeFormat};
 
 use crate::actions::{DecreaseFontSize, IncreaseFontSize, OpenNotesFolder};
 use crate::app::{self, Napkin};
@@ -55,6 +55,7 @@ pub(crate) struct SettingsWindow {
     font: Choice,
     precision: Choice,
     number_style: Choice,
+    input_language: Choice,
     angle_unit: Choice,
     time_format: Choice,
     recording_hotkey: Option<Subscription>,
@@ -68,6 +69,9 @@ const NUMBER_STYLES: [(NumberStyle, &str); 5] = [
     (NumberStyle::French, "French  1 234,56"),
     (NumberStyle::Plain, "Plain  1234.56"),
 ];
+/// The input language entry that follows the system language.
+const AUTOMATIC_LANGUAGE: &str = "Automatic (system language)";
+
 const ANGLE_UNITS: [(AngleUnit, &str); 2] =
     [(AngleUnit::Degrees, "Degrees"), (AngleUnit::Radians, "Radians")];
 const TIME_FORMATS: [(TimeFormat, &str); 2] = [
@@ -130,6 +134,23 @@ impl SettingsWindow {
             }
         }));
 
+        let language_labels: Vec<&str> = std::iter::once(AUTOMATIC_LANGUAGE)
+            .chain(InputLanguage::ALL.iter().map(|language| language.native_name()))
+            .collect();
+        let input_language = choice(
+            &language_labels,
+            settings
+                .input_language
+                .map_or(AUTOMATIC_LANGUAGE, InputLanguage::native_name),
+            window,
+            cx,
+        );
+        subscriptions.push(on_choice(&input_language, window, cx, |label, settings| {
+            settings.input_language = InputLanguage::ALL
+                .into_iter()
+                .find(|language| language.native_name() == label);
+        }));
+
         let angle_unit = choice(
             ANGLE_UNITS.map(|(_, label)| label).as_slice(),
             label_of(&ANGLE_UNITS, settings.engine.angle_unit),
@@ -159,6 +180,7 @@ impl SettingsWindow {
             font,
             precision,
             number_style,
+            input_language,
             angle_unit,
             time_format,
             recording_hotkey: None,
@@ -438,6 +460,7 @@ impl Render for SettingsWindow {
             .child(row("Font size", font_size_control(&settings)))
             .child(section("Calculation", &palette))
             .child(row("Precision (decimal places)", select(&self.precision)))
+            .child(row("Input language", select(&self.input_language)))
             .child(row("Number style", select(&self.number_style)))
             .child(row("Angle unit", select(&self.angle_unit)))
             .child(row("Time format", select(&self.time_format)))

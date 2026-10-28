@@ -1,9 +1,11 @@
-//! The few macOS calls GPUI does not wrap: the Trash, the Dock icon, and the print panel.
+//! The few macOS calls GPUI does not wrap: the Trash, the Dock icon, the print panel and the
+//! preferred languages.
 
 use std::fmt::Write as _;
 use std::path::Path;
 
 use gpui_kit::Window;
+use napkin_core::InputLanguage;
 
 use crate::settings::Switch;
 
@@ -22,6 +24,15 @@ pub(crate) fn move_to_trash(path: &Path) -> bool {
 /// Shows or hides the Dock icon (and the app menu bar with it).
 pub(crate) fn set_dock_icon(shown: Switch) {
     imp::set_dock_icon(shown);
+}
+
+/// The input language "Automatic" stands for: the first of the user's preferred languages
+/// Napkin has a vocabulary for, else English.
+pub(crate) fn system_language() -> InputLanguage {
+    imp::preferred_languages()
+        .iter()
+        .find_map(|tag| InputLanguage::from_locale(tag))
+        .unwrap_or_default()
 }
 
 /// Opens the native print panel as a sheet on `window`, printing `lines` with results on the right.
@@ -90,7 +101,9 @@ mod imp {
     use objc2_app_kit::{
         NSApplication, NSApplicationActivationPolicy, NSPrintInfo, NSPrintOperation, NSTextView, NSView,
     };
-    use objc2_foundation::{NSData, NSFileManager, NSPoint, NSRange, NSRect, NSSize, NSString, NSURL};
+    use objc2_foundation::{
+        NSData, NSFileManager, NSLocale, NSPoint, NSRange, NSRect, NSSize, NSString, NSURL,
+    };
     use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 
     pub(super) fn move_to_trash(path: &Path) -> bool {
@@ -101,6 +114,14 @@ mod imp {
         NSFileManager::defaultManager()
             .trashItemAtURL_resultingItemURL_error(&url, None)
             .is_ok()
+    }
+
+    /// The user's preferred languages, most preferred first (`de-DE`, `en-US`).
+    pub(super) fn preferred_languages() -> Vec<String> {
+        NSLocale::preferredLanguages()
+            .iter()
+            .map(|tag| tag.to_string())
+            .collect()
     }
 
     pub(super) fn set_dock_icon(shown: Switch) {
@@ -172,6 +193,16 @@ mod imp {
     }
 
     pub(super) fn set_dock_icon(_shown: Switch) {}
+
+    /// The user's preferred languages from the POSIX locale variables.
+    pub(super) fn preferred_languages() -> Vec<String> {
+        ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"]
+            .iter()
+            .filter_map(|name| std::env::var(name).ok())
+            .flat_map(|value| value.split(':').map(str::to_owned).collect::<Vec<_>>())
+            .filter(|tag| !tag.is_empty() && tag != "C" && tag != "POSIX")
+            .collect()
+    }
 
     pub(super) fn printable_width_points() -> f64 {
         468.

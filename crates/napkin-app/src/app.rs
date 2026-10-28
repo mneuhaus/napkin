@@ -132,7 +132,7 @@ pub(crate) fn start(
     let paths = AppPaths::resolve()?;
     let settings: AppSettings = load_json(&paths.settings_file());
     let rates = paths.rate_cache().load_or_bundled();
-    let (engine, extensions) = build_engine(&settings.engine, rates, &paths);
+    let (engine, extensions) = build_engine(&settings.engine_settings(), rates, &paths);
     for (file, reason) in &extensions.failed {
         eprintln!("extension {} failed: {reason}", file.display());
     }
@@ -427,12 +427,12 @@ pub(crate) fn update_settings(cx: &mut App, change: impl FnOnce(&mut AppSettings
         eprintln!("could not save settings: {error:#}");
     }
 
-    if after.engine != before.engine {
+    if after.engine != before.engine || after.input_language != before.input_language {
         napkin
             .engine
             .write()
             .expect("engine lock poisoned")
-            .set_settings(after.engine.clone());
+            .set_settings(after.engine_settings());
         reevaluate(cx);
     }
     if after.theme != before.theme
@@ -506,7 +506,7 @@ pub(crate) fn reload_extensions(cx: &mut App) {
         .expect("engine lock poisoned")
         .exchange_rates()
         .clone();
-    let (engine, report) = build_engine(&napkin.settings.engine, rates, &napkin.paths);
+    let (engine, report) = build_engine(&napkin.settings.engine_settings(), rates, &napkin.paths);
     let napkin = cx.global_mut::<Napkin>();
     *napkin.engine.write().expect("engine lock poisoned") = engine;
     napkin.extensions = report;

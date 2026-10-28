@@ -206,6 +206,50 @@ degrees in degree mode. `sin 45°` works in either mode.
 `~/Library/Application Support/com.dmitrynikolaev.numi/extensions` and
 `~/Library/Application Support/com.nikolaeu.numi-setapp/extensions` when present.
 
+### Languages
+
+Like Numi, Napkin reads calculations in other languages: `5 Zoll in cm`, `20 Prozent von 50`,
+`3 mal 4`, `heute + 2 Wochen`, `Summe`, `Durchschnitt`, `2 Milliarden`. The input language is a
+setting (`Settings::input_language`, `InputLanguage`, default English) with Numi's 28 languages:
+`en`, `af`, `bs-BA`, `cs`, `da`, `de`, `de-AT`, `de-CH`, `es`, `fi`, `fr`, `he`, `it`, `ja`, `ko`,
+`nl`, `nl-BE`, `no`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `sv`, `tr`, `uk`, `zh-Hans`, `zh-Hant`.
+
+- **English is always understood**; the selected language's words are layered on top:
+  operators, conversion and assignment words (`ist gleich`), percentage phrases including the
+  multi-word `of what is` and `as a % of` forms, scales, today/tomorrow/yesterday/now/local,
+  sum/average/prev, function names (`Quadratwurzel`), unit names for every category with SI and
+  IEC prefix words (`Zentimeter`, `厘米`) and squared/cubed compounds (`Quadratmeter`), currency
+  names, month names in date literals (`12. März 2026`) and city names of time zones (`Wien`,
+  `Moskau`, `Peking`).
+- **Precedence** where words meet: the longest phrase wins; a user variable shadows every
+  language word; a language word spelt like a short English unit symbol (`m`, `ft`, `kt`, `km`)
+  cannot redefine it (`2 m` stays two metres in every language); an operator word with another
+  meaning (`e` in Italian, `min` in Dutch, `sin` in Spanish, `和` in Chinese) is an operator
+  only between two operands; a conversion word that is also a unit (`em` in Portuguese)
+  converts only when a unit, currency, zone or format follows; percentage words apply after a
+  percentage first; a word that is both a weight and a currency (`Pfund`) follows the `pound`
+  rule. Scale words follow the language (`Billion` is 10^12 in German, French and Spanish).
+  Language words are not reserved: a variable named like one shadows it.
+- **Assignment words** (`x ist gleich 5`, `Miete ist 800 €`, `价格是5`) assign only to a valid,
+  unreserved name; otherwise the line is a calculation as before.
+- **Chinese and Japanese** are written without spaces: `5厘米`, `5千米加3毫米`,
+  `9美元兑换成欧元` are segmented by the vocabulary (longest phrase). Korean words stay whole but
+  separate from digits (`5센티미터`). East Asian dates (`2026年3月12日`, `3月12号`,
+  `2026년 3월 12일`), full-width operators and `＃` headers work.
+- **Times of day with an o'clock word**: German `14 Uhr`, `14:30 Uhr`, `14.30 Uhr` (`Uhr` alone
+  is the current time), Japanese `3時`, Korean `3시`.
+- **Results** show word units in the selected language with the language's plural rules
+  (`2 Stunden`, `1 Tag`, `30,42 Tage`, `5 Zoll`, `3 Fuß`, `5 часов`, `2 godziny`), squared and
+  cubed word units as compounds where the language has them (`2 Quadratfuß`), dates and
+  weekdays with the language's names and order (`Mi., 28. Okt. 2026`). Symbols stay symbols
+  (`cm`, `kg`, `°C`). English results are unchanged. The number style stays a separate setting.
+- Each language's vocabulary is a data file, `crates/napkin-core/lang/<tag>.txt`, in Napkin's
+  own format (documented in `crates/napkin-core/src/vocab.rs`), with a sample note
+  `lang/<tag>.numi` (`InputLanguage::sample_note`). A compatibility test checks every phrase of
+  Numi's own vocabulary against an English reference when Numi's extracted engine strings are
+  present; the phrases Napkin reads differently on purpose are listed with reasons in
+  `crates/napkin-core/tests/numi_compat/<tag>.txt`.
+
 ### Acceptance examples
 
 Default settings, `Clock::Fixed { now: 2026-10-28T12:00:00Z, time_zone: Europe/Berlin }`
@@ -303,7 +347,9 @@ selection, caret, and one colour per `SpanKind`.
 
 ### Settings (`⌘,`)
 
-Theme, font size, precision (0–10), number style, angle unit, time format, notes folder,
+Theme, font size, precision (0–10), input language ("Automatic (system language)", the
+closest language to the first of macOS's preferred languages, falling back to English; or any
+language by its native name), number style, angle unit, time format, notes folder,
 global hotkey (default `⌥⌘N`, can be disabled), show menu bar icon, show dock icon,
 launch at login, Alfred/HTTP integration on/off. Persisted as JSON in
 `~/Library/Application Support/Napkin/settings.json`.
@@ -330,6 +376,9 @@ extensions" and "Open extensions folder".
 - `napkin` with stdin (or `-f file.numi`) evaluates a whole document and prints
   `line  → result` per line (`--results-only` prints just results, blank for none).
 - `--json` prints machine-readable output; `--refresh-rates` downloads rates first;
-  `--no-extensions`; `--precision N`.
+  `--no-extensions`; `--precision N`; `--number-style english|german|swiss|french|plain`.
+- `--language <tag>` selects the input language (`de`, `zh-Hans`, a locale such as `de_DE`
+  also works); the default `auto` uses `$NAPKIN_LANGUAGE`, else the system language like the
+  app's "Automatic". The Alfred endpoint of the app uses the app's setting.
 - `napkin serve [--port 15055]` runs the Alfred-compatible HTTP endpoint headless.
 - `integrations/alfred/`: an Alfred workflow (script filter calling `napkin`).
