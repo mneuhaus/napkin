@@ -24,7 +24,7 @@ use clap::{CommandFactory as _, Parser, Subcommand};
 use crate::output::Format;
 use crate::setup::EngineArgs;
 
-/// Napkin, the natural-language calculator (Numi-compatible), on the command line.
+/// Napkin, the natural-language calculator, on the command line.
 #[derive(Debug, Parser)]
 #[command(name = "napkin", version, allow_negative_numbers = true)]
 struct Cli {

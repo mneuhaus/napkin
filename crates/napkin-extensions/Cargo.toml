@@ -1,6 +1,6 @@
 [package]
 name = "napkin-extensions"
-description = "Numi-compatible JavaScript extensions (numi.addUnit, numi.addFunction, numi.setVariable) for Napkin"
+description = "JavaScript extensions for Napkin (numi.addUnit, numi.addFunction, numi.setVariable)"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

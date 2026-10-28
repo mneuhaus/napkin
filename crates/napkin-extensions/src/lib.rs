@@ -1,4 +1,4 @@
-//! Numi-compatible JavaScript extensions for Napkin.
+//! JavaScript extensions for Napkin, using the extension API Numi defined.
 //!
 //! Extensions are `.js` files that call `numi.addUnit`, `numi.addFunction`, `numi.setVariable`
 //! and `log`, exactly like Numi's

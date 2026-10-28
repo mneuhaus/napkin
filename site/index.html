@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Napkin · Calculator notepad for macOS</title>
-  <meta name="description" content="Napkin is a free, open-source calculator notepad for macOS. Write math in plain words on the left and read the answers on the right. Speaks Numi's syntax, written in Rust.">
+  <meta name="description" content="Napkin is a free, open-source calculator notepad for macOS. Write math in plain words on the left and read the answers on the right. Written in Rust.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1d1e21" media="(prefers-color-scheme: dark)">
@@ -40,7 +40,7 @@
 
       <div class="hero-body">
         <div>
-          <p class="lede"><strong>Napkin is a calculator notepad for macOS.</strong> Write the math in plain words on the left; the answer appears on the right of the same line. It speaks Numi's syntax, and it is free and open source.</p>
+          <p class="lede"><strong>Napkin is a calculator notepad for macOS.</strong> Write the math in plain words on the left; the answer appears on the right of the same line. It is free and open source.</p>
           <div class="actions">
             <a class="button primary" href="https://github.com/mneuhaus/napkin/releases/latest">
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 17h12"/></svg>
@@ -97,7 +97,7 @@
             <label><input type="radio" name="theme" value="system" checked><span class="swatch" style="--sw-bg:#fcfcfb;--sw-fg:#1d1e21"></span>System</label>
             <label><input type="radio" name="theme" value="light"><span class="swatch" style="--sw-bg:#fcfcfb;--sw-fg:#2f7d68"></span>Light</label>
             <label><input type="radio" name="theme" value="dark"><span class="swatch" style="--sw-bg:#1d1e21;--sw-fg:#7ccfae"></span>Dark</label>
-            <label><input type="radio" name="theme" value="numi-classic"><span class="swatch" style="--sw-bg:#2b2b2b;--sw-fg:#f5c451"></span>Numi Classic</label>
+            <label><input type="radio" name="theme" value="amber"><span class="swatch" style="--sw-bg:#2b2b2b;--sw-fg:#f5c451"></span>Amber</label>
             <label><input type="radio" name="theme" value="solarized-light"><span class="swatch" style="--sw-bg:#fdf6e3;--sw-fg:#859900"></span>Solarized Light</label>
             <label><input type="radio" name="theme" value="solarized-dark"><span class="swatch" style="--sw-bg:#002b36;--sw-fg:#b58900"></span>Solarized Dark</label>
           </fieldset>
@@ -112,12 +112,12 @@
     <section class="wrap" id="features" aria-labelledby="features-title">
       <div class="section-head">
         <h2 id="features-title">What it understands</h2>
-        <p>Everything in Numi's documentation, plus a little more. Every result on this page was calculated by Napkin itself.</p>
+        <p>Every result on this page was calculated by Napkin itself.</p>
       </div>
 
       <div class="notes">
         <article class="note">
-          <h3><span class="hash" aria-hidden="true">#</span>Plain words, Numi's syntax</h3>
+          <h3><span class="hash" aria-hidden="true">#</span>Plain words</h3>
           <p>Operators as symbols or words, implicit multiplication, scales like <code>k</code> and <code>M</code>, hex, binary and octal, and functions from <code>sqrt</code> to <code>tanh</code>.</p>
           <dl class="calc">
             <div class="row"><dt><span class="num">8</span> <span class="kw">times</span> <span class="num">9</span></dt><dd>72</dd></div>
@@ -158,7 +158,7 @@
 
         <article class="note">
           <h3><span class="hash" aria-hidden="true">#</span>Every kind of percentage</h3>
-          <p>All of Numi's forms: <em>of</em>, <em>on</em>, <em>off</em>, <em>as a % of</em>, and the reverse questions like <em>of what is</em>.</p>
+          <p>All the usual forms: <em>of</em>, <em>on</em>, <em>off</em>, <em>as a % of</em>, and the reverse questions like <em>of what is</em>.</p>
           <dl class="calc">
             <div class="row"><dt><span class="num">20</span><span class="unit">%</span> <span class="kw">of</span> <span class="unit">$</span><span class="num">10</span></dt><dd>$2</dd></div>
             <div class="row"><dt><span class="num">5</span><span class="unit">%</span> <span class="kw">on</span> <span class="unit">$</span><span class="num">30</span></dt><dd>$31.50</dd></div>
@@ -201,7 +201,7 @@
           <div class="lang-intro">
             <div>
               <h3><span class="hash" aria-hidden="true">#</span>28 input languages</h3>
-              <p>The same 28 languages as Numi. Pick one in Settings or let Napkin follow your system language: its words are understood on top of English, and unit names and dates come back in that language.</p>
+              <p>Pick one in Settings or let Napkin follow your system language: its words are understood on top of English, and unit names and dates come back in that language.</p>
               <ul class="lang-list" aria-label="Input languages">
                 <li lang="en">English</li>
                 <li lang="af">Afrikaans</li>
@@ -284,18 +284,18 @@
     <section class="wrap" id="app" aria-labelledby="app-title">
       <div class="section-head">
         <h2 id="app-title">The app around it</h2>
-        <p>A native Mac app that stays out of the way, a command line tool for everything else, and Numi's extension API.</p>
+        <p>A native Mac app that stays out of the way, a command line tool for everything else, and JavaScript extensions.</p>
       </div>
 
       <div class="notes">
         <article class="note wide" id="themes">
           <h3><span class="hash" aria-hidden="true">#</span>Six themes</h3>
-          <p>System (follows light and dark mode), Light, Dark, Numi Classic, Solarized Light and Solarized Dark. Font, font size, precision, number style, angle unit and clock format are settings too.</p>
+          <p>System (follows light and dark mode), Light, Dark, Amber, Solarized Light and Solarized Dark. Font, font size, precision, number style, angle unit and clock format are settings too.</p>
           <ul class="theme-shots">
             <li>
               <figure>
-                <img src="assets/theme-numi-classic.png" width="600" height="520" loading="lazy" alt="The Weekend in Lisbon note in the Numi Classic theme: dark grey with warm yellow results.">
-                <figcaption>Numi Classic</figcaption>
+                <img src="assets/theme-amber.png" width="600" height="520" loading="lazy" alt="The Weekend in Lisbon note in the Amber theme: dark grey with warm amber results.">
+                <figcaption>Amber</figcaption>
               </figure>
             </li>
             <li>
@@ -321,13 +321,13 @@
             <li>Change the hotkey or turn it off <span>in Settings</span></li>
             <li>Run with or without a Dock icon</li>
             <li>Start at login</li>
-            <li>Numi's shortcuts: <kbd>⇧⌘C</kbd> copies the current result, <kbd>⌥⌘C</kbd> the whole note</li>
+            <li>Shortcuts: <kbd>⇧⌘C</kbd> copies the current result, <kbd>⌥⌘C</kbd> the whole note</li>
           </ul>
         </article>
 
         <article class="note">
-          <h3><span class="hash" aria-hidden="true">#</span>Numi's JavaScript extensions</h3>
-          <p>Napkin runs Numi extensions unchanged: <code>numi.addUnit</code>, <code>numi.addFunction</code>, <code>numi.setVariable</code>. It also loads them from Numi's own extension folders.</p>
+          <h3><span class="hash" aria-hidden="true">#</span>JavaScript extensions</h3>
+          <p>Add your own units, functions and variables with a few lines of JavaScript.</p>
 <pre><code>numi.addUnit({
   id: "horse", phrases: "horse, horses, hrs",
   baseUnitId: "m", format: "hrs", ratio: 2.4,
@@ -351,7 +351,7 @@ numi.addFunction({ id: "zum", phrases: "zum" }, (values) => ({
 <span class="o">12.7 cm</span>
 <span class="p">$ </span>napkin --json "60 km / 2 h"
 <span class="o">{"input":"60 km / 2 h","result":{"text":"30 km/h","number":30.0,"unit":"km/h"},"error":null}</span></code></pre>
-          <p>The app answers Numi's Alfred endpoint on <code>localhost:15055</code>, so Numi's Alfred workflow keeps working. Napkin has its own workflow too, and <code>napkin serve</code> runs the endpoint without the app.</p>
+          <p>Napkin comes with an Alfred workflow, and <code>napkin serve</code> answers calculations over a local HTTP endpoint without the app.</p>
         </article>
 
         <article class="note">
@@ -366,6 +366,19 @@ numi.addFunction({ id: "zum", phrases: "zum" }, (values) => ({
           </ul>
         </article>
       </div>
+    </section>
+
+    <section class="wrap" id="numi" aria-labelledby="numi-title">
+      <div class="section-head">
+        <h2 id="numi-title">Coming from Numi?</h2>
+        <p>Napkin is an independent app, but it is compatible with Numi, so what you have keeps working:</p>
+      </div>
+      <ul class="facts">
+        <li>The same calculation syntax <span>units, currencies, percentages, dates and time zones, <code>prev</code>, <code>sum</code>, <code>avg</code></span></li>
+        <li>Your notes <span>Napkin opens and saves plain-text <code>.numi</code> files</span></li>
+        <li>Your extensions <span>Numi's JavaScript extension API (<code>numi.addUnit</code>, <code>numi.addFunction</code>, <code>numi.setVariable</code>) runs unchanged, also from Numi's extension folders</span></li>
+        <li>Your Alfred workflow <span>the app answers on the same local endpoint, <code>localhost:15055</code></span></li>
+      </ul>
     </section>
 
     <section class="wrap" id="install" aria-labelledby="install-title">
@@ -413,7 +426,7 @@ numi.addFunction({ id: "zum", phrases: "zum" }, (values) => ({
         <img src="assets/icon-64.png" width="24" height="24" alt="">
         Napkin
       </a>
-      <p>MIT license. Not affiliated with Numi.</p>
+      <p>MIT license. Numi is a trademark of its owner; Napkin is an independent project and not affiliated with or endorsed by Numi.</p>
       <p><a href="https://github.com/mneuhaus/napkin">Source on GitHub</a></p>
     </div>
   </footer>

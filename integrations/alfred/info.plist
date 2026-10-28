@@ -38,7 +38,7 @@
 	<key>createdby</key>
 	<string>Napkin contributors</string>
 	<key>description</key>
-	<string>Calculate with Napkin (Numi-compatible calculator)</string>
+	<string>Calculate with Napkin</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>

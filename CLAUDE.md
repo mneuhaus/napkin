@@ -1,6 +1,6 @@
 # Napkin
 
-Open-source, 1:1 alternative to Numi (calculator notepad) in Rust with GPUI. Read
+Open-source calculator notepad in Rust with GPUI, compatible with Numi's syntax. Read
 `docs/spec.md` first: it is the behaviour contract and lists which crate owns what.
 
 ## Rules

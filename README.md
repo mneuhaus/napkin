@@ -1,8 +1,7 @@
 # Napkin
 
-Back-of-the-napkin math for your desktop. Napkin is an open-source calculator notepad that
-speaks [Numi](https://numi.app)'s language: type calculations in plain words on the left, read
-the answers on the right of the same line.
+Back-of-the-napkin math for your desktop. Napkin is an open-source calculator notepad for macOS:
+type calculations in plain words on the left, read the answers on the right of the same line.
 
 **Website:** <https://mneuhaus.github.io/napkin/> · **Download:** [latest release](https://github.com/mneuhaus/napkin/releases/latest)
 
@@ -27,8 +26,6 @@ Built in Rust with [GPUI](https://www.gpui.rs), following the
 
 ## What it understands
 
-Everything in Numi's documentation, plus a little more:
-
 - **Arithmetic** with symbols or words (`8 times 9`, `$50 without 10%`), implicit
   multiplication (`6 (3)`), `mod`, bitwise operators, factorials, hex/binary/octal input and
   output (`0o1435343 in hex`), scientific notation (`5 300 in sci`), scales (`$2k`, `2M eur`).
@@ -37,7 +34,7 @@ Everything in Numi's documentation, plus a little more:
   compound units from dimension algebra (`km/h`, `m²`). Mixed units add up (`1 meter 20 cm`).
 - **Currencies** by code, name or sign, live rates for ~160 fiat currencies and ~40 crypto
   tickers (`$30 CAD + 5 USD - 7EUR`, `0.25 BTC in EUR`), cached for offline use.
-- **Percentages** in all of Numi's forms: `20% of $10`, `5% on $30`, `6% off 40 EUR`,
+- **Percentages** in all the usual forms: `20% of $10`, `5% on $30`, `6% off 40 EUR`,
   `$50 as a % of $100`, `5% of what is 6 EUR`, …
 - **Dates, times and time zones**: `now`, `today + 2 weeks`, `New York time`,
   `2:30 pm HKT in Berlin`, `fromunix(1446587186)`, `2026-12-24 - today`.
@@ -45,10 +42,22 @@ Everything in Numi's documentation, plus a little more:
   radians, and more.
 - **Notes as documents**: `# headers`, `// comments`, `"quoted comments"`, `Labels:`, variables,
   `prev`, `sum`/`total`, `avg`/`average`. Prose between the numbers is ignored.
-- **28 input languages**, Numi's set, on top of English: `5 Zoll in cm`, `20 Prozent von 50`,
+- **28 input languages** on top of English: `5 Zoll in cm`, `20 Prozent von 50`,
   `heute + 2 Wochen`, `3 fois 4`, `14h30 à New York`, `5厘米加3毫米`, `三百五十元`,
   `2 часа в минутах`. Word units and dates come out in the chosen language (`2 Stunden`,
   `Mi., 28. Okt. 2026`).
+
+## Coming from Numi?
+
+Napkin is an independent app, but it is compatible with [Numi](https://numi.app), so what you
+have keeps working:
+
+- **The same calculation syntax**: units, currencies, percentages, dates and time zones, `prev`,
+  `sum`, `avg`.
+- **Your notes**: Napkin opens and saves plain-text `.numi` files.
+- **Your extensions**: Numi's JavaScript extension API runs unchanged, also from Numi's extension
+  folders.
+- **Your Alfred workflow**: the app answers on the same local endpoint, `localhost:15055`.
 
 ## Install
 
@@ -74,11 +83,11 @@ cargo install --git https://github.com/mneuhaus/napkin napkin-cli
 - Results right-aligned on each line, syntax colouring, click a result to copy it.
 - Multiple notes saved as plain `.numi` files (point the notes folder at iCloud Drive or Dropbox
   to sync), a searchable notes list (`⌘L`), import/export/print.
-- Numi's shortcuts (`⇧⌘C` copy result, `⌥⌘C` copy all, `⇧⌘0` parenthesise, …), six themes
-  including Numi Classic and Solarized, settings for input language, precision, number
+- Shortcuts (`⇧⌘C` copy result, `⌥⌘C` copy all, `⇧⌘0` parenthesise, …), six themes
+  including Amber and Solarized, settings for input language, precision, number
   style, angle unit and clock format.
 - Menu bar icon, global hotkey (`⌥⌘N`), launch at login, optional Dock icon.
-- Numi's Alfred endpoint on `http://localhost:15055/?q=…`, so Numi's Alfred workflow works too.
+- An Alfred workflow and a local HTTP endpoint, `http://localhost:15055/?q=…`.
 
 ## Command line
 
@@ -95,9 +104,9 @@ An Alfred workflow lives in [`integrations/alfred`](integrations/alfred).
 
 ## Extensions
 
-Napkin runs Numi's JavaScript extensions unchanged (`numi.addUnit`, `numi.addFunction`,
-`numi.setVariable`, `log`). It loads them from `~/Library/Application Support/Napkin/extensions`
-and from Numi's own extension folders when they exist:
+Add your own units, functions and variables in JavaScript (`numi.addUnit`, `numi.addFunction`,
+`numi.setVariable`, `log`). Napkin loads extensions from
+`~/Library/Application Support/Napkin/extensions`:
 
 ```js
 numi.addUnit({
@@ -130,7 +139,7 @@ the secret-scanning hooks with `git config core.hooksPath .githooks`.
 |---|---|
 | `napkin-core` | The calculation engine (no I/O). |
 | `napkin-rates` | Exchange-rate download (open.er-api.com, Coinbase) and cache. |
-| `napkin-extensions` | QuickJS host for Numi-compatible extensions. |
+| `napkin-extensions` | QuickJS host for JavaScript extensions. |
 | `napkin-cli` | The `napkin` command. |
 | `napkin-app` | The GPUI desktop app. |
 
@@ -138,4 +147,5 @@ the secret-scanning hooks with `git config core.hooksPath .githooks`.
 
 ## License
 
-MIT. Napkin is an independent project, not affiliated with Numi.
+MIT. Numi is a trademark of its owner; Napkin is an independent project and not affiliated with
+or endorsed by Numi.

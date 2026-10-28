@@ -20,8 +20,9 @@ pub(crate) enum ThemeChoice {
     System,
     Light,
     Dark,
-    /// Numi's dark grey with warm yellow results.
-    NumiClassic,
+    /// Dark grey with warm amber results. Settings written before 0.1.2 call it `NumiClassic`.
+    #[serde(alias = "NumiClassic")]
+    Amber,
     SolarizedLight,
     SolarizedDark,
 }
@@ -31,7 +32,7 @@ impl ThemeChoice {
         Self::System,
         Self::Light,
         Self::Dark,
-        Self::NumiClassic,
+        Self::Amber,
         Self::SolarizedLight,
         Self::SolarizedDark,
     ];
@@ -41,7 +42,7 @@ impl ThemeChoice {
             Self::System => "System",
             Self::Light => "Light",
             Self::Dark => "Dark",
-            Self::NumiClassic => "Numi Classic",
+            Self::Amber => "Amber",
             Self::SolarizedLight => "Solarized Light",
             Self::SolarizedDark => "Solarized Dark",
         }
@@ -56,7 +57,7 @@ impl ThemeChoice {
             },
             Self::Light => light(),
             Self::Dark => dark(),
-            Self::NumiClassic => numi_classic(),
+            Self::Amber => amber(),
             Self::SolarizedLight => solarized_light(),
             Self::SolarizedDark => solarized_dark(),
         }
@@ -281,7 +282,7 @@ fn dark() -> Palette {
     }
 }
 
-fn numi_classic() -> Palette {
+fn amber() -> Palette {
     let text = color("#e8e6e1");
     Palette {
         dark: true,
@@ -384,6 +385,13 @@ fn solarized_dark() -> Palette {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_old_theme_name_still_loads() {
+        let theme: ThemeChoice = serde_json::from_str("\"NumiClassic\"").expect("old name parses");
+        assert_eq!(theme, ThemeChoice::Amber);
+        assert_eq!(serde_json::to_string(&theme).expect("serializes"), "\"Amber\"");
+    }
 
     #[test]
     fn every_theme_resolves_every_span_kind() {

@@ -619,7 +619,7 @@ h2 {
   --s-lbl: #80848c; --s-prose: 0.6;
 }
 
-[data-theme="numi-classic"] {
+[data-theme="amber"] {
   --w-bg: #2b2b2b; --w-title: #868480; --w-result: #f5c451; --w-caret: #f5c451; --w-edge: #3a3a3a;
   --s-text: #e8e6e1; --s-num: #e8e6e1; --s-unit: #8fc8e8; --s-op: #9a9792; --s-kw: #c9a8e8;
   --s-var: #e8a080; --s-fn: #a8d88c; --s-dt: #8cd8c8; --s-cmt: #777570; --s-hdr: #f4f2ee;

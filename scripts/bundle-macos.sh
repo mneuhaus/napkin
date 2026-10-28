@@ -73,7 +73,7 @@ cat > "$app/Contents/Info.plist" <<PLIST
     <array>
         <dict>
             <key>CFBundleTypeName</key>
-            <string>Numi Document</string>
+            <string>Napkin Document</string>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>LSHandlerRank</key>
@@ -90,7 +90,7 @@ cat > "$app/Contents/Info.plist" <<PLIST
             <key>UTTypeIdentifier</key>
             <string>com.neuhaus.napkin.numi</string>
             <key>UTTypeDescription</key>
-            <string>Numi Document</string>
+            <string>Napkin Document</string>
             <key>UTTypeConformsTo</key>
             <array>
                 <string>public.plain-text</string>

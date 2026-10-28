@@ -1,6 +1,6 @@
 # Napkin specification
 
-Napkin is a 1:1 open-source alternative to [Numi](https://numi.app) (macOS calculator notepad,
+Napkin is an open-source calculator notepad compatible with [Numi](https://numi.app)'s syntax (macOS,
 v3.35): you type calculations in plain words on the left, results appear on the right of the
 same line. Source of truth for Numi's behaviour: its wiki
 (<https://github.com/nikolaeu/numi/wiki>), README, changelog and plugin samples
@@ -397,7 +397,7 @@ document.
 
 ### Themes
 
-Built-in: System (follows light/dark), Light, Dark, Numi Classic (Numi's dark grey with warm
+Built-in: System (follows light/dark), Light, Dark, Amber (dark grey with warm
 yellow results), Solarized Light, Solarized Dark. Each theme defines background, text, result,
 selection, caret, and one colour per `SpanKind`.
 
