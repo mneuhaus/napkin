@@ -40,7 +40,7 @@ Everything in Numi's documentation, plus a little more:
 - **Percentages** in all of Numi's forms: `20% of $10`, `5% on $30`, `6% off 40 EUR`,
   `$50 as a % of $100`, `5% of what is 6 EUR`, …
 - **Dates, times and time zones**: `now`, `today + 2 weeks`, `New York time`,
-  `2:30 pm HKT in Berlin`, `fromunix(1446587186)`, `christmas - today`.
+  `2:30 pm HKT in Berlin`, `fromunix(1446587186)`, `2026-12-24 - today`.
 - **Functions**: `sqrt`, `cbrt`, `root 2 (8)`, `log 2 (10)`, `ln`, `round`, trig in degrees or
   radians, and more.
 - **Notes as documents**: `# headers`, `// comments`, `"quoted comments"`, `Labels:`, variables,
