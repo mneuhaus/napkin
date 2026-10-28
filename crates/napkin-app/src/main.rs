@@ -1,160 +1,88 @@
 //! Napkin: a calculator notepad. Type math in plain words, read the results on the right.
+//!
+//! `napkin-app [file.numi]` opens the file as a new note. Environment for testing:
+//! `NAPKIN_HOME=<dir>` keeps notes, settings, caches, extensions and the login item in one
+//! folder; `NAPKIN_BACKGROUND=1` opens the window without focus and never activates the app.
 
+mod actions;
+mod app;
 mod editor;
+mod hotkey;
+mod http;
+mod login_item;
+mod note_window;
+mod notes;
+mod notes_list;
 mod paths;
+mod platform;
 mod results;
 mod settings;
+mod settings_window;
 mod sheet;
 mod theme;
+mod tray;
 
-use std::cell::RefCell;
-use std::rc::Rc;
-use std::sync::{Arc, RwLock};
-use std::time::Duration;
+use std::borrow::Cow;
+use std::path::PathBuf;
 
-use gpui_kit::base::input::{EditorState, InputEvent};
-use gpui_kit::{
-    App, AppContext as _, Bounds, ClipboardItem, Context, Entity, FontWeight, InteractiveElement as _,
-    IntoElement, ParentElement as _, Render, Styled as _, Subscription, TitlebarOptions, Window,
-    WindowBounds, WindowOptions, div, point, px, size,
-};
-use napkin_core::Engine;
+use gpui_kit::{App, AssetSource, SharedString};
 
-use crate::editor::{EditorArea, EditorFont, new_editor};
-use crate::settings::{DEFAULT_FONT_SIZE, FontChoice};
-use crate::sheet::Sheet;
-use crate::theme::ThemeChoice;
+use crate::app::Launch;
 
-const SAMPLE: &str = "# Trip\n12\n3.5\nnot a number\n1000000\n0.25\nA long line of prose that should soft wrap before it reaches the result column on the right side of the window, keeping the result aligned with the first row\n42\n// a comment\n7";
+gpui_kit::assets::icon_assets!(
+    ExtraIconAssets,
+    [List, Pencil, Trash, Plus, Search, FolderOpen, X]
+);
 
-struct NoteWindow {
-    sheet: Rc<RefCell<Sheet>>,
-    editor: Entity<EditorState>,
-    flash: Option<(usize, u64)>,
-    flash_generation: u64,
-    _subscriptions: Vec<Subscription>,
-}
+/// The icons the app uses beyond gpui-component's defaults.
+pub(crate) use gpui_kit::assets::IconName as ExtraIcon;
 
-impl NoteWindow {
-    fn new(text: &str, window: &mut Window, cx: &mut Context<'_, Self>) -> Self {
-        let engine = Arc::new(RwLock::new(Engine::new()));
-        let sheet = Rc::new(RefCell::new(Sheet::new(engine)));
-        sheet.borrow_mut().set_text(text);
-        let editor = new_editor(&sheet, text, window, cx);
-        let subscriptions = vec![
-            cx.subscribe_in(&editor, window, |this, editor, event, _window, cx| {
-                if matches!(event, InputEvent::Change) {
-                    this.sheet.borrow_mut().set_text(&editor.read(cx).value());
-                    cx.notify();
-                }
-            }),
-        ];
-        Self {
-            sheet,
-            editor,
-            flash: None,
-            flash_generation: 0,
-            _subscriptions: subscriptions,
+/// gpui-kit's default assets plus [`ExtraIconAssets`].
+struct Assets;
+
+impl AssetSource for Assets {
+    fn load(&self, path: &str) -> gpui_kit::Result<Option<Cow<'static, [u8]>>> {
+        if let Some(bytes) = ExtraIconAssets.load(path)? {
+            return Ok(Some(bytes));
         }
+        gpui_kit::assets::Assets.load(path)
     }
 
-    fn copy_result(&mut self, line: usize, cx: &mut Context<'_, Self>) {
-        let Some(text) = self.sheet.borrow().answer(line).map(|answer| answer.text.clone()) else {
-            return;
-        };
-        cx.write_to_clipboard(ClipboardItem::new_string(text));
-        self.flash_generation += 1;
-        let generation = self.flash_generation;
-        self.flash = Some((line, generation));
-        cx.notify();
-        cx.spawn(async move |this, cx| {
-            cx.background_executor().timer(Duration::from_millis(900)).await;
-            let _ = this.update(cx, |this, cx| {
-                if this.flash.is_some_and(|(_, shown)| shown == generation) {
-                    this.flash = None;
-                    cx.notify();
-                }
-            });
-        })
-        .detach();
+    fn list(&self, path: &str) -> gpui_kit::Result<Vec<SharedString>> {
+        let mut paths = gpui_kit::assets::Assets.list(path)?;
+        paths.extend(ExtraIconAssets.list(path)?);
+        paths.sort();
+        paths.dedup();
+        Ok(paths)
     }
 }
 
-impl Render for NoteWindow {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<'_, Self>) -> impl IntoElement {
-        let palette = ThemeChoice::System.palette(window.appearance());
-        let width = window.bounds().size.width;
-        let view = cx.entity().downgrade();
-        let area = EditorArea {
-            editor: &self.editor,
-            sheet: &self.sheet,
-            palette: &palette,
-            font: EditorFont {
-                choice: FontChoice::System,
-                size: DEFAULT_FONT_SIZE,
-            },
-            width,
-            flash_line: self.flash.map(|(line, _)| line),
-            on_copy: Rc::new(move |line, _window, cx| {
-                let _ = view.update(cx, |this, cx| this.copy_result(line, cx));
-            }),
-        };
-        div()
-            .id("napkin")
-            .size_full()
-            .flex()
-            .flex_col()
-            .bg(palette.background)
-            .child(
-                div()
-                    .h(px(38.))
-                    .flex_none()
-                    .flex()
-                    .items_center()
-                    .justify_center()
-                    .text_size(px(12.))
-                    .font_weight(FontWeight::MEDIUM)
-                    .text_color(palette.muted)
-                    .child("Trip"),
-            )
-            .child(area.render(window, cx))
+fn launch_from_environment() -> Launch {
+    Launch {
+        open_file: std::env::args_os()
+            .nth(1)
+            .map(PathBuf::from)
+            .filter(|path| path.is_file()),
+        background: std::env::var_os("NAPKIN_BACKGROUND").is_some_and(|value| !value.is_empty()),
     }
 }
 
 fn main() {
-    gpui_kit::application().run(|cx: &mut App| {
+    let launch = launch_from_environment();
+    let application = gpui_kit::application().with_assets(Assets);
+    // The Dock icon, or opening Napkin again from Finder, brings the window back.
+    application.on_reopen(app::show_main_window);
+    // `.numi` files opened from Finder become notes.
+    let (opened_sender, opened_files) = async_channel::unbounded();
+    application.on_open_urls(move |urls| {
+        let _ = opened_sender.try_send(urls);
+    });
+    application.run(move |cx: &mut App| {
         gpui_kit::init(cx);
-        let bounds = Bounds::centered(None, size(px(560.), px(440.)), cx);
-        let opened = gpui_kit::open_window(
-            WindowOptions {
-                window_bounds: Some(WindowBounds::Windowed(bounds)),
-                titlebar: Some(TitlebarOptions {
-                    title: Some("Napkin".into()),
-                    appears_transparent: true,
-                    traffic_light_position: Some(point(px(13.), px(13.))),
-                }),
-                window_min_size: Some(size(px(320.), px(200.))),
-                focus: std::env::var_os("NAPKIN_BACKGROUND").is_none(),
-                ..Default::default()
-            },
-            cx,
-            |window, cx| {
-                let text = std::env::args()
-                    .nth(1)
-                    .and_then(|path| std::fs::read_to_string(path).ok())
-                    .unwrap_or_else(|| SAMPLE.to_owned());
-                let view = cx.new(|cx| NoteWindow::new(&text, window, cx));
-                let editor = view.read(cx).editor.clone();
-                editor.update(cx, |editor, cx| editor.focus(window, cx));
-                view
-            },
-        );
-        if let Err(error) = opened {
-            eprintln!("could not open the window: {error:#}");
+        notes_list::bind_keys(cx);
+        if let Err(error) = app::start(launch, opened_files, cx) {
+            eprintln!("Napkin could not start: {error:#}");
             cx.quit();
-        }
-        if std::env::var_os("NAPKIN_BACKGROUND").is_none() {
-            cx.activate(true);
         }
     });
 }
