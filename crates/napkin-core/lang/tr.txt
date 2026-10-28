@@ -1,1 +1,238 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Turkish (Türkçe). Format: see crates/napkin-core/src/vocab.rs.
+# Turkish uses the singular after numbers, so every word unit has one form (`3 saat`).
+# Phrases of three or more characters match any case through Rust's lowercasing, which maps
+# `I` to `i` and `İ` to `i̇`: words with ı, İ, ş, ğ, ç, ö, ü also come without the marks
+# (`yil`, `dolari`), which covers text typed on keyboards without Turkish letters and in capitals.
+
+# Arithmetic
+plus = artı, arti, ve, ile, topla
+minus = eksi, çıkar, cikar
+times = çarpı, carpi, kere, kez, defa
+divide = bölü, bolu, böl, bol, bölünürse
+per = başına, basina
+modulo = mod, modülo
+# `5 km kaç mil`, `100 dolar kaç euro`; after the target: `5 km mil olarak`, `cm cinsinden`
+convert = kaç, kac
+convert-after = olarak, cinsinden, cinsinde
+assign = eşittir, esittir, eşit, esit
+
+# Percentages (`yüzde 20` and `%20` put the percent word before the number)
+percent = yüzde, yuzde
+percent.before = yüzde, yuzde, %
+
+# Scales (short scale: milyar = 10^9, trilyon = 10^12)
+scale.1e3 = bin
+scale.1e6 = milyon, mn
+scale.1e9 = milyar, mlr
+scale.1e12 = trilyon
+
+# Dates and times
+today = bugün, bugun
+tomorrow = yarın, yarin
+yesterday = dün, dun
+day.2 = öbür gün, obur gun, yarından sonra
+day.-2 = evvelki gün, evvelsi gün, önceki gün, dünden önce
+now = şimdi, simdi, şu an, su an, şu anda, zaman, saati
+local = yerel, yerel saat, yerel saat dilimi, yerel zaman
+noon = öğle, öğlen, ogle, oglen
+midnight = gece yarısı, gece yarisi
+
+# Document references
+prev = önceki, onceki, bir önceki
+sum = toplam, toplamı, toplami, total, sum
+average = ortalama, ortalaması, ortalamasi
+
+# Functions and formats
+function.sqrt = karekök, karekok
+function.cbrt = küpkök, kupkok
+function.round = yuvarla
+function.ceil = yukarı yuvarla
+function.floor = aşağı yuvarla
+function.abs = mutlak değer
+function.fact = faktöriyel
+function.sin = sinüs
+function.cos = kosinüs
+function.tan = tanjant
+format.hex = onaltılık, onaltilik, heksadesimal
+format.bin = ikilik, ikili
+format.oct = sekizlik
+format.dec = onluk
+format.sci = bilimsel
+
+# Time
+show.s = saniye
+unit.s = sn{,.}, san{,.}
+show.min = dakika
+unit.min = dk{,.}, dak{,.}
+show.h = saat
+unit.h = sa{,.}
+show.day = gün
+unit.day = gun
+show.week = hafta
+unit.week = hf{,.}
+show.month = ay
+unit.month = ay.
+show.year = yıl
+unit.year = yil, sene, yl
+show.decade = onyıl
+unit.decade = onyil
+show.century = yüzyıl
+unit.century = yuzyil, asır, asir
+
+# SI prefixes that Turkish spells differently from English
+prefix.c = santi
+prefix.m = mili
+prefix.d = desi
+prefix.µ = mikro
+prefix.p = piko
+prefix.h = hekto
+
+# Length
+unit.m = metre
+show.inch = inç
+unit.inch = inc
+show.foot = fit
+unit.foot = ayak
+show.yard = yarda
+show.mile = mil
+show.nautical mile = deniz mili
+unit.nautical mile = deniz mil
+show.light year = ışık yılı
+unit.light year = isik yili
+unit.pt = punto
+unit.px = piksel
+
+# Area (metrekare, fit kare)
+square = *kare, * kare
+show.square = * kare
+unit.ha = hektar, hk
+show.are = ar
+show.acre = akre
+show.dunam = dönüm
+unit.dunam = donum
+
+# Volume (metreküp, santimetreküp)
+cubic = *küp, * küp, *kup, * kup
+show.cubic = * küp
+unit.l = litre, lt
+show.cup = su bardağı
+unit.cup = bardak, su bardagi
+show.tablespoon = yemek kaşığı
+unit.tablespoon = yemek kasigi
+show.teaspoon = çay kaşığı
+unit.teaspoon = cay kasigi
+show.gallon = galon
+show.fluid ounce = sıvı ons
+unit.fluid ounce = sivi ons
+
+# Weight (kental = 100 kg)
+unit.g = gram, gr{,.}
+unit.kg = kilo
+unit.t = ton
+show.carat = kırat
+unit.carat = kirat, karat
+show.centner = kental
+show.pound = libre
+show.ounce = ons
+
+# Temperature and angles
+unit.°C = santigrat, derece santigrat, selsiyus, derece selsiyus, celsius
+unit.°F = fahrenhayt, fahrenayt, derece fahrenhayt
+unit.K = kelvin
+unit.° = derece
+unit.rad = radyan
+
+# Data, speed
+unit.B = bayt
+per.h = saatte, saat başına, saat basina
+per.day = günde, gunde, günlük, gunluk
+per.week = haftada, haftalık, haftalik
+per.month = ayda, aylık, aylik
+per.year = yılda, yilda, yıllık, yillik
+
+# Currencies
+currency.TRY = TL, lira, liras{ı,i}, {türk,turk} liras{ı,i}
+currency.USD = dolar, dolar{ı,i}, amerikan dolar{ı,i}, abd dolar{ı,i}
+currency.EUR = euro, avro
+currency.GBP = sterlin, İngiliz sterlini, ingiliz sterlini, ingiliz pound{,u}
+currency.CHF = frank, İsviçre frang{ı,i}, isviçre frang{ı,i}, isvicre frangi
+currency.JPY = yen, japon yen{i,}
+currency.CNY = yuan, çin yuan{ı,i}, cin yuani
+currency.RUB = ruble, rus rubles{i,}
+currency.AED = dirhem, bae dirhem{i,}
+currency.SAR = riyal, suudi riyal{i,}
+currency.QAR = katar riyal{i,}, qatari rial{,s}
+currency.AZN = manat, azerbaycan manat{ı,i}
+currency.AUD = avustralya dolar{ı,i}
+currency.CAD = kanada dolar{ı,i}
+currency.BBD = barbados dolar{ı,i}
+currency.SGD = singapur dolar{ı,i}, singapore dollar{,s}
+currency.INR = hindistan rupi{si,}, indian rupee{,s}
+currency.LKR = sri lanka rupi{si,}, sri lanka rupee{,s}
+currency.THB = baht, tayland baht{ı,i}, thai baht
+currency.AFN = afgani, afgan afgani{,si}, Afs, Af, ؋
+currency.BTC = bitcoin
+
+# Time zones: Turkish names of cities and countries
+zone.Europe/Istanbul = İstanbul, istanbul, Ankara, İzmir, izmir, Antalya, Bursa, Türkiye, turkiye
+zone.Europe/London = Londra, İngiltere, ingiltere
+zone.Europe/Moscow = Moskova, Rusya
+zone.Asia/Shanghai = Pekin, Şanghay, sanghay, Çin, cin
+zone.Europe/Vienna = Viyana, Avusturya
+zone.Europe/Berlin = Münih, munih, Almanya
+zone.Europe/Lisbon = Lizbon, Portekiz
+zone.Europe/Warsaw = Varşova, varsova, Polonya
+zone.Europe/Brussels = Brüksel, bruksel, Belçika, belcika
+zone.Europe/Copenhagen = Kopenhag, Danimarka
+zone.Europe/Zurich = Cenevre, Zürih, zurih, İsviçre, isvicre
+zone.Europe/Paris = Fransa
+zone.Europe/Rome = İtalya, italya, Milano
+zone.Europe/Madrid = Barselona, İspanya, ispanya
+zone.Europe/Amsterdam = Hollanda
+zone.Europe/Athens = Atina, Yunanistan
+zone.Europe/Prague = Prag
+zone.Europe/Budapest = Budapeşte, budapeste
+zone.Europe/Bucharest = Bükreş, bukres, Romanya
+zone.Europe/Sofia = Sofya, Bulgaristan
+zone.Europe/Belgrade = Belgrad, Sırbistan, sirbistan
+zone.Europe/Sarajevo = Saraybosna
+zone.Europe/Kyiv = Kiev, Ukrayna
+zone.Europe/Stockholm = Stokholm, İsveç, isvec
+zone.Europe/Oslo = Norveç, norvec
+zone.Europe/Helsinki = Finlandiya
+zone.Asia/Nicosia = Lefkoşa, lefkosa, Kıbrıs, kibris
+zone.Asia/Tbilisi = Tiflis, Gürcistan, gurcistan
+zone.Asia/Baku = Bakü, baku, Azerbaycan
+zone.Asia/Yerevan = Erivan
+zone.Asia/Tehran = Tahran, İran, iran
+zone.Asia/Baghdad = Bağdat, bagdat, Irak
+zone.Asia/Damascus = Şam, Suriye
+zone.Asia/Beirut = Beyrut, Lübnan, lubnan
+zone.Asia/Jerusalem = Kudüs, kudus, İsrail, israil
+zone.Africa/Cairo = Kahire, Mısır, misir
+zone.Asia/Riyadh = Riyad, Mekke, Suudi Arabistan
+zone.Asia/Seoul = Seul
+zone.Asia/Kolkata = Yeni Delhi, Hindistan
+zone.Asia/Tokyo = Japonya
+zone.America/New_York = Vaşington, vasington
+zone.America/Mexico_City = Meksika
+zone.Australia/Sydney = Avustralya
+
+# Month names in dates (`12 Mart 2026`)
+month.1 = Ocak, Oca
+month.2 = Şubat, subat, Şub, sub
+month.3 = Mart, Mar
+month.4 = Nisan, Nis
+month.5 = Mayıs, mayis
+month.6 = Haziran, Haz
+month.7 = Temmuz, Tem
+month.8 = Ağustos, agustos, Ağu, agu
+month.9 = Eylül, eylul, Eyl
+month.10 = Ekim, Eki
+month.11 = Kasım, kasim, Kas
+month.12 = Aralık, aralik, Ara
+
+# Display (`28 Eki 2026 Çar`)
+weekdays = Pzt, Sal, Çar, Per, Cum, Cmt, Paz
+months = Oca, Şub, Mar, Nis, May, Haz, Tem, Ağu, Eyl, Eki, Kas, Ara
+date = %-d %b %Y %a

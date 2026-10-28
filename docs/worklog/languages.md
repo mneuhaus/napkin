@@ -15,7 +15,8 @@ reference only, never committed).
 - [x] currency names for every language, all other languages (delegated, see below)
 - [x] test harness: `tests/languages/` (tables + sample notes), `tests/numi_compat.rs`
 - [x] app picker, CLI `--language` (+ `--number-style`), spec "Languages" section, README
-- [ ] gate, screenshots, final commit
+- [x] gate (fmt, clippy -D warnings, tests, docs), CLI demo, screenshots
+      (`tmp/shots/languages-*.png`), final commit
 
 ## Layout
 
@@ -113,6 +114,11 @@ e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `t
   Spanish `hora` = now alone).
 - Conversion words of one or two letters (`à`, `a`, `zu`, `в`, `w`) convert only when a unit,
   currency, zone or format follows.
+- Turkish `%20`: `percent.before = %` makes a percent sign before its number a percentage
+  (`50 + %20` = 60) where the language lists it; English is unchanged.
+- A `"` between two Hebrew letters is the gershayim of an abbreviation (`ש"ח`), not a quote.
+- `dunam` built-in unit (1000 m²) for Turkish `dönüm` and Hebrew `דונם`.
+- Vocabulary lookups borrow instead of allocating (English 5.2 ms → 2.8 ms per 500 lines).
 
 ## Known gaps (not done)
 
@@ -129,4 +135,51 @@ e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `t
 
 ## Coverage
 
-(filled in from the compatibility test at the end)
+Numi compatibility (`cargo test -p napkin-core --test numi_compat -- --nocapture`), every
+`*.variants` phrase of Numi 3.34's engine strings, probed against an English reference. Every
+phrase is either accepted or listed with its reason in `tests/numi_compat/<tag>.txt`; the test
+fails on any other miss and on listed misses that pass by now.
+
+| Language | Accepted | Total | Coverage | Explained misses |
+|---|---|---|---|---|
+| en | 778 | 816 | 95.3% | 38 |
+| af | 1045 | 1086 | 96.2% | 41 |
+| bs-BA | 161 | 165 | 97.6% | 4 |
+| cs | 114 | 119 | 95.8% | 5 |
+| da | 74 | 83 | 89.2% | 9 |
+| de | 1584 | 1653 | 95.8% | 69 |
+| de-AT | 1567 | 1630 | 96.1% | 63 |
+| de-CH | 1580 | 1652 | 95.6% | 72 |
+| es | 683 | 724 | 94.3% | 41 |
+| fi | 96 | 97 | 99.0% | 1 |
+| fr | 1364 | 1394 | 97.8% | 30 |
+| he | 15 | 15 | 100.0% | 0 |
+| it | 1692 | 1725 | 98.1% | 33 |
+| ja | 54 | 55 | 98.2% | 1 |
+| ko | 283 | 289 | 97.9% | 6 |
+| nl | 1082 | 1125 | 96.2% | 43 |
+| nl-BE | 988 | 1028 | 96.1% | 40 |
+| no | 220 | 235 | 93.6% | 15 |
+| pl | 424 | 438 | 96.8% | 14 |
+| pt-BR | 1616 | 1672 | 96.7% | 56 |
+| pt-PT | 1619 | 1674 | 96.7% | 55 |
+| ro | 234 | 250 | 93.6% | 16 |
+| ru | 981 | 1009 | 97.2% | 28 |
+| sv | 75 | 83 | 90.4% | 8 |
+| tr | 90 | 95 | 94.7% | 5 |
+| uk | 75 | 75 | 100.0% | 0 |
+| zh-Hans | 634 | 673 | 94.2% | 39 |
+| zh-Hant | 247 | 255 | 96.9% | 8 |
+| **all** | **19375** | **20115** | **96.3%** | **740** |
+
+Reasons for the 740 explained misses, roughly: ~45% obsolete currency codes Napkin does not
+know (BYR, VEF, MRO, STD, SVC, ZMK; their names map to today's codes); short English unit
+symbols and articles that keep their meaning (`m` as million or thousand, `t`, `kt`, `a`, `'`);
+phrases Numi lists under two meanings or two currencies (Spanish `de` of/off, bare `manat`,
+`kwacha`, `leu`, `C$`); mistranslations that would compute wrong values (German `Zentner` 50 kg,
+Swedish `av`, Norwegian `subtrahert` as divide, Turkish `dönüm` as acre, Spanish `billón` 10^9);
+common words that would turn prose into numbers (`Real`, `Dram`, `Kip`, Dutch `ver`); broken
+entries (missing commas, `%@` templates, a URL, invisible characters).
+
+Performance (release, 500 lines): English 2.8 ms, German 3.0 ms, Chinese 1.9 ms, Russian 1.8 ms
+(`input_languages_stay_fast`, budget 10 ms).

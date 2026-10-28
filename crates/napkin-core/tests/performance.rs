@@ -6,7 +6,7 @@ mod common;
 
 use std::time::{Duration, Instant};
 
-use napkin_core::LineResult;
+use napkin_core::{InputLanguage, LineResult};
 
 /// Lines typical of a Numi note: budgets, conversions, dates, prose and comments.
 const LINES: &[&str] = &[
@@ -77,4 +77,50 @@ fn five_hundred_lines_in_under_ten_milliseconds() {
         median < Duration::from_millis(10),
         "median {median:?} is too slow"
     );
+}
+
+/// The median time of evaluating `document` 21 times.
+fn median_time(engine: &napkin_core::Engine, document: &str) -> Duration {
+    let mut timings: Vec<Duration> = (0..21)
+        .map(|_| {
+            let start = Instant::now();
+            let lines = engine.evaluate(document);
+            let elapsed = start.elapsed();
+            assert_eq!(lines.len(), document.split('\n').count());
+            elapsed
+        })
+        .collect();
+    timings.sort();
+    timings[timings.len() / 2]
+}
+
+#[test]
+#[ignore = "timing check; run in release with --ignored"]
+fn input_languages_stay_fast() {
+    for language in [
+        InputLanguage::German,
+        InputLanguage::ChineseSimplified,
+        InputLanguage::Russian,
+    ] {
+        let mut engine = common::engine();
+        let mut settings = engine.settings().clone();
+        settings.input_language = language;
+        engine.set_settings(settings);
+        let note = language.sample_note();
+        let document: Vec<&str> = LINES
+            .iter()
+            .copied()
+            .chain(note.lines())
+            .cycle()
+            .take(500)
+            .collect();
+        let document = document.join("\n");
+        let median = median_time(&engine, &document);
+        println!("500 lines in {}: median {median:?}", language.tag());
+        assert!(
+            median < Duration::from_millis(10),
+            "{}: median {median:?} is too slow",
+            language.tag()
+        );
+    }
 }

@@ -128,9 +128,10 @@ All SI-based units accept every SI prefix, short and long, case-sensitive
 (`mm`, `picometers`, `GB`, `MHz`). Plural and singular forms, common abbreviations.
 
 - **Length**: meter, mil, point, line, inch, hand, foot, yard, rod, chain, furlong, mile,
-  cable, nautical mile, league; CSS `px`, `pt`, `em` (see CSS).
-- **Area**: hectare, are, acre, and squared lengths with `square`/`sq` prefix or `²`/`^2` suffix:
-  `20 sq cm`, `30 square inches`, `11 sqm` → `11 m²`.
+  cable, nautical mile, league, Scandinavian mile (10 km, named only in Swedish and Norwegian);
+  CSS `px`, `pt`, `em` (see CSS).
+- **Area**: hectare, are, acre, ping (坪), dunam (1000 m²), and squared lengths with
+  `square`/`sq` prefix or `²`/`^2` suffix: `20 sq cm`, `30 square inches`, `11 sqm` → `11 m²`.
 - **Volume**: pint, quart, gallon, teaspoon (`tsp`), tablespoon (`tbsp`), cup, liter (`l`, `L`,
   with SI prefixes), cubed lengths with `cubic`/`cu`/`cb` prefix or `³`: `20 cu cm`, `11 cbm`.
 - **Weight**: gram (SI prefixes), tonne, carat, centner, pound, stone, ounce.
@@ -228,7 +229,10 @@ setting (`Settings::input_language`, `InputLanguage`, default English) with Numi
   only between two operands; a conversion word that is also a unit (`em` in Portuguese)
   converts only when a unit, currency, zone or format follows; percentage words apply after a
   percentage first; a word that is both a weight and a currency (`Pfund`) follows the `pound`
-  rule. Scale words follow the language (`Billion` is 10^12 in German, French and Spanish).
+  rule; an uppercase currency code beats a language word (`5 SEK`, not Norwegian `sek`
+  seconds); a word that is an operator and a unit is the unit before a number with a unit of
+  the same kind (Dutch `5 min 30 sec`, but `10 min 3` = 7); conversion words of one or two
+  letters (`à`, `zu`, `в`) convert only when a target follows. Scale words follow the language (`Billion` is 10^12 in German, French and Spanish).
   Language words are not reserved: a variable named like one shadows it.
 - **Assignment words** (`x ist gleich 5`, `Miete ist 800 €`, `价格是5`) assign only to a valid,
   unreserved name; otherwise the line is a calculation as before.
@@ -237,7 +241,15 @@ setting (`Settings::input_language`, `InputLanguage`, default English) with Numi
   separate from digits (`5센티미터`). East Asian dates (`2026年3月12日`, `3月12号`,
   `2026년 3월 12일`), full-width operators and `＃` headers work.
 - **Times of day with an o'clock word**: German `14 Uhr`, `14:30 Uhr`, `14.30 Uhr` (`Uhr` alone
-  is the current time), Japanese `3時`, Korean `3시`.
+  is the current time), Chinese `下午3点半`, Japanese `午後3時15分`, Korean `오후 3시 30분`.
+- **Word order of other languages**: a percent sign or word before the number (Turkish
+  `50 + %20` = 60, Chinese `百分之20的50` = 10), units before the number (`摄氏100度`,
+  `大さじ3`), conversion words after the target (Korean `100달러를 유로로`, Japanese
+  `100ドルをユーロに`; unknown Korean words are split into known words, so attached particles
+  separate), joining words in dates (`12 de março de 2026`) and between a number and its unit
+  (Romanian `25 de kilograme`), per-unit phrases (`100 рублей в час` is RUB/h).
+- **Units only some languages have**: the Scandinavian mile (`mil` = 10 km in Swedish and
+  Norwegian), the dunam (1000 m², Turkish `dönüm`), the ping (坪, 400/121 m²).
 - **Results** show word units in the selected language with the language's plural rules
   (`2 Stunden`, `1 Tag`, `30,42 Tage`, `5 Zoll`, `3 Fuß`, `5 часов`, `2 godziny`), squared and
   cubed word units as compounds where the language has them (`2 Quadratfuß`), dates and

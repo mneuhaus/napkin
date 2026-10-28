@@ -1,1 +1,253 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Bosnian (bosanski, Latin script; common Croatian and Serbian variants are read too).
+# Format: see crates/napkin-core/src/vocab.rs.
+# Word units are shown in the CLDR plural categories one | few | other:
+# 1 sat | 2 sata | 5 sati (fractions take `other`: 1,5 sati).
+
+# Arithmetic
+plus = plus, i, dodaj, dodati, sabrano s{,a}, zbrojeno s{,a}
+minus = minus, manje, oduzeto, oduzmi, bez
+times = puta, pomnoženo s{,a}, pomnoženo, množi s{,a}
+divide = podijeljeno s{,a}, podijeljeno, podeljeno s{,a}, kroz, dijeli s{,a}
+per = po, na svak{i,u,o}
+modulo = modulo, mod
+convert = u, kao, pretvori u, pretvoreno u, preračunato u
+assign = jednako je, jednako, je, jest, iznosi
+
+# Percentages
+percent = posto, procen{at,ta,ti,ata}, procent{,a,i}, postot{ak,ka,ci,aka}
+percent.of = od
+percent.on = na, povrh, dodatno na
+percent.off = popusta na, popust na, manje od, umanjeno za
+as-percent.of = kao {%,postotak,procenat,posto} od, u procentima od, u postocima od
+as-percent.off = kao {%,postotak,procenat} {smanjenja,pada} od
+as-percent.on = kao {%,postotak,procenat} {povećanja,rasta} od
+what-is.of = od čega je, od koliko je, od čega
+what-is.off = popusta na koliko je, popusta na šta je
+what-is.on = na koliko je, na šta je, na što je
+
+# Scales (long scale: milijarda = 10^9, bilion = 10^12)
+scale.1e3 = hiljad{a,e,u,i,ama}, hilj{,.}, tisuć{a,e,u,i}
+scale.1e6 = milion{,a,i,e,u,ima}, milijun{,a,i,e,u}, mil.
+scale.1e9 = milijard{a,e,i,u,ama}, mlrd{,.}, mrd{,.}
+scale.1e12 = bilion{,a,i,e,u}, bilijun{,a,i,e,u}
+
+# Dates and times
+today = danas
+tomorrow = sutra
+yesterday = jučer, juče
+day.2 = prekosutra
+day.-2 = prekjučer, prekjuče
+now = sada, sad, vrijeme, trenutno vrijeme, koliko je sati
+local = lokalno vrijeme, mjesno vrijeme, po lokalnom vremenu, lokalna vremenska zona, lokalno
+noon = podne
+midnight = ponoć
+
+# Document references
+prev = prethodn{i,o,a,og}, prethodni rezultat
+sum = zbir, ukupno, suma, zbroj, sve ukupno
+average = prosjek, prosječno, prosek
+
+# Functions and formats
+function.sqrt = kvadratni korijen{, od, iz}, drugi korijen{, od, iz}, korijen{, od, iz}
+function.cbrt = kubni korijen{, od, iz}, treći korijen{, od, iz}
+function.round = zaokruži, zaokruženo
+function.ceil = zaokruži naviše, zaokruži nagore
+function.floor = zaokruži naniže, zaokruži nadolje
+function.abs = apsolutna vrijednost
+function.fact = faktorijel
+function.sin = sinus
+function.cos = kosinus
+function.tan = tangens
+format.hex = heksadecimaln{o,i,om}, hexadecimaln{o,i,om}
+format.bin = binarn{o,i,om}
+format.oct = oktaln{o,i,om}
+format.dec = decimaln{o,i,om}
+format.sci = naučn{a,i,o,om} {notacija,notaciji,zapis,zapisu}, naučno, znanstven{i,o,om} {zapis,zapisu}
+
+# Time
+show.s = sekunda | sekunde | sekundi
+unit.s = sekund{u,om,ama}, sek{,.}
+show.min = minuta | minute | minuta
+unit.min = minut{u,om,ama,i}
+show.h = sat | sata | sati
+unit.h = sat{u,om,ima,e}
+show.day = dan | dana | dana
+unit.day = dan{u,om,ima,i}
+show.week = sedmica | sedmice | sedmica
+unit.week = sedmic{u,om,ama,i}, tjed{an,na,nu,nom,ana,ni,nima}
+show.month = mjesec | mjeseca | mjeseci
+unit.month = mjesec{u,om,ima,e}, mj{,.}
+show.year = godina | godine | godina
+unit.year = godin{u,om,ama,i}, god{,.}
+show.decade = decenija | decenije | decenija
+unit.decade = decenij{u,om,ama,i}, desetljeć{e,a,u,ima}
+show.century = vijek | vijeka | vijekova
+unit.century = vijek{u,om,ovi,ovima}, stoljeć{e,a,u,ima}
+
+# SI prefixes that Bosnian spells differently from English
+prefix.m = mili
+prefix.µ = mikro
+prefix.p = piko
+prefix.h = hekto
+
+# Length
+unit.m = m{etar,etra,etri,etre,etara,etru,etrom,etrima}
+show.inch = inč | inča | inča
+unit.inch = inč{u,om,i,eva,ima}, pal{ac,ca,aca,cu,cima}
+show.foot = stopa | stope | stopa
+unit.foot = stop{u,om,i,ama}
+show.yard = jard | jarda | jardi
+unit.yard = jard{u,om,e,ima}
+show.mile = milja | milje | milja
+unit.mile = milj{u,om,i,ama,ima}
+show.nautical mile = nautička milja | nautičke milje | nautičkih milja
+unit.nautical mile = nautičk{u,om} milj{u,om}, morsk{a,e,ih,u} milj{a,e,u}
+show.light year = svjetlosna godina | svjetlosne godine | svjetlosnih godina
+unit.light year = svjetlosn{u,om,im} godin{u,om,ama}
+unit.pt = tačk{a,e,i,u}, točk{a,e,i,u}
+unit.px = piksel{,i,a,ima}, pixel{,i,a}, pixselima, pks
+unit.em = emovi, emova, emovima
+
+# Area (kvadratni metar, metar na kvadrat)
+square = kvadratn{i,a,ih,og,e,im,u} *, * na kvadrat, kv{,.} *
+unit.ha = hektar{,a,i,e,u,om,ima}
+show.are = ar | ara | ari
+unit.are = ar{u,om,ima}
+show.acre = aker | akera | akera
+unit.acre = aker{i,u,om,ima}, acres
+show.ping = ping | pinga | pingova
+unit.ping = píng, pings, píngs, pingovi, píngovi, píngova, pingove, píngove, pingovima, píngovima
+
+# Volume
+cubic = kubn{i,a,ih,og,e,im,u} *, * na kub
+unit.l = lit{ar,ra,re,ri,ara,ru,rom,rima}
+show.cup = šolja | šolje | šolja
+unit.cup = šolj{u,om,ama}, šalic{a,e,u,ama}
+show.tablespoon = kašika | kašike | kašika
+unit.tablespoon = kašik{u,om,ama}, žlic{a,e,u,ama}
+show.teaspoon = kašičica | kašičice | kašičica
+unit.teaspoon = kašičic{u,om,ama}, žličic{a,e,u,ama}
+show.pint = pinta | pinte | pinti
+unit.pint = pint{u,om,ama}
+show.gallon = galon | galona | galona
+unit.gallon = galon{i,e,u,om,ima}
+
+# Weight (deka = 10 g, kvintal = 100 kg)
+unit.g = gram{,a,i,e,u,om,ima}
+unit.dag = deka, dekagram{,a,i}, dkg
+unit.kg = kil{a,o}
+unit.t = ton{a,e,u,i,om,ama}
+show.carat = karat | karata | karata
+unit.carat = karat{i,u,om,ima}
+show.centner = kvintal | kvintala | kvintala
+unit.centner = kvintal{i,u,om,ima}, metričk{a,e,ih} cent{a,e,i}, q
+show.pound = funta | funte | funti
+unit.pound = funt{u,om,ama}
+show.ounce = unca | unce | unci
+unit.ounce = unc{u,om,ama}
+
+# Temperature and angles
+unit.°C = celzij{us,usa,a}, stepen{,a,i} celzij{usa,a}, stup{anj,nja,njeva} celzij{usa,a}
+unit.°F = farenhajt{,a}, fahrenheit{,a}, stepen{,a,i} {farenhajta,fahrenheita}
+unit.K = kelvin{,a,i,ima}
+unit.° = stepen{,a,i,ima,u,om}, stup{anj,nja,njeva}
+unit.rad = radijan{,i,a,ima}
+
+# Data, frequency, speed
+unit.b = bit{,a,ovi,ova,ovima}
+unit.B = bajt{,a,ovi,ova,ovima}, byte{,s}
+unit.Hz = herc{,a,i}
+per.h = na sat, po satu, na čas
+per.min = u minuti, po minuti, na minutu
+per.s = u sekundi, po sekundi
+per.day = dnevno, na dan, po danu
+per.week = sedmično, tjedno
+per.month = mjesečno, na mjesec, po mjesecu
+per.year = godišnje, na godinu, po godini
+show.knot = čvor | čvora | čvorova
+unit.knot = čvor{u,om,ovi,ovima}
+
+# Currencies (`funta` is the currency on money lines, the weight elsewhere)
+currency.BAM = KM, mark{a,e,i,u,ama}, maraka, konvertibiln{a,e,ih,u,oj,im} mark{a,e,i,u,ama}, konvertibilnih maraka,
+    bosanskohercegovačk{a,e,ih,im,u,oj} mark{a,e,i,u,ama}, bosanskohercegovačk{ih,e} maraka
+currency.EUR = euro, eur{a,i,e,u,ima}, evr{o,a,i,e,u,ima}
+currency.USD = dolar{,a,i,e,u,ima}, američk{i,a,ih,im,og} dolar{,a,i,e,ima}, US dolar{,a,i}
+currency.GBP = funt{a,e,i,u,ama}, britansk{a,e,ih,im,u} funt{a,e,i,u,ama}, funt{a,e,i} sterling{,a}
+currency.CHF = {švicarsk,švajcarsk}{i,a,ih,im,og} fran{ak,ka,ci,aka,cima}, fran{ak,ka,ci,aka,cima}, SFr{,.}
+currency.HRK = hrvatsk{a,e,ih,im,u} kun{a,e,u,ama}, kun{a,e,u,ama}
+currency.RSD = {srbijansk,srpsk}{i,a,ih,im,e,og} dinar{,a,i,e,u,ima}, dinar{,a,i,e,u,ima}
+currency.MKD = makedonsk{i,a,ih,im} denar{,a,i,ima}, denar{,a,i}
+currency.AUD = {australijsk,australsk}{i,a,ih,im,og} dolar{,a,i,e,ima}
+currency.CAD = kanadsk{i,a,ih,im,og} dolar{,a,i,e,ima}
+currency.JPY = jen{,a,i,ima}, japansk{i,a,ih} jen{,a,i}
+currency.CNY = juan{,a,i,ima}, kinesk{i,a,ih} juan{,a,i}
+currency.TRY = tursk{a,e,ih,u,oj} lir{a,e,i,u,ama}
+currency.RUB = rub{alj,lja,lji,alja,ljima}, rusk{i,a,ih} rub{alj,lja,lji,alja}
+currency.PLN = polsk{i,a,ih,e} zlot{i,a,ih,e}, zlot{i,a,e,ih}
+currency.CZK = češk{a,e,ih,u} krun{a,e,i,u,ama}, čeških kruna
+currency.SEK = švedsk{a,e,ih,u} krun{a,e,i,u,ama}, švedskih kruna
+currency.NOK = norvešk{a,e,ih,u} krun{a,e,i,u,ama}, norveških kruna
+currency.DKK = dansk{a,e,ih,u} krun{a,e,i,u,ama}, danskih kruna
+currency.HUF = forint{,a,i,ima}, mađarsk{i,a,ih} forint{,a,i}
+currency.BTC = bitcoin{,a,i,ima,ovi,ova,ovima}, bitcons, Bitcoins, B⃦
+
+# Time zones: Bosnian names of cities and countries (with the locative, `u Sarajevu`)
+zone.Europe/Sarajevo = Sarajev{o,a,u}, Banj{a,oj} Luk{a,e,ci}, Banjaluk{a,e}, Banjaluci, Mostar{,a,u}, Tuzl{a,e,i},
+    Zenic{a,e,i}, Bihać{,a,u}, BiH, Bosn{a,e,i}, Bosn{a,e,i} i Hercegovin{a,e,i}
+zone.Europe/Belgrade = Beograd{,a,u}, Novi Sad, Novom Sadu, Srbij{a,e,i}
+zone.Europe/Zagreb = Zagreb{,a,u}, Split{,a,u}, Dubrovnik{,a,u}, Hrvatsk{a,e,oj}
+zone.Europe/Podgorica = Podgoric{a,e,i}, Crn{a,e,oj} Gor{a,e,i}
+zone.Europe/Skopje = Skoplj{e,a,u}
+zone.Europe/Ljubljana = Ljubljan{a,e,i}, Slovenij{a,e,i}
+zone.Europe/Vienna = Beč{,a,u}, Austrij{a,e,i}
+zone.Europe/Berlin = Berlin{,a,u}, Minhen{,a,u}, Frankfurt{,a,u}, Hamburg{,a,u}, Njemačk{a,e,oj}
+zone.Europe/Lisbon = Lisabon{,a,u}
+zone.Europe/Warsaw = Varšav{a,e,i}
+zone.Europe/Brussels = Brisel{,a,u}
+zone.Europe/Copenhagen = Kopenhagen{,a,u}
+zone.Europe/Zurich = Ženev{a,e,i}, Cirih{,a,u}, Bern{,a,u}, Švicarsk{a,e,oj}, Švajcarsk{a,e,oj}
+zone.Europe/Rome = Rim{,a,u}, Milan{,a,u}, Venecij{a,e,i}, Italij{a,e,i}
+zone.Europe/Paris = Pariz{,a,u}, Francusk{a,e,oj}
+zone.Europe/London = London{,a,u}, Engleska, Engleskoj, Velik{a,e,oj} Britanij{a,e,i}
+zone.Europe/Moscow = Moskv{a,e,i}, Rusij{a,e,i}
+zone.Europe/Madrid = Madrid{,a,u}, Španij{a,e,i}
+zone.Europe/Amsterdam = Amsterdam{,a,u}, Holandij{a,e,i}
+zone.Europe/Prague = Prag{a,e,u}
+zone.Europe/Budapest = Budimpešt{a,e,i}, Mađarsk{a,e,oj}
+zone.Europe/Athens = Atin{a,e,i}, Grčk{a,e,oj}
+zone.Europe/Istanbul = Istanbul{,a,u}, Carigrad{,a,u}, Ankar{a,e,i}, Turksk{a,e,oj}
+zone.Europe/Bucharest = Bukurešt{,a,u}
+zone.Europe/Sofia = Sofij{a,e,i}
+zone.Europe/Kyiv = Kijev{,a,u}, Ukrajin{a,e,i}
+zone.Europe/Stockholm = Štokholm{,a,u}, Švedsk{a,e,oj}
+zone.Europe/Oslo = Oslo, Norvešk{a,e,oj}
+zone.Asia/Shanghai = Peking{,a,u}, Šangaj{,a,u}, Kin{a,e,i}
+zone.Asia/Tokyo = Tokio, Tokiju, Japan{,a,u}
+zone.Asia/Seoul = Seul{,a,u}
+zone.Asia/Dubai = Dubai, Dubaiju
+zone.Asia/Jerusalem = Jerusalim{,a,u}, Izrael{,a,u}
+zone.Africa/Cairo = Kair{o,a,u}, Egipat, Egiptu
+zone.America/New_York = Njujork{,a,u}, Nju Jork{,a,u}, Vašington{,a,u}
+zone.America/Los_Angeles = Los Anđeles{,a,u}
+zone.America/Chicago = Čikag{o,a,u}
+zone.America/Toronto = Toront{o,a,u}
+zone.Australia/Sydney = Sidnej{,a,u}
+
+# Month names in dates (`12. marta 2026.`)
+month.1 = januar{,a,u}, siječ{anj,nja,nju}, jan
+month.2 = februar{,a,u}, veljač{a,e,i}, feb
+month.3 = mart{,a,u}, ožuj{ak,ka,ku}
+month.4 = april{,a,u}, trav{anj,nja,nju}, apr
+month.5 = maj{,a,u}, svib{anj,nja,nju}
+month.6 = jun{,i,a,u}, lip{anj,nja,nju}
+month.7 = jul{,i,a,u}, srp{anj,nja,nju}
+month.8 = august{,a,u}, avgust{,a,u}, kolovoz{,a,u}, aug
+month.9 = septemb{ar,ra,ru}, ruj{an,na,nu}, sep, sept
+month.10 = oktob{ar,ra,ru}, listopad{,a,u}, okt
+month.11 = novemb{ar,ra,ru}, stud{eni,enog,enoga}, nov
+month.12 = decemb{ar,ra,ru}, prosin{ac,ca,cu}, dec
+
+# Display (`sri, 28. okt 2026.`)
+weekdays = pon, uto, sri, čet, pet, sub, ned
+months = jan, feb, mar, apr, maj, jun, jul, aug, sep, okt, nov, dec
+date = %a, %-d. %b %Y.

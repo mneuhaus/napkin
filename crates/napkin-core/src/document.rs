@@ -68,6 +68,13 @@ fn closing_quote(c: char) -> Option<char> {
     }
 }
 
+/// Whether a `"` between `prev` and `next` marks a Hebrew abbreviation (`ש"ח`, the ASCII stand-in
+/// for gershayim) rather than opening a quoted comment.
+fn hebrew_abbreviation(prev: Option<char>, next: Option<char>) -> bool {
+    let hebrew = |c: Option<char>| c.is_some_and(|c| ('\u{05D0}'..='\u{05EA}').contains(&c));
+    hebrew(prev) && hebrew(next)
+}
+
 /// Splits a line into label, comments and code.
 fn layout(line: &str) -> Layout {
     let chars: Vec<(usize, char)> = line.char_indices().collect();
@@ -83,7 +90,7 @@ fn layout(line: &str) -> Layout {
         }
         let prev = k.checked_sub(1).and_then(|p| chars.get(p)).map(|&(_, c)| c);
         let next = chars.get(k + 1).map(|&(_, c)| c);
-        if let Some(close) = closing_quote(c) {
+        if let Some(close) = closing_quote(c).filter(|_| !hebrew_abbreviation(prev, next)) {
             quote = Some(close);
         } else if c == '/' && next == Some('/') {
             slashes = Some(i);
@@ -127,7 +134,9 @@ fn split_quotes(line: &str, region: Range<usize>, out: &mut Layout) {
             }
             Some(_) => {}
             None => {
-                if let Some(close) = closing_quote(c) {
+                let prev = line[..i].chars().next_back();
+                let next = line[i + c.len_utf8()..].chars().next();
+                if let Some(close) = closing_quote(c).filter(|_| !hebrew_abbreviation(prev, next)) {
                     out.code.push(start..i);
                     quote = Some((i, close));
                 }

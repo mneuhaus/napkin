@@ -17,6 +17,7 @@
 //!   currency on lines with money on them and the weight elsewhere; an uppercase currency code
 //!   beats a language's unit word (`5 SEK`, `3 CUP`).
 
+use std::borrow::Cow;
 use std::f64::consts::{E, PI};
 use std::ops::Range;
 
@@ -493,7 +494,7 @@ impl Classifier<'_> {
     }
 
     /// The longest language phrase starting at raw `i`: its meanings and last raw.
-    fn language_phrase_at(&self, i: usize) -> Option<(Vec<Meaning>, usize)> {
+    fn language_phrase_at(&self, i: usize) -> Option<(Cow<'static, [Meaning]>, usize)> {
         let window = self.language_window(i);
         if window == 0 {
             return None;
@@ -518,6 +519,10 @@ impl Classifier<'_> {
                 self.sign(i, code);
                 1
             }
+            RawKind::Sym(Sym::Percent) if self.percent_sign_before_number(i) => {
+                self.push(Tok::PercentBefore, range, SpanKind::Operator);
+                1
+            }
             RawKind::Sym(sym) => {
                 self.push(Tok::Op(symbol(*sym)), range, SpanKind::Operator);
                 1
@@ -540,6 +545,19 @@ impl Classifier<'_> {
                 1
             }
         }
+    }
+
+    /// Turkish `%20`: a percent sign written before its number, where the language says so and
+    /// no value stands right before it (`50 + %20`).
+    fn percent_sign_before_number(&self, i: usize) -> bool {
+        self.touching(i)
+            && self.number_at(i + 1).is_some()
+            && !self.prev_ends_value()
+            && self
+                .ctx
+                .lexicon
+                .meanings("%")
+                .contains(&Meaning::Keyword(Keyword::PercentBefore))
     }
 
     /// Classifies a language phrase of at least `min_raws` raws starting at `i`, trying the
@@ -647,7 +665,7 @@ impl Classifier<'_> {
             .and_then(|word| BUILTINS.lookup(word).map(|hit| hit.index))
             .or_else(|| {
                 self.language_phrase_at(k + 1).and_then(|(meanings, _)| {
-                    meanings.into_iter().find_map(|m| match m {
+                    meanings.iter().find_map(|m| match *m {
                         Meaning::Unit { index, power: 1 } => Some(index),
                         _ => None,
                     })
@@ -911,7 +929,7 @@ impl Classifier<'_> {
     /// Classifies raws `i..=j` (whose text is `text`) by the input language, if one of the
     /// phrase's meanings applies here.
     fn language(&mut self, i: usize, j: usize, text: &str) -> bool {
-        let mut meanings = self.ctx.lexicon.meanings(text);
+        let mut meanings = self.ctx.lexicon.meanings(text).into_owned();
         // An uppercase currency code beats a language's unit word (`5 SEK`, not `Sek` seconds).
         if text.len() >= 3 && text.chars().all(|c| c.is_ascii_uppercase()) && currency::code(text).is_some() {
             meanings.retain(|m| !matches!(m, Meaning::Unit { .. } | Meaning::Scale(_)));
@@ -1099,7 +1117,7 @@ impl Classifier<'_> {
         let dim = &BUILTINS.def(index).dim;
         let english = BUILTINS.lookup(word).map(|hit| hit.index);
         let language = self.language_phrase_at(j + 2).and_then(|(meanings, _)| {
-            meanings.into_iter().find_map(|m| match m {
+            meanings.iter().find_map(|m| match *m {
                 Meaning::Unit { index, power: 1 } => Some(index),
                 _ => None,
             })

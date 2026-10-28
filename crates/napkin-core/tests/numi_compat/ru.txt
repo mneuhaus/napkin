@@ -1,0 +1,30 @@
+# Phrases of Numi's Russian vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+thousand.variants	т	`т` is the Russian tonne symbol (`5 т` is five tonnes); thousands are `тыс`/`тысяч`
+thousand.variants	т.	`т` is the Russian tonne symbol (`5 т.` is five tonnes at the end of a sentence); thousands are `тыс.`
+GBP.variants	Фунт	`фунт` is also the pound weight: like English `pound` it is the currency on lines with money (`5 фунтов в евро`) and the weight elsewhere
+GBP.variants	Фунтов	`фунт` is also the pound weight: like English `pound` it is the currency on lines with money (`5 фунтов в евро`) and the weight elsewhere
+GBP.variants	Фунтах	`фунт` is also the pound weight: like English `pound` it is the currency on lines with money (`5 фунтов в евро`) and the weight elsewhere
+TTD.variants	Доллар	Numi lists bare `доллар` under USD and TTD; it stays the US dollar
+MAD.variants	Дирхам	Numi lists bare `дирхам` under AED and MAD; it stays the UAE dirham (`марокканский дирхам` is MAD)
+MAD.variants	Дирхамов	Numi lists bare `дирхам` under AED and MAD; it stays the UAE dirham (`марокканских дирхамов` is MAD)
+MAD.variants	Дирхамах	Numi lists bare `дирхам` under AED and MAD; it stays the UAE dirham (`марокканских дирхамах` is MAD)
+MDL.variants	Лей	Numi lists bare `лей` under MDL and RON; it stays the Romanian leu (`молдавский лей` is MDL)
+MWK.variants	Квача	Numi lists bare `квача` under MWK and ZMW; it stays the Zambian kwacha (`малавийская квача` is MWK)
+MWK.variants	Квачах	Numi lists bare `квача` under MWK and ZMW; it stays the Zambian kwacha (`малавийских квачах` is MWK)
+TMT.variants	Манат	Numi lists bare `манат` under AZN and TMT; it stays the Azerbaijani manat (`туркменский манат` is TMT)
+TMT.variants	Манатов	Numi lists bare `манат` under AZN and TMT; it stays the Azerbaijani manat (`туркменских манатов` is TMT)
+TMT.variants	Маната	Numi lists bare `манат` under AZN and TMT; it stays the Azerbaijani manat (`туркменского маната` is TMT)
+MRO.variants	Мавританская угия	MRO is an obsolete code; Napkin reads the ouguiya as MRU
+MRO.variants	Угия	MRO is an obsolete code; Napkin reads the ouguiya as MRU
+MRO.variants	Угий	MRO is an obsolete code; Napkin reads the ouguiya as MRU
+MRO.variants	Угиях	MRO is an obsolete code; Napkin reads the ouguiya as MRU
+SVC.variants	Колонов	SVC is an obsolete code; bare `колон` is the Costa Rican colón (CRC), as Numi also lists
+SVC.variants	Колон	SVC is an obsolete code; bare `колон` is the Costa Rican colón (CRC), as Numi also lists
+SVC.variants	Колонах	SVC is an obsolete code; bare `колон` is the Costa Rican colón (CRC), as Numi also lists
+VEF.variants	Венесуэльские боливары	VEF is an obsolete code; Napkin reads the bolívar as VES
+VEF.variants	Венесуэльский Боливар	VEF is an obsolete code; Napkin reads the bolívar as VES
+VEF.variants	Боливар фуэрте	VEF is an obsolete code; Napkin reads the bolívar as VES
+VEF.variants	Венесуэльских боливаров	VEF is an obsolete code; Napkin reads the bolívar as VES
+VEF.variants	Венесуэльских боливарах	VEF is an obsolete code; Napkin reads the bolívar as VES
+VEF.variants	Боливарах фуэрте	VEF is an obsolete code; Napkin reads the bolívar as VES

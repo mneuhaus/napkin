@@ -50,6 +50,7 @@
 //! Polish and Czech; `one | few | other` for Bosnian and Romanian; `one | two | other` for
 //! Hebrew. A single form is used for every count.
 
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt::Write as _;
 use std::sync::OnceLock;
@@ -287,6 +288,28 @@ fn normalize(phrase: &str) -> String {
         .replace('’', "'")
 }
 
+/// `phrase` as [`normalize`] would make it, borrowed when it already is (the common case).
+fn normal(phrase: &str) -> Cow<'_, str> {
+    let already = !phrase.contains(['’', '\t', '\n', '\r', '\u{a0}'])
+        && !phrase.contains("  ")
+        && !phrase.starts_with(' ')
+        && !phrase.ends_with(' ');
+    if already {
+        Cow::Borrowed(phrase)
+    } else {
+        Cow::Owned(normalize(phrase))
+    }
+}
+
+/// `text` in lowercase, borrowed when it has no uppercase letters.
+fn lower(text: &str) -> Cow<'_, str> {
+    if text.chars().any(char::is_uppercase) {
+        Cow::Owned(text.to_lowercase())
+    } else {
+        Cow::Borrowed(text)
+    }
+}
+
 /// Whether a normalized phrase matches its exact case only.
 fn exact_case(phrase: &str) -> bool {
     phrase.chars().count() <= 2
@@ -295,18 +318,18 @@ fn exact_case(phrase: &str) -> bool {
 impl Vocab {
     /// What a phrase (any whitespace, any case for longer phrases) means, in priority order.
     pub(crate) fn get(&self, phrase: &str) -> &[Meaning] {
-        let key = normalize(phrase);
+        let key = normal(phrase);
         let found = if exact_case(&key) {
-            self.exact.get(&key)
+            self.exact.get(key.as_ref())
         } else {
-            self.folded.get(&key.to_lowercase())
+            self.folded.get(lower(&key).as_ref())
         };
         found.map_or(&[], Vec::as_slice)
     }
 
     /// How many raw tokens the longest phrase starting with `first` has (0 when none does).
     pub(crate) fn window(&self, first: &str) -> usize {
-        self.starts.get(&first.to_lowercase()).copied().unwrap_or(0)
+        self.starts.get(lower(first).as_ref()).copied().unwrap_or(0)
     }
 
     /// The form for the formatted `number` among forms listed in plural category order.
@@ -409,19 +432,18 @@ impl Lexicon {
     }
 
     /// What a phrase means: the selected language's meanings first, then English's.
-    pub(crate) fn meanings(&self, phrase: &str) -> Vec<Meaning> {
-        let mut out = self.primary.get(phrase).to_vec();
-        if let Some(english) = self.english {
-            out.extend(
-                english
-                    .get(phrase)
-                    .iter()
-                    .filter(|m| !out.contains(m))
-                    .copied()
-                    .collect::<Vec<_>>(),
-            );
+    pub(crate) fn meanings(&self, phrase: &str) -> Cow<'static, [Meaning]> {
+        let primary: &'static [Meaning] = self.primary.get(phrase);
+        let english: &'static [Meaning] = self.english.map_or(&[], |vocab| vocab.get(phrase));
+        if english.is_empty() {
+            return Cow::Borrowed(primary);
         }
-        out
+        if primary.is_empty() {
+            return Cow::Borrowed(english);
+        }
+        let mut out = primary.to_vec();
+        out.extend(english.iter().filter(|m| !primary.contains(m)));
+        Cow::Owned(out)
     }
 
     /// The most raw tokens a phrase starting with `first` can have.

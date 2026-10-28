@@ -1,1 +1,251 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Czech (čeština). Format: see crates/napkin-core/src/vocab.rs.
+# Word units are shown in the CLDR plural categories one | few | other | many (many is the
+# fractions): 1 hodina | 2 hodiny | 5 hodin | 1,5 hodiny.
+
+# Arithmetic
+plus = plus, a, přičíst, připočíst, sečteno s
+minus = minus, mínus, bez, odečíst, odečteno
+times = krát, násobeno, vynásobeno
+divide = děleno, vyděleno, lomeno, dělit
+per = za, na každ{ý,ou,é}
+modulo = modulo, zbytek po dělení
+convert = na, v, ve, do, jako, převést na, převedeno na
+assign = rovná se, je rovno, je, jsou
+
+# Percentages
+percent = procent{,o,a,u,ech,y}, proc{,.}
+percent.of = z, ze
+percent.on = navíc k, přirážka k, přirážka na, k
+percent.off = sleva z, sleva na, slevy z, slevy na, méně než, odečteno od
+as-percent.of = jako {%,procento,procent} z, v procentech z
+as-percent.off = jako {%,procento,procent} {snížení,poklesu} {z,oproti}
+as-percent.on = jako {%,procento,procent} {zvýšení,nárůstu,navýšení} {z,oproti}
+what-is.of = z čeho je, z kolika je, z čeho
+what-is.off = sleva z čeho je, po slevě z čeho je
+what-is.on = navíc k čemu je, k čemu je
+
+# Scales (long scale: miliarda = 10^9, bilion = 10^12)
+scale.1e3 = tisíc{,e,i,em,ích,ům}, tis{,.}
+scale.1e6 = milion{,y,ů,u,em,ech}, mil., mio{,.}
+scale.1e9 = miliard{a,y,u,ou,ách}, miliard, mld{,.}
+scale.1e12 = bilion{,y,ů,u,em}
+
+# Dates and times
+today = dnes, dneska
+tomorrow = zítra
+yesterday = včera
+day.2 = pozítří
+day.-2 = předevčírem
+now = teď, ted, nyní, čas, aktuální čas, kolik je hodin
+local = místní čas, lokální čas, místního času, místní časové pásmo, místně
+noon = poledne
+midnight = půlnoc
+
+# Document references
+prev = předchozí, předešlý, předchozí výsledek
+sum = součet, celkem, suma, dohromady, úhrnem
+average = průměr, průměrně, aritmetický průměr
+
+# Functions and formats
+function.sqrt = druhá odmocnina{, z}, odmocnina{, z}
+function.cbrt = třetí odmocnina{, z}, kubická odmocnina{, z}
+function.round = zaokrouhlit, zaokrouhli
+function.ceil = zaokrouhlit nahoru
+function.floor = zaokrouhlit dolů
+function.abs = absolutní hodnota
+function.fact = faktoriál
+function.sin = sinus
+function.cos = kosinus, cosinus
+function.tan = tangens
+format.hex = šestnáctkov{ě,ou,á,é,ý}, hexadecimáln{ě,í}, šestnáctkovou soustavu
+format.bin = dvojkov{ě,ou,á,é,ý}, binárn{ě,í}, dvojkovou soustavu
+format.oct = osmičkov{ě,ou,á,é,ý}, oktaln{ě,í}, osmičkovou soustavu
+format.dec = desítkov{ě,ou,á,é,ý}, decimáln{ě,í}, desítkovou soustavu
+format.sci = vědeck{ý,ou,á,é} {zápis,zápisu,notace,notaci}, vědecky, exponenciáln{ě,í}
+
+# Time
+show.s = sekunda | sekundy | sekund | sekundy
+unit.s = sekund{u,ou,ách,ám,ami,ě}, sek{,.}
+show.min = minuta | minuty | minut | minuty
+unit.min = minut{u,ou,ách,ám,ami,ě}
+show.h = hodina | hodiny | hodin | hodiny
+unit.h = hodin{u,ou,ách,ám,ami,ě}, hod{,.}
+show.day = den | dny | dní | dne
+unit.day = dn{ů,i,ech,ům,em,u}, dnů
+show.week = týden | týdny | týdnů | týdne
+unit.week = týdn{u,em,ech,ům}, týd{,.}
+show.month = měsíc | měsíce | měsíců | měsíce
+unit.month = měsíc{i,em,ích,ům}, měs{,.}
+show.year = rok | roky | let | roku
+unit.year = rok{ů,em,ech,ům}, léta, letech
+show.decade = desetiletí | desetiletí | desetiletí | desetiletí
+unit.decade = desetiletích, dekád{a,y}, dekád
+show.century = století | století | století | století
+unit.century = stoletích
+
+# SI prefixes that Czech spells differently from English
+prefix.m = mili
+prefix.µ = mikro
+prefix.p = piko
+prefix.h = hekto
+
+# Length
+unit.m = metr{,y,ů,u,em,ech,ům}
+show.inch = palec | palce | palců | palce
+unit.inch = palc{i,em,ích,ům}, palců
+show.foot = stopa | stopy | stop | stopy
+unit.foot = stop{u,ou,ách,ám}
+show.yard = yard | yardy | yardů | yardu
+unit.yard = yard{em,ech}
+show.mile = míle | míle | mil | míle
+unit.mile = míl{i,ích,ím}, mílích
+show.nautical mile = námořní míle | námořní míle | námořních mil | námořní míle
+unit.nautical mile = námořní míli, námořních mílích
+show.furlong = furlong | furlongy | furlongů | furlongu
+show.light year = světelný rok | světelné roky | světelných let | světelného roku
+unit.light year = světeln{ý,é,ých,ého,ém} {rok,roky,let,roku,letech}
+unit.pt = bod{,y,ů}, pt.
+unit.px = pixel{,y,ů,u,ech}, px.
+
+# Area (čtvereční metr, metrů čtverečních)
+square = čtvereční{,ch,m,ho,mu} *, * čtvereční{,ch,m,ho}, čtver{,.} *
+unit.ha = hektar{,y,ů,u,ech}
+show.are = ar | ary | arů | aru
+unit.are = ar{ech,em}
+show.acre = akr | akry | akrů | akru
+unit.acre = akr{ech,em}
+show.ping = ping | pingy | pingů | pingu
+unit.ping = píng, píngy, píngů
+
+# Volume
+cubic = krychlov{ý,á,é,ých,ého,ou,ém} *, * krychlov{ý,á,é,ých,ého}, kubick{ý,á,é,ých,ého} *,
+    * kubick{ý,á,é,ých,ého}
+unit.l = litr{,y,ů,u,em,ech}
+show.cup = hrnek | hrnky | hrnků | hrnku
+unit.cup = hrnk{u,em,ách}, šálek, šálky, šálků
+show.tablespoon = lžíce | lžíce | lžic | lžíce
+unit.tablespoon = lžíc{i,ích}, polévkov{á,é,ých} lžíc{e,i}, polévkových lžic
+show.teaspoon = lžička | lžičky | lžiček | lžičky
+unit.teaspoon = lžičk{u,ou,ách}, kávov{á,é,ých} lžičk{a,y}
+show.pint = pinta | pinty | pint | pinty
+unit.pint = pint{u,ou}
+show.gallon = galon | galony | galonů | galonu
+unit.gallon = galon{em,ech}
+
+# Weight (metrák = 100 kg; deka = 10 g)
+unit.g = gram{,y,ů,u,em,ech}
+unit.dag = deka, deko, dkg, dekagram{,y,ů}
+unit.kg = kilo, kila
+unit.t = tun{a,y,u,ou,ách}, tun
+show.carat = karát | karáty | karátů | karátu
+unit.carat = karát{em,ech}
+show.centner = metrák | metráky | metráků | metráku
+unit.centner = metrák{em,ech}, centnéř{,e,ů,ích}, metrick{ý,é,ých} cent{,y,ů}, q
+show.pound = libra | libry | liber | libry
+unit.pound = libr{u,ou,ách}
+show.stone = stone | stony | stonů | stonu
+show.ounce = unce | unce | uncí | unce
+unit.ounce = unc{i,ích}
+
+# Temperature and angles
+unit.°C = stup{eň,ně,ňů,ních,ni} Celsia, Celsia, Celsius{,e}
+unit.°F = stup{eň,ně,ňů,ních,ni} Fahrenheita, Fahrenheit{,a,ech}
+unit.K = Kelvin{,a,ů,y,ech}, stup{eň,ně,ňů} Kelvina
+unit.° = stup{eň,ně,ňů,ních,ni,něm}
+unit.rad = radián{,y,ů,u,ech}
+
+# Data, frequency, speed
+unit.b = bit{,y,ů,u,ech}
+unit.B = bajt{,y,ů,u,ech}, byt{,y,ů,u}
+unit.Hz = hertz{,y,ů,u}
+per.h = za hodinu, v hodině, na hodinu
+per.min = za minutu, na minutu
+per.s = za sekundu, za vteřinu
+per.day = za den, na den, denně
+per.week = za týden, týdně
+per.month = za měsíc, měsíčně
+per.year = za rok, ročně
+show.knot = uzel | uzly | uzlů | uzlu
+unit.knot = uzl{em,ech}
+
+# Currencies
+currency.CZK = korun{a,y,u,ou,ách}, korun, Kč, česk{á,é,ou,ých} korun{a,y,u,ou}, českých korun,
+    korun{a,y} česk{á,é}, korun českých
+currency.EUR = euro, eur, eura, eurech
+currency.USD = dolar{,y,ů,u,ech}, americk{ý,é,ých} dolar{,y,ů,u}
+currency.GBP = libr{a,y,u,ou}, liber, britsk{á,é,ou,ých} libr{a,y,u,ou}, britských liber, {libra,libry,liber} šterlink{ů,}
+currency.CHF = frank{,y,ů,u}, švýcarsk{ý,é,ých} frank{,y,ů,u}
+currency.PLN = zlot{ý,é,ých}, polsk{ý,é,ých} zlot{ý,é,ých}
+currency.HUF = forint{,y,ů,u}, maďarsk{ý,é,ých} forint{,y,ů,u}
+currency.SEK = švédsk{á,é,ou,ých} korun{a,y,u,ou}, švédských korun
+currency.NOK = norsk{á,é,ou,ých} korun{a,y,u,ou}, norských korun
+currency.DKK = dánsk{á,é,ou,ých} korun{a,y,u,ou}, dánských korun
+currency.JPY = jen{,y,ů}, japonsk{ý,é,ých} jen{,y,ů}
+currency.CNY = jüan{,y,ů}, juan{,y,ů}, čínsk{ý,é,ých} {jüan,jüany,jüanů,juan,juany,juanů}
+currency.RUB = rubl{,y,ů,u}, rusk{ý,é,ých} rubl{,y,ů,u}
+currency.UAH = hřivn{a,y,u}, hřiven, ukrajinsk{á,é,ou,ých} hřivn{a,y,u}
+currency.TRY = tureck{á,é,ou,ých} lir{a,y,u}, tureckých lir
+currency.HRK = kun{a,y,u}, chorvatsk{á,é,ých} kun{a,y}
+currency.AED = dirham{,y,ů}, UAE dirham{,y,ů}, Dhs, د.إ
+currency.AFN = afghání, afghánsk{ý,é,ých} afghání, Afs, Af, ؋
+currency.BTC = bitcoin{,y,ů,u}
+
+# Time zones: Czech names of cities and countries (with the locative, `v Londýně`)
+zone.Europe/Prague = Prah{a,y,u}, Praze, Brn{o,a}, Brně, Ostrav{a,y,ě}, Plzeň, Plzni, Olomouc{,i}, Česk{o,u},
+    Česk{á,é} republik{a,y}, České republice
+zone.Europe/Bratislava = Bratislav{a,y,ě}, Košic{e,ích}, Slovensk{o,a,u}
+zone.Europe/London = Londýn{,a,ě}, Angli{e,i}, Velk{á,é} Británi{e,i}
+zone.Europe/Moscow = Moskv{a,y,ě}, Petrohrad{,u,ě}, Rusk{o,a,u}
+zone.Europe/Paris = Paříž{,e,i}, Franci{e,i}
+zone.Europe/Berlin = Berlín{,a,ě}, Mnichov{,a,ě}, Drážďan{y,ech}, Hamburk{,u}, Frankfurt{,u}, Němec{ko,ka,ku}
+zone.Europe/Rome = Řím{,a,ě}, Milán{,a,ě}, Benát{ky,kách}, Neapol{,e,i}, Itáli{e,i}
+zone.Europe/Vienna = Vídeň, Vídně, Vídni, Rakousk{o,a,u}
+zone.Europe/Lisbon = Lisabon{,u}, Portugalsk{o,a,u}
+zone.Europe/Madrid = Madrid{,u}, Barcelon{a,y,ě}, Španělsk{o,a,u}
+zone.Europe/Warsaw = Varšav{a,y,ě}, Krakov{,a,ě}, Polsk{o,a,u}
+zone.Europe/Brussels = Brusel{,u}, Belgi{e,i}
+zone.Europe/Copenhagen = Kodaň, Kodaně, Kodani, Dánsk{o,a,u}
+zone.Europe/Zurich = Ženev{a,y,ě}, Curych{,u}, Bern{,u}, Švýcarsk{o,a,u}
+zone.Europe/Amsterdam = Amsterodam{,u}, Nizozemsk{o,a,u}, Holandsk{o,a,u}
+zone.Europe/Budapest = Budapešť, Budapešti, Maďarsk{o,a,u}
+zone.Europe/Athens = Atén{y,ách}, Řeck{o,a,u}
+zone.Europe/Istanbul = Istanbul{,u}, Cařihrad{,u}, Ankar{a,y,ě}, Tureck{o,a,u}
+zone.Europe/Kyiv = Kyjev{,a,ě}, Lvov{,a,ě}, Oděs{a,y,e}, Ukrajin{a,y,ě}
+zone.Europe/Bucharest = Bukurešť, Bukurešti, Rumunsk{o,a,u}
+zone.Europe/Belgrade = Bělehrad{,u,ě}, Srbsk{o,a,u}
+zone.Europe/Zagreb = Záhřeb{,u}, Chorvatsk{o,a,u}
+zone.Europe/Ljubljana = Lublaň, Lublani, Slovinsk{o,a,u}
+zone.Europe/Sofia = Sofi{e,i}, Bulharsk{o,a,u}
+zone.Europe/Stockholm = Stockholm{,u}, Švédsk{o,a,u}
+zone.Europe/Oslo = Oslo, Osle, Norsk{o,a,u}
+zone.Europe/Helsinki = Helsink{y,ách}, Finsk{o,a,u}
+zone.Europe/Dublin = Dublin{,u}, Irsk{o,a,u}
+zone.Asia/Shanghai = Peking{,u}, Šanghaj, Šanghaji, Čín{a,y,ě}
+zone.Asia/Tokyo = Toki{o,u}, Japonsk{o,a,u}
+zone.Asia/Seoul = Soul{,u}
+zone.Asia/Kolkata = Dillí, Nové Dillí, Bombaj{,i}, Indi{e,i}
+zone.Asia/Jerusalem = Jeruzalém{,a,ě}, Tel Aviv{,u}, Izrael{,e,i}
+zone.Africa/Cairo = Káhir{a,y,ře}, Egypt{,a,ě}
+zone.America/New_York = New York{,u}, Washington{,u}
+zone.America/Los_Angeles = Kaliforni{e,i}
+zone.America/Mexico_City = Mexik{o,a,u}
+zone.Australia/Sydney = Sydney
+
+# Month names in dates (`12. března 2026`)
+month.1 = led{en,na,nu}
+month.2 = únor{,a,u}
+month.3 = břez{en,na,nu}
+month.4 = dub{en,na,nu}
+month.5 = květ{en,na,nu}
+month.6 = červ{en,na,nu}
+month.7 = červen{ec,ce,ci}
+month.8 = srp{en,na,nu}
+month.9 = září
+month.10 = říj{en,na,nu}
+month.11 = listopad{,u}
+month.12 = prosin{ec,ce,ci}
+
+# Display (`st 28. 10. 2026`)
+weekdays = po, út, st, čt, pá, so, ne
+months = led, úno, bře, dub, kvě, čvn, čvc, srp, zář, říj, lis, pro
+date = %a %-d. %-m. %Y

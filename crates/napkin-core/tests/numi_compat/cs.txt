@@ -1,0 +1,7 @@
+# Phrases of Numi's Czech vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+celsius.variants	%@ Celsia	Numi's template placeholder `%@` inside a variants list; the phrase itself works (`3 Celsia`)
+fahrenheit.variants	%@ Fahrenheit	Numi's template placeholder `%@` inside a variants list; the phrase itself works (`3 Fahrenheit`)
+kelvin.variants	%@ Kelvina	Numi's template placeholder `%@` inside a variants list; the phrase itself works (`3 Kelvina`)
+kelvin.variants	%@ Celsia	Numi lists `Celsia` under Celsius and Kelvin; it stays Celsius
+carat.variants	kt	`kt` is the knot; carats are `ct`/`karát`

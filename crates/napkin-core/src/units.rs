@@ -650,6 +650,16 @@ fn specs() -> Vec<Spec> {
             &["acre", "acres"],
             &["ac"],
         ),
+        // The metric dunam (Turkish dönüm, Hebrew dunam): 1000 m².
+        word(
+            "dunam",
+            "dunam",
+            ("dunam", "dunams"),
+            AREA,
+            1000.0,
+            &["dunam", "dunams", "dunum", "dunums"],
+            &[],
+        ),
         // The East Asian 坪 (tsubo, ping): 400/121 m², a 1.82 m square.
         word(
             "ping",

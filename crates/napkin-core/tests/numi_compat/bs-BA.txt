@@ -1,0 +1,6 @@
+# Phrases of Numi's Bosnian vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+are.variants	a	`a` is the Bosnian conjunction ("and", "but") and the atto prefix; ares are `ar`/`ara`/`ari`
+GBP.variants	funta	`funta` is also the pound weight: like English `pound` it is the currency on lines with money (`5 funti u eurima`) and the weight elsewhere
+GBP.variants	funte	`funta` is also the pound weight: like English `pound` it is the currency on lines with money (`5 funti u eurima`) and the weight elsewhere
+GBP.variants	funti	`funta` is also the pound weight: like English `pound` it is the currency on lines with money (`5 funti u eurima`) and the weight elsewhere

@@ -1,1 +1,226 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Hebrew (עברית). Format: see crates/napkin-core/src/vocab.rs.
+# Word units are shown in the CLDR plural categories one | two | other. With a numeral Hebrew
+# uses the plural for two as well (`2 שעות`; the dual `שעתיים` already means "two hours"), so
+# the two and other forms are the same. Abbreviations are written with gershayim (״) or a plain
+# double quote (ק״מ, ק"מ) and geresh (׳) or an apostrophe (אינץ׳, אינץ'); both are listed.
+# One-letter prefixes joined to the next word (ב, ל) are listed where they matter: `בלונדון`,
+# `במרץ`, `לשעה`.
+
+# Arithmetic
+plus = ועוד, פלוס, בתוספת
+minus = פחות, מינוס
+times = כפול, פעמים
+divide = חלקי, לחלק ל, מחולק ב, חלקי ב
+per = לכל
+modulo = מודולו
+convert = ב, ל, ב־, ל־, בתור, אל
+assign = שווה ל, שווה, שווים, זה
+
+# Percentages
+percent = אחוז, אחוזים
+percent.of = מתוך, של, מ
+percent.on = תוספת על, בתוספת על, יותר מ
+percent.off = הנחה על, הנחה מ, פחות מ
+as-percent.of = {כאחוז,באחוזים} {מ,מתוך}
+as-percent.off = כאחוז הנחה {מ,על}, כאחוז ירידה מ
+as-percent.on = כאחוז תוספת {מ,על}, כאחוז עלייה מ
+what-is.of = מתוך מה זה, ממה זה
+what-is.off = הנחה על מה זה
+what-is.on = תוספת על מה זה
+
+# Scales (מיליארד = 10^9, טריליון = 10^12)
+scale.1e3 = אלף, אלפים
+scale.1e6 = מיליון, מיליונים
+scale.1e9 = מיליארד, מיליארדים
+scale.1e12 = טריליון, טריליונים
+
+# Dates and times
+today = היום
+tomorrow = מחר
+yesterday = אתמול
+day.2 = מחרתיים
+day.-2 = שלשום
+now = עכשיו, כעת, השעה, הזמן
+local = זמן מקומי, שעון מקומי, שעה מקומית, מקומי
+noon = צהריים, צהרים
+midnight = חצות
+
+# Document references
+prev = קודם, הקודם, התוצאה הקודמת
+sum = סה"כ, סה״כ, סך הכל, סך הכול, סכום, ביחד
+average = ממוצע, בממוצע
+
+# Functions and formats
+function.sqrt = שורש ריבועי, שורש
+function.cbrt = שורש שלישי, שורש מעוקב
+function.round = עגל, עיגול
+function.ceil = עגל למעלה
+function.floor = עגל למטה
+function.abs = ערך מוחלט
+function.fact = עצרת
+function.sin = סינוס
+function.cos = קוסינוס
+function.tan = טנגנס
+format.hex = הקסדצימלי, בסיס 16
+format.bin = בינארי, בסיס 2
+format.oct = אוקטלי, בסיס 8
+format.dec = עשרוני, בסיס 10
+format.sci = כתיב מדעי, מדעי
+
+# Time
+show.s = שנייה | שניות | שניות
+unit.s = שניה, שנ׳, שנ'
+show.min = דקה | דקות | דקות
+unit.min = דק׳, דק'
+show.h = שעה | שעות | שעות
+show.day = יום | ימים | ימים
+show.week = שבוע | שבועות | שבועות
+show.month = חודש | חודשים | חודשים
+show.year = שנה | שנים | שנים
+show.decade = עשור | עשורים | עשורים
+per.s = לשנייה, לשניה
+per.min = לדקה
+per.h = לשעה
+per.day = ליום
+per.week = לשבוע
+per.month = לחודש
+per.year = לשנה
+
+# SI prefixes in Hebrew
+prefix.k = קילו
+prefix.c = סנטי
+prefix.m = מילי
+prefix.µ = מיקרו
+prefix.n = ננו
+prefix.d = דצי
+prefix.h = הקטו
+prefix.M = מגה
+prefix.G = גיגה
+prefix.T = טרה
+prefix.p = פיקו
+
+# Length (ס״מ, מ״מ, ק״מ are abbreviations, not prefix + symbol)
+unit.m = מטר, מטרים, מ׳, מ'
+unit.cm = ס"מ, ס״מ
+unit.mm = מ"מ, מ״מ
+unit.km = ק"מ, ק״מ
+show.inch = אינץ׳ | אינץ׳ | אינץ׳
+unit.inch = אינץ', אינצ׳ים, אינצ'ים
+show.foot = רגל | רגל | רגל
+unit.foot = רגליים, פיט
+show.yard = יארד | יארדים | יארדים
+show.mile = מייל | מייל | מייל
+unit.mile = מיילים, מיל
+show.nautical mile = מייל ימי | מייל ימי | מייל ימי
+unit.nautical mile = מיילים ימיים
+show.light year = שנת אור | שנות אור | שנות אור
+unit.px = פיקסל, פיקסלים
+
+# Area and volume (מטר רבוע, מ״ר; מטר מעוקב, מ״ק, קוב)
+square = * רבוע{,ה,ים,ות}, * מרובע{,ת,ים,ות}
+cubic = * מעוקב{,ת,ים,ות}
+unit.m2 = מ"ר, מ״ר
+unit.m3 = מ"ק, מ״ק, קוב, קו"ב, קו״ב
+unit.ha = הקטר, הקטרים, הקטאר
+show.acre = אקר | אקרים | אקרים
+show.dunam = דונם | דונמים | דונמים
+unit.l = ליטר, ליטרים, ל׳
+unit.ml = מ"ל, מ״ל
+show.cup = כוס | כוסות | כוסות
+show.tablespoon = כף | כפות | כפות
+show.teaspoon = כפית | כפיות | כפיות
+show.gallon = גלון | גלונים | גלונים
+show.pint = פיינט | פיינטים | פיינטים
+
+# Weight
+unit.g = גרם, גרמים, גר׳, גר'
+unit.kg = ק"ג, ק״ג, קילו, קג
+unit.t = טון, טונות
+show.pound = ליברה | ליברות | ליברות
+show.ounce = אונקיה | אונקיות | אונקיות
+unit.ounce = אונקייה
+show.carat = קראט | קראט | קראט
+unit.carat = קרט
+
+# Temperature and angles
+unit.°C = צלזיוס, מעלות צלזיוס, מעלה צלזיוס
+unit.°F = פרנהייט, מעלות פרנהייט, מעלה פרנהייט
+unit.K = קלווין, קלוין
+unit.° = מעלה, מעלות
+unit.rad = רדיאן, רדיאנים
+
+# Data, speed
+unit.b = ביט, ביטים
+unit.B = בייט, בייטים, בתים
+unit.km/h = קמ"ש, קמ״ש
+
+# Currencies
+currency.ILS = שקל, שקלים, ש"ח, ש״ח, שקל חדש, שקלים חדשים, שקל ישראלי חדש, שקלים ישראלים חדשים,
+    שקלים ישראלים, ש״ח חדש
+currency.USD = דולר, דולרים, דולר אמריקאי, דולרים אמריקאים, דולר ארה"ב, דולר ארה״ב
+currency.EUR = אירו, יורו
+currency.GBP = פאונד, לירה שטרלינג, לירות שטרלינג, ליש"ט, ליש״ט
+currency.JPY = ין, ין יפני
+currency.CHF = פרנק, פרנקים, פרנק שווייצרי, פרנקים שווייצריים
+currency.CAD = דולר קנדי, דולרים קנדיים
+currency.AUD = דולר אוסטרלי, דולרים אוסטרליים
+currency.RUB = רובל, רובלים
+currency.CNY = יואן
+currency.TRY = לירה טורקית, לירות טורקיות
+currency.JOD = דינר ירדני, דינרים ירדניים
+currency.EGP = לירה מצרית, לירות מצריות
+currency.BTC = ביטקוין
+
+# Time zones: Hebrew names of cities and countries, also with a joined ב (`בלונדון`)
+zone.Asia/Jerusalem = {,ב}ירושלים, {,ב}תל אביב, {,ב}תל־אביב, {,ב}חיפה, {,ב}אילת, {,ב}באר שבע, {,ב}ישראל
+zone.Europe/London = {,ב}לונדון, {,ב}אנגליה, {,ב}בריטניה
+zone.Europe/Moscow = {,ב}מוסקבה, {,ב}רוסיה
+zone.Asia/Shanghai = {,ב}בייג׳ינג, {,ב}בייג'ינג, {,ב}שנגחאי, {,ב}סין
+zone.Europe/Vienna = {,ב}וינה, {,ב}אוסטריה
+zone.Europe/Berlin = {,ב}ברלין, {,ב}מינכן, {,ב}פרנקפורט, {,ב}גרמניה
+zone.Europe/Lisbon = {,ב}ליסבון, {,ב}פורטוגל
+zone.Europe/Warsaw = {,ב}ורשה, {,ב}פולין
+zone.Europe/Brussels = {,ב}בריסל, {,ב}בלגיה
+zone.Europe/Copenhagen = {,ב}קופנהגן, {,ב}דנמרק
+zone.Europe/Zurich = {,ב}ז׳נבה, {,ב}ז'נבה, {,ב}ציריך, {,ב}שווייץ
+zone.Europe/Paris = {,ב}פריז, {,ב}צרפת
+zone.Europe/Rome = {,ב}רומא, {,ב}מילאנו, {,ב}איטליה
+zone.Europe/Madrid = {,ב}מדריד, {,ב}ברצלונה, {,ב}ספרד
+zone.Europe/Amsterdam = {,ב}אמסטרדם, {,ב}הולנד
+zone.Europe/Athens = {,ב}אתונה, {,ב}יוון
+zone.Europe/Prague = {,ב}פראג
+zone.Europe/Budapest = {,ב}בודפשט, {,ב}הונגריה
+zone.Europe/Bucharest = {,ב}בוקרשט, {,ב}רומניה
+zone.Europe/Kyiv = {,ב}קייב, {,ב}קיוב, {,ב}אוקראינה
+zone.Europe/Istanbul = {,ב}איסטנבול, {,ב}טורקיה
+zone.Asia/Nicosia = {,ב}קפריסין, {,ב}לרנקה
+zone.Asia/Amman = {,ב}עמאן, {,ב}ירדן
+zone.Africa/Cairo = {,ב}קהיר, {,ב}מצרים
+zone.Asia/Dubai = {,ב}דובאי
+zone.Asia/Tokyo = {,ב}טוקיו, {,ב}יפן
+zone.Asia/Bangkok = {,ב}בנגקוק, {,ב}תאילנד
+zone.Asia/Kolkata = {,ב}דלהי, {,ב}מומבאי, {,ב}הודו
+zone.America/New_York = {,ב}ניו יורק, {,ב}וושינגטון
+zone.America/Los_Angeles = {,ב}לוס אנג׳לס, {,ב}לוס אנג'לס
+zone.America/Chicago = {,ב}שיקגו
+zone.America/Toronto = {,ב}טורונטו
+zone.Australia/Sydney = {,ב}סידני
+
+# Month names in dates (`12 במרץ 2026`)
+month.1 = {,ב}ינואר
+month.2 = {,ב}פברואר
+month.3 = {,ב}מרץ, {,ב}מרס
+month.4 = {,ב}אפריל
+month.5 = {,ב}מאי
+month.6 = {,ב}יוני
+month.7 = {,ב}יולי
+month.8 = {,ב}אוגוסט
+month.9 = {,ב}ספטמבר
+month.10 = {,ב}אוקטובר
+month.11 = {,ב}נובמבר
+month.12 = {,ב}דצמבר
+
+# Display (`יום ד׳, 28 באוק׳ 2026`)
+weekdays = יום ב׳, יום ג׳, יום ד׳, יום ה׳, יום ו׳, שבת, יום א׳
+months = ינו׳, פבר׳, מרץ, אפר׳, מאי, יוני, יולי, אוג׳, ספט׳, אוק׳, נוב׳, דצמ׳
+date = %a, %-d ב%b %Y
