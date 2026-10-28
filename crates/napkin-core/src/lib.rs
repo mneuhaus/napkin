@@ -13,8 +13,23 @@
 //! assert!(matches!(&lines[1].result, LineResult::Value(answer) if answer.text == "36"));
 //! ```
 //!
-//! STUB: this file pins the public API that the app, the CLI and the extension host build on.
-//! The engine implementation replaces the bodies; the signatures below stay stable.
+//! Lines are evaluated like [Numi](https://github.com/nikolaeu/numi/wiki) does: unknown words are
+//! ignored, `Label:` prefixes, `// comments` and `"quoted text"` are skipped, and a line that
+//! computes nothing yields [`LineResult::None`] rather than an error.
+
+mod classify;
+mod currency;
+mod custom;
+mod document;
+mod eval;
+mod format;
+mod functions;
+mod lexer;
+mod num;
+mod parser;
+mod units;
+mod value;
+mod zones;
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -30,10 +45,14 @@ pub struct Engine {
     settings: Settings,
     rates: ExchangeRates,
     clock: Clock,
-    units: Vec<CustomUnit>,
-    functions: Vec<CustomFunction>,
+    custom: custom::Registry,
     globals: BTreeMap<String, ExtValue>,
 }
+
+const _: () = {
+    const fn assert_send_sync<T: Send + Sync>() {}
+    assert_send_sync::<Engine>();
+};
 
 impl Engine {
     /// An engine with default [`Settings`], the bundled exchange rates and the system clock.
@@ -43,7 +62,10 @@ impl Engine {
 
     /// An engine with the given settings.
     pub fn with_settings(settings: Settings) -> Self {
-        Self { settings, ..Self::default() }
+        Self {
+            settings,
+            ..Self::default()
+        }
     }
 
     /// The current settings.
@@ -75,7 +97,7 @@ impl Engine {
     /// (split on `\n`; a trailing `\r` belongs to no span). Span ranges are byte offsets
     /// into their own line.
     pub fn evaluate(&self, document: &str) -> Vec<LineOutput> {
-        document.split('\n').map(|line| self.evaluate_stub_line(line)).collect()
+        document::evaluate(self, document)
     }
 
     /// Evaluates a single expression without document context (CLI, Alfred).
@@ -84,7 +106,7 @@ impl Engine {
     ///
     /// Returns [`EvalError`] when the input does not compute anything or fails to evaluate.
     pub fn evaluate_expression(&self, input: &str) -> Result<Answer, EvalError> {
-        match self.evaluate_stub_line(input).result {
+        match document::evaluate_expression(self, input) {
             LineResult::Value(answer) => Ok(answer),
             LineResult::Error(error) => Err(error),
             LineResult::None => Err(EvalError::new("nothing to calculate")),
@@ -97,9 +119,11 @@ impl Engine {
     ///
     /// Returns [`RegisterError`] when the id is already taken, `phrases` is empty, the ratio is
     /// not finite and positive, or `base_unit_id` is not a known base unit.
+    ///
+    /// A unit whose `base_unit_id` is its own id starts a new dimension of its own (other
+    /// units can then be based on it).
     pub fn register_unit(&mut self, unit: CustomUnit) -> Result<(), RegisterError> {
-        self.units.push(unit);
-        Ok(())
+        self.custom.add_unit(unit)
     }
 
     /// Registers a custom function (Numi `numi.addFunction`).
@@ -108,8 +132,7 @@ impl Engine {
     ///
     /// Returns [`RegisterError`] when the id is already taken or `phrases` is empty.
     pub fn register_function(&mut self, function: CustomFunction) -> Result<(), RegisterError> {
-        self.functions.push(function);
-        Ok(())
+        self.custom.add_function(function)
     }
 
     /// Declares a global variable visible in every document (Numi `numi.setVariable`).
@@ -119,20 +142,9 @@ impl Engine {
     /// Returns [`RegisterError`] when `name` is not a valid variable name or names a unit,
     /// keyword or function.
     pub fn set_global_variable(&mut self, name: &str, value: ExtValue) -> Result<(), RegisterError> {
+        document::check_variable_name(name, &self.custom).map_err(RegisterError::new)?;
         self.globals.insert(name.to_owned(), value);
         Ok(())
-    }
-
-    fn evaluate_stub_line(&self, line: &str) -> LineOutput {
-        let trimmed = line.trim();
-        let Ok(number) = trimmed.parse::<f64>() else {
-            return LineOutput { spans: Vec::new(), result: LineResult::None };
-        };
-        let start = line.len() - line.trim_start().len();
-        LineOutput {
-            spans: vec![Span { range: start..start + trimmed.len(), kind: SpanKind::Number }],
-            result: LineResult::Value(Answer { text: number.to_string(), number: Some(number), unit: None }),
-        }
     }
 }
 
@@ -217,7 +229,9 @@ pub struct EvalError {
 impl EvalError {
     /// An error with a human-readable message.
     pub fn new(message: impl Into<String>) -> Self {
-        Self { message: message.into() }
+        Self {
+            message: message.into(),
+        }
     }
 
     /// The human-readable message.
@@ -244,7 +258,9 @@ pub struct RegisterError {
 impl RegisterError {
     /// An error with a human-readable message.
     pub fn new(message: impl Into<String>) -> Self {
-        Self { message: message.into() }
+        Self {
+            message: message.into(),
+        }
     }
 }
 
@@ -338,6 +354,10 @@ pub struct ExchangeRates {
 
 impl ExchangeRates {
     /// The snapshot compiled into the binary, used until a download succeeds.
+    ///
+    /// # Panics
+    ///
+    /// Never in practice: the bundled file is valid JSON, which the test suite checks.
     pub fn bundled() -> Self {
         serde_json::from_str(include_str!("../data/rates-fallback.json"))
             .expect("the bundled rates file is valid JSON checked by the test suite")
@@ -403,12 +423,6 @@ impl fmt::Debug for CustomFunction {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn engine_is_send_and_sync() {
-        fn assert_send_sync<T: Send + Sync>() {}
-        assert_send_sync::<Engine>();
-    }
 
     #[test]
     fn bundled_rates_parse() {

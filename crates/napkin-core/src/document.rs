@@ -1,0 +1,517 @@
+//! Document semantics: headers, comments, labels, assignments, `prev`, `sum` and `average`.
+
+use std::collections::HashMap;
+use std::ops::Range;
+
+use chrono::{DateTime, Datelike, Utc};
+
+use crate::classify::{self, Context, Item, Op, Tok};
+use crate::eval::Env;
+use crate::functions::Builtin;
+use crate::lexer::{self, Raw, RawKind, Sym};
+use crate::parser::{self, Expr};
+use crate::units::{BUILTINS, Form, Unit, UnitRef};
+use crate::value::{Units, Value};
+use crate::zones::Zone;
+use crate::{Clock, Engine, EvalError, LineOutput, LineResult, Span, SpanKind, currency};
+
+/// CSS pixels per inch until the document assigns `ppi`.
+const DEFAULT_PPI: f64 = 96.0;
+/// CSS pixels per em until the document assigns `em`.
+const DEFAULT_EM_PX: f64 = 16.0;
+
+/// Words that cannot be variable names (besides units, currencies and functions).
+const KEYWORDS: &[&str] = &[
+    "in",
+    "into",
+    "to",
+    "as",
+    "plus",
+    "and",
+    "with",
+    "minus",
+    "subtract",
+    "without",
+    "times",
+    "mul",
+    "divide",
+    "per",
+    "mod",
+    "xor",
+    "of",
+    "on",
+    "off",
+    "prev",
+    "sum",
+    "total",
+    "avg",
+    "average",
+    "now",
+    "time",
+    "today",
+    "tomorrow",
+    "yesterday",
+    "noon",
+    "midnight",
+    "pi",
+    "e",
+    "sq",
+    "square",
+    "cubic",
+    "cu",
+    "cb",
+    "percent",
+    "pct",
+];
+
+/// The evaluation state of one document, top to bottom.
+pub(crate) struct Document<'a> {
+    engine: &'a Engine,
+    vars: HashMap<String, Value>,
+    globals: HashMap<String, Result<Value, EvalError>>,
+    prev: Option<Value>,
+    block: Vec<Value>,
+    ppi: f64,
+    em_px: f64,
+    now: DateTime<Utc>,
+    local: Zone,
+}
+
+/// Where the label, comments and code of a line are.
+#[derive(Debug, Default)]
+struct Layout {
+    label: Option<Range<usize>>,
+    comments: Vec<Range<usize>>,
+    code: Vec<Range<usize>>,
+}
+
+fn closing_quote(c: char) -> Option<char> {
+    match c {
+        '"' => Some('"'),
+        '“' | '„' => Some('”'),
+        '«' => Some('»'),
+        _ => None,
+    }
+}
+
+/// Splits a line into label, comments and code.
+fn layout(line: &str) -> Layout {
+    let chars: Vec<(usize, char)> = line.char_indices().collect();
+    let mut quote = None;
+    let mut slashes = None;
+    let mut colon = None;
+    for (k, &(i, c)) in chars.iter().enumerate() {
+        if let Some(close) = quote {
+            if c == close || (close == '”' && c == '“') {
+                quote = None;
+            }
+            continue;
+        }
+        let prev = k.checked_sub(1).and_then(|p| chars.get(p)).map(|&(_, c)| c);
+        let next = chars.get(k + 1).map(|&(_, c)| c);
+        if let Some(close) = closing_quote(c) {
+            quote = Some(close);
+        } else if c == '/' && next == Some('/') {
+            slashes = Some(i);
+            break;
+        } else if c == ':' && colon.is_none() {
+            let ends_word = next.is_none_or(char::is_whitespace);
+            let between_digits =
+                prev.is_some_and(|p| p.is_ascii_digit()) && next.is_some_and(|n| n.is_ascii_digit());
+            if ends_word && !between_digits {
+                colon = Some(i);
+            }
+        }
+    }
+    let mut out = Layout::default();
+    let content_start = line.len() - line.trim_start().len();
+    let code_start = colon.map_or(0, |c| c + 1);
+    if let Some(c) = colon {
+        out.label = Some(content_start..c + 1);
+    }
+    let code_end = slashes.unwrap_or(line.len());
+    if let Some(start) = slashes {
+        out.comments.push(start..line.trim_end().len());
+    }
+    split_quotes(line, code_start..code_end, &mut out);
+    out
+}
+
+/// Splits `region` into code and quoted comments.
+fn split_quotes(line: &str, region: Range<usize>, out: &mut Layout) {
+    let mut start = region.start;
+    let mut quote: Option<(usize, char)> = None;
+    for (i, c) in line[region.clone()]
+        .char_indices()
+        .map(|(i, c)| (i + region.start, c))
+    {
+        match quote {
+            Some((open, close)) if c == close || (close == '”' && c == '“' && i > open) => {
+                out.comments.push(open..i + c.len_utf8());
+                start = i + c.len_utf8();
+                quote = None;
+            }
+            Some(_) => {}
+            None => {
+                if let Some(close) = closing_quote(c) {
+                    out.code.push(start..i);
+                    quote = Some((i, close));
+                }
+            }
+        }
+    }
+    match quote {
+        Some((open, _)) => out
+            .comments
+            .push(open..line[..region.end].trim_end().len().max(open + 1)),
+        None => out.code.push(start..region.end),
+    }
+    out.code.retain(|r| !line[r.clone()].trim().is_empty());
+}
+
+/// Whether a token can end an expression.
+fn can_end(tok: &Tok) -> bool {
+    !matches!(
+        tok,
+        Tok::Op(
+            Op::Add
+                | Op::Sub
+                | Op::Mul
+                | Op::Div
+                | Op::Pow
+                | Op::Mod
+                | Op::BitAnd
+                | Op::BitOr
+                | Op::Xor
+                | Op::Shl
+                | Op::Shr
+                | Op::LParen
+                | Op::Semi
+        ) | Tok::Convert(_)
+            | Tok::Percent(_)
+            | Tok::What
+            | Tok::Is
+            | Tok::Power(_)
+            | Tok::Func(_)
+            | Tok::PrefixCurrency(_)
+    )
+}
+
+/// Whether a token can start an expression.
+fn can_start(tok: &Tok) -> bool {
+    !matches!(
+        tok,
+        Tok::Op(
+            Op::Mul
+                | Op::Div
+                | Op::Pow
+                | Op::Mod
+                | Op::BitAnd
+                | Op::BitOr
+                | Op::Xor
+                | Op::Shl
+                | Op::Shr
+                | Op::RParen
+                | Op::Semi
+                | Op::Fact
+                | Op::Percent
+                | Op::Sup2
+                | Op::Sup3
+        ) | Tok::Convert(_)
+            | Tok::Percent(_)
+            | Tok::What
+            | Tok::Is
+            | Tok::Radix(_)
+    )
+}
+
+/// Drops operators and keywords dangling at either end.
+fn trim(tokens: &[Tok]) -> &[Tok] {
+    let start = tokens.iter().position(can_start).unwrap_or(tokens.len());
+    let end = tokens
+        .iter()
+        .rposition(can_end)
+        .map_or(start, |e| (e + 1).max(start));
+    &tokens[start..end]
+}
+
+/// Parses a line's tokens, falling back to the longest sensible prefix when the whole line does
+/// not parse (prose tolerance).
+fn parse_tolerant(tokens: &[Tok]) -> Result<Expr, EvalError> {
+    let first_error = match parser::parse(tokens) {
+        Ok(expr) => return Ok(expr),
+        Err(error) => error,
+    };
+    let trimmed = trim(tokens);
+    for end in (1..=trimmed.len()).rev() {
+        let candidate = trim(&trimmed[..end]);
+        if candidate.iter().any(Tok::is_value)
+            && let Ok(expr) = parser::parse(candidate)
+        {
+            return Ok(expr);
+        }
+    }
+    Err(first_error)
+}
+
+fn none(spans: Vec<Span>) -> LineOutput {
+    LineOutput {
+        spans,
+        result: LineResult::None,
+    }
+}
+
+impl<'a> Document<'a> {
+    pub(crate) fn new(engine: &'a Engine) -> Self {
+        let (now, local) = match engine.clock {
+            Clock::System => (Utc::now(), Zone::Local),
+            Clock::Fixed { now, time_zone } => (now, Zone::Named(time_zone)),
+        };
+        let mut document = Self {
+            engine,
+            vars: HashMap::new(),
+            globals: HashMap::new(),
+            prev: None,
+            block: Vec::new(),
+            ppi: DEFAULT_PPI,
+            em_px: DEFAULT_EM_PX,
+            now,
+            local,
+        };
+        let globals = engine
+            .globals
+            .iter()
+            .map(|(name, value)| {
+                (
+                    name.clone(),
+                    document
+                        .env(&|_| None)
+                        .quantity_from_ext(value)
+                        .map(Value::Quantity),
+                )
+            })
+            .collect();
+        document.globals = globals;
+        document
+    }
+
+    fn units(&self) -> Units<'a> {
+        Units {
+            custom: &self.engine.custom,
+            rates: &self.engine.rates,
+            ppi: self.ppi,
+            em_px: self.em_px,
+        }
+    }
+
+    fn env<'s>(&'s self, lookup: crate::eval::Lookup<'s>) -> Env<'s> {
+        Env {
+            units: self.units(),
+            settings: &self.engine.settings,
+            now: self.now,
+            local: self.local,
+            functions: &self.engine.custom.functions,
+            lookup,
+            prev: self.prev.as_ref(),
+            block: &self.block,
+        }
+    }
+
+    fn is_variable(&self, name: &str) -> bool {
+        self.vars.contains_key(name) || self.globals.contains_key(name)
+    }
+
+    /// Evaluates the next line of the document.
+    pub(crate) fn line(&mut self, raw_line: &str) -> LineOutput {
+        let line = raw_line.strip_suffix('\r').unwrap_or(raw_line);
+        let content = line.trim();
+        let content_start = line.len() - line.trim_start().len();
+        if content.is_empty() {
+            self.block.clear();
+            return none(Vec::new());
+        }
+        if content.starts_with('#') {
+            self.block.clear();
+            let range = content_start..content_start + content.len();
+            return none(vec![Span {
+                range,
+                kind: SpanKind::Header,
+            }]);
+        }
+        let layout = layout(line);
+        let mut spans: Vec<Span> = layout
+            .label
+            .iter()
+            .map(|r| Span {
+                range: r.clone(),
+                kind: SpanKind::Label,
+            })
+            .collect();
+        spans.extend(layout.comments.iter().map(|r| Span {
+            range: r.clone(),
+            kind: SpanKind::Comment,
+        }));
+        let style = self.engine.settings.number_style;
+        let raws: Vec<Raw> = layout
+            .code
+            .iter()
+            .flat_map(|r| lexer::lex(&line[r.clone()], r.start, style))
+            .collect();
+        let result = self.code(line, &raws, &mut spans);
+        if let (LineResult::Value(_), Some(value)) = (&result.0, result.1) {
+            self.block.push(value.clone());
+            self.prev = Some(value);
+        }
+        spans.sort_by_key(|s| s.range.start);
+        LineOutput {
+            spans,
+            result: result.0,
+        }
+    }
+
+    /// Evaluates the code tokens of a line; returns the result and its value.
+    fn code(&mut self, line: &str, raws: &[Raw], spans: &mut Vec<Span>) -> (LineResult, Option<Value>) {
+        let assignment = match raws {
+            [name, eq, ..] if name.kind == RawKind::Word && eq.kind == RawKind::Sym(Sym::Equals) => {
+                Some(&line[name.range.clone()])
+            }
+            _ => None,
+        };
+        let expression = if assignment.is_some() { &raws[2..] } else { raws };
+        let items = self.classify(line, expression);
+        spans.extend(items.iter().map(|item| Span {
+            range: item.range.clone(),
+            kind: item.kind,
+        }));
+        let Some(name) = assignment else {
+            return self.evaluate(&items);
+        };
+        spans.push(Span {
+            range: raws[0].range.clone(),
+            kind: SpanKind::Variable,
+        });
+        spans.push(Span {
+            range: raws[1].range.clone(),
+            kind: SpanKind::Operator,
+        });
+        self.assign(name, &items)
+    }
+
+    fn classify(&self, line: &str, raws: &[Raw]) -> Vec<Item> {
+        let is_variable = |name: &str| self.is_variable(name);
+        let ctx = Context {
+            line,
+            custom: &self.engine.custom,
+            is_variable: &is_variable,
+            year: self.local.naive(self.now).year(),
+        };
+        classify::classify(raws, &ctx)
+    }
+
+    fn evaluate(&self, items: &[Item]) -> (LineResult, Option<Value>) {
+        let tokens: Vec<Tok> = items
+            .iter()
+            .map(|item| &item.tok)
+            .take_while(|tok| **tok != Tok::Op(Op::Equals))
+            .filter(|tok| **tok != Tok::Text)
+            .cloned()
+            .collect();
+        if !tokens.iter().any(Tok::is_value) {
+            return (LineResult::None, None);
+        }
+        let lookup = |name: &str| {
+            self.vars
+                .get(name)
+                .cloned()
+                .map(Ok)
+                .or_else(|| self.globals.get(name).cloned())
+        };
+        let env = self.env(&lookup);
+        match parse_tolerant(&tokens).and_then(|expr| env.eval(&expr)) {
+            Ok(value) => {
+                let answer = env.units.answer(&value, &self.engine.settings, self.now);
+                (LineResult::Value(answer), Some(value))
+            }
+            Err(error) => (LineResult::Error(error), None),
+        }
+    }
+
+    fn assign(&mut self, name: &str, items: &[Item]) -> (LineResult, Option<Value>) {
+        let special = matches!(name, "em" | "ppi");
+        if !special && let Err(error) = self.check_name(name) {
+            return (LineResult::Error(error), None);
+        }
+        let (result, value) = self.evaluate(items);
+        let Some(value) = value else {
+            return (result, None);
+        };
+        if special && let Err(error) = self.set_css(name, &value) {
+            return (LineResult::Error(error), None);
+        }
+        if !special {
+            self.vars.insert(name.to_owned(), value.clone());
+        }
+        (result, Some(value))
+    }
+
+    fn set_css(&mut self, name: &str, value: &Value) -> Result<(), EvalError> {
+        let Value::Quantity(q) = value else {
+            return Err(EvalError::new(format!("`{name}` needs a number")));
+        };
+        let size = if name == "ppi" || q.is_plain() {
+            q.value
+        } else {
+            let px = BUILTINS.by_id("px").expect("px is built in");
+            self.units()
+                .convert(q, &Unit::simple(UnitRef::Builtin(px), Form::Default))?
+        };
+        if !size.is_finite() || size <= 0.0 {
+            return Err(EvalError::new(format!("`{name}` must be positive")));
+        }
+        if name == "ppi" {
+            self.ppi = size;
+        } else {
+            self.em_px = size;
+        }
+        Ok(())
+    }
+
+    fn check_name(&self, name: &str) -> Result<(), EvalError> {
+        check_variable_name(name, &self.engine.custom).map_err(EvalError::new)
+    }
+}
+
+/// Whether `name` may be a variable: letters, digits and `_`, not starting with a digit, and not
+/// a unit, currency, keyword, function or constant.
+pub(crate) fn check_variable_name(name: &str, custom: &crate::custom::Registry) -> Result<(), String> {
+    let mut chars = name.chars();
+    let valid_start = chars.next().is_some_and(|c| c.is_alphabetic() || c == '_');
+    if !valid_start || !name.chars().all(|c| c.is_alphanumeric() || c == '_') {
+        return Err(format!("`{name}` is not a valid variable name"));
+    }
+    let lower = name.to_lowercase();
+    let taken = KEYWORDS.contains(&lower.as_str())
+        || BUILTINS.lookup(name).is_some()
+        || currency::code(name).is_some()
+        || currency::name(name).is_some()
+        || Builtin::from_name(name).is_some()
+        || custom.names(name);
+    if taken {
+        return Err(format!(
+            "`{name}` is a unit, keyword or function and cannot be a variable"
+        ));
+    }
+    Ok(())
+}
+
+/// Evaluates every line of `text`.
+pub(crate) fn evaluate(engine: &Engine, text: &str) -> Vec<LineOutput> {
+    let mut document = Document::new(engine);
+    text.split('\n').map(|line| document.line(line)).collect()
+}
+
+/// Evaluates one expression without document context.
+pub(crate) fn evaluate_expression(engine: &Engine, input: &str) -> LineResult {
+    let single_line = input.replace(['\n', '\r'], " ");
+    Document::new(engine).line(&single_line).result
+}
