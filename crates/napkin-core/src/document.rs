@@ -129,6 +129,20 @@ fn split_quotes(line: &str, region: Range<usize>, out: &mut Layout) {
 /// recursion.
 const MAX_TOKENS: usize = 300;
 
+/// The first unknown word written right after a bare number that a conversion follows
+/// (`10 XYZ in USD`, `1 furlongz in m`). Ignoring it would silently turn the number into the
+/// target unit, so the line fails instead. Prose elsewhere stays ignored.
+fn unknown_unit_before_conversion(items: &[Item]) -> Option<Range<usize>> {
+    items.windows(2).enumerate().find_map(|(index, pair)| {
+        let [number, word] = pair else { return None };
+        if !matches!(number.tok, Tok::Num(_)) || word.tok != Tok::Text {
+            return None;
+        }
+        let next = items[index + 2..].iter().find(|item| item.tok != Tok::Text)?;
+        matches!(next.tok, Tok::Convert(_)).then(|| word.range.clone())
+    })
+}
+
 /// The tokens the parser sees: prose dropped, everything after a stray `=` dropped, and a
 /// [`Tok::Gap`] where prose separated two operands (so `3 apples 4 pears` does not multiply).
 fn significant(items: &[Item]) -> Vec<Tok> {
@@ -380,7 +394,7 @@ impl<'a> Document<'a> {
             kind: item.kind,
         }));
         let Some(name) = assignment else {
-            return self.evaluate(&items);
+            return self.evaluate(line, &items);
         };
         spans.push(Span {
             range: raws[0].range.clone(),
@@ -390,7 +404,7 @@ impl<'a> Document<'a> {
             range: raws[1].range.clone(),
             kind: SpanKind::Operator,
         });
-        self.assign(name, &items)
+        self.assign(line, name, &items)
     }
 
     fn classify(&self, line: &str, raws: &[Raw]) -> Vec<Item> {
@@ -404,7 +418,7 @@ impl<'a> Document<'a> {
         classify::classify(raws, &ctx)
     }
 
-    fn evaluate(&self, items: &[Item]) -> (LineResult, Option<Value>) {
+    fn evaluate(&self, line: &str, items: &[Item]) -> (LineResult, Option<Value>) {
         let tokens = significant(items);
         let missing_prev = self.prev.is_none() && tokens.contains(&Tok::Doc(classify::DocRef::Prev));
         if missing_prev || !tokens.iter().any(Tok::is_value) {
@@ -415,6 +429,10 @@ impl<'a> Document<'a> {
                 LineResult::Error(EvalError::new("the line is too long to calculate")),
                 None,
             );
+        }
+        if let Some(word) = unknown_unit_before_conversion(items) {
+            let message = format!("unknown unit \"{}\"", &line[word]);
+            return (LineResult::Error(EvalError::new(message)), None);
         }
         let lookup = |name: &str| {
             self.vars
@@ -433,12 +451,12 @@ impl<'a> Document<'a> {
         }
     }
 
-    fn assign(&mut self, name: &str, items: &[Item]) -> (LineResult, Option<Value>) {
+    fn assign(&mut self, line: &str, name: &str, items: &[Item]) -> (LineResult, Option<Value>) {
         let special = matches!(name, "em" | "ppi");
         if !special && let Err(error) = self.check_name(name) {
             return (LineResult::Error(error), None);
         }
-        let (result, value) = self.evaluate(items);
+        let (result, value) = self.evaluate(line, items);
         let Some(value) = value else {
             return (result, None);
         };

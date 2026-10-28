@@ -70,6 +70,17 @@ fn quantity(value: Value) -> Result<Quantity, EvalError> {
 }
 
 /// A percentage as a plain fraction; other quantities unchanged.
+/// Exactly one currency to the first power and nothing else: `€89`, not `$3/kg`.
+fn is_price(q: &Quantity) -> bool {
+    matches!(q.unit.factors.as_slice(), [factor] if factor.power == 1 && matches!(factor.unit, UnitRef::Currency(_)))
+}
+
+fn has_currency(unit: &Unit) -> bool {
+    unit.factors
+        .iter()
+        .any(|factor| matches!(factor.unit, UnitRef::Currency(_)))
+}
+
 fn fraction(q: Quantity) -> Quantity {
     if q.is_percent() {
         Quantity::plain(q.value / 100.0)
@@ -250,6 +261,14 @@ impl Env<'_> {
         match (a.is_percent(), b.is_percent()) {
             (true, false) if b.is_plain() => Ok(percent(a.value * b.value)),
             (true, true) => Ok(percent(a.value * b.value / 100.0)),
+            // A price times an amount of something is money: `4 days * 35 EUR` is €140, not
+            // 140 d·EUR. Compound prices (`$3/kg * 5 kg`) still go through the unit algebra.
+            (false, false) if is_price(&a) && !has_currency(&b.unit) && !b.is_plain() => {
+                Ok(Quantity::new(a.value * b.value, a.unit))
+            }
+            (false, false) if is_price(&b) && !has_currency(&a.unit) && !a.is_plain() => {
+                Ok(Quantity::new(a.value * b.value, b.unit))
+            }
             _ => self.combine(fraction(a), fraction(b)),
         }
     }

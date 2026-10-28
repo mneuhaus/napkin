@@ -709,3 +709,44 @@ fn deep_or_long_lines_do_not_overflow_the_stack() {
         "90 levels of parentheses are fine"
     );
 }
+
+#[test]
+fn a_price_times_an_amount_is_money() {
+    let engine = common::engine();
+    check(
+        &engine,
+        &[
+            ("4 days * 35 EUR", "€140"),
+            ("5 kg * $3", "$15"),
+            ("$5 * 2 hours", "$10"),
+            ("$3/kg * 5 kg", "$15"),
+            ("3 m * 4 m", "12 m²"),
+        ],
+    );
+    assert_eq!(
+        last(
+            &engine,
+            "Hotel: 3 nights * €89\nFood: 4 days * 35 EUR\nTotal: sum"
+        ),
+        "€407"
+    );
+}
+
+#[test]
+fn an_unknown_unit_before_a_conversion_is_an_error() {
+    let engine = common::engine();
+    for input in ["10 XYZ in USD", "1 furlongz in m", "3 apples in kg"] {
+        assert!(
+            is_error(&engine, input),
+            "{input} should fail, got {}",
+            last(&engine, input)
+        );
+    }
+    check(
+        &engine,
+        &[
+            ("convert 5 km to miles", "3.11 miles"),
+            ("$275 for the \"Model 227\"", "$275"),
+        ],
+    );
+}

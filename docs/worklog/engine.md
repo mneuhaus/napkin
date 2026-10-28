@@ -122,7 +122,8 @@ No spec row needed changing. All 63 checked lines of the acceptance table pass.
 
 - No derived SI units beyond the spec (newton, watt, joule, pascal); extensions can add them.
 - No data-rate units (`Mbps`); extensions can add them.
-- Unknown words before a conversion are dropped, so `1 furlongz in m` reads as `1 in m` →
-  `1 m` (a plain number takes the target unit). Same for unknown currency codes.
+- Fixed after the merge: an unknown word right after a bare number that a conversion follows
+  (`1 furlongz in m`, `10 XYZ in USD`) is now an error instead of silently taking the target
+  unit. A price times an amount (`4 days * 35 EUR`) is money (`€140`), not `140 d·EUR`.
 - Functions drop physical units (spec row `round(1 month in days)` → `30`), keeping only
   currency and percent for `round`/`ceil`/`floor`/`abs`.
