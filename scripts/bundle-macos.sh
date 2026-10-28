@@ -2,7 +2,8 @@
 # Builds a release Napkin.app into dist/ (bundle id com.neuhaus.napkin, generated icon,
 # ad-hoc signed). Installs nothing.
 #
-#   scripts/bundle-macos.sh            # build and bundle
+#   scripts/bundle-macos.sh            # build and bundle for this Mac's architecture
+#   UNIVERSAL=1 scripts/bundle-macos.sh  # Apple Silicon + Intel in one binary
 #   CARGO_TARGET_DIR=... scripts/...   # reuse another target folder
 set -euo pipefail
 
@@ -12,12 +13,22 @@ dist="$root/dist"
 app="$dist/Napkin.app"
 version="$(sed -n '/^\[workspace.package\]/,/^\[/s/^version = "\(.*\)"/\1/p' "$root/Cargo.toml")"
 
-echo "building napkin-app $version (release)"
-CARGO_TARGET_DIR="$target_dir" cargo build --release -p napkin-app --manifest-path "$root/Cargo.toml"
-
 rm -rf "$app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
-cp "$target_dir/release/napkin-app" "$app/Contents/MacOS/napkin-app"
+if [[ -n "${UNIVERSAL:-}" ]]; then
+    for triple in aarch64-apple-darwin x86_64-apple-darwin; do
+        echo "building napkin-app $version (release, $triple)"
+        CARGO_TARGET_DIR="$target_dir" cargo build --release -p napkin-app --target "$triple" \
+            --manifest-path "$root/Cargo.toml"
+    done
+    lipo -create -output "$app/Contents/MacOS/napkin-app" \
+        "$target_dir/aarch64-apple-darwin/release/napkin-app" \
+        "$target_dir/x86_64-apple-darwin/release/napkin-app"
+else
+    echo "building napkin-app $version (release)"
+    CARGO_TARGET_DIR="$target_dir" cargo build --release -p napkin-app --manifest-path "$root/Cargo.toml"
+    cp "$target_dir/release/napkin-app" "$app/Contents/MacOS/napkin-app"
+fi
 
 echo "drawing the icon"
 work="$(mktemp -d "$dist/.icon.XXXXXX")"

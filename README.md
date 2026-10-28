@@ -4,6 +4,8 @@ Back-of-the-napkin math for your desktop. Napkin is an open-source calculator no
 speaks [Numi](https://numi.app)'s language: type calculations in plain words on the left, read
 the answers on the right of the same line.
 
+**Website:** <https://mneuhaus.github.io/napkin/> · **Download:** [latest release](https://github.com/mneuhaus/napkin/releases/latest)
+
 ```
 # Trip to Rome
 Hotel: 3 nights * €89            €267
@@ -48,6 +50,25 @@ Everything in Numi's documentation, plus a little more:
   `2 часа в минутах`. Word units and dates come out in the chosen language (`2 Stunden`,
   `Mi., 28. Okt. 2026`).
 
+## Install
+
+**App (macOS 11+, Apple Silicon and Intel):** download `Napkin-<version>.dmg` from the
+[latest release](https://github.com/mneuhaus/napkin/releases/latest), open it and drag Napkin
+into Applications.
+
+> The current builds are not notarized by Apple yet. The first launch is blocked once: open
+> **System Settings → Privacy & Security**, scroll to the message about Napkin and click
+> **Open Anyway**. (Or run `xattr -dr com.apple.quarantine /Applications/Napkin.app`.)
+
+**Command line:** download `napkin-cli-<version>-macos-universal.tar.gz` from the release and put
+`napkin` on your `PATH`, or build it with Cargo:
+
+```sh
+cargo install --git https://github.com/mneuhaus/napkin napkin-cli
+```
+
+**Alfred:** open `Napkin.alfredworkflow` from the release (needs the command line tool).
+
 ## The app
 
 - Results right-aligned on each line, syntax colouring, click a result to copy it.
@@ -58,12 +79,6 @@ Everything in Numi's documentation, plus a little more:
   style, angle unit and clock format.
 - Menu bar icon, global hotkey (`⌥⌘N`), launch at login, optional Dock icon.
 - Numi's Alfred endpoint on `http://localhost:15055/?q=…`, so Numi's Alfred workflow works too.
-
-Build the app bundle (macOS) into `dist/Napkin.app`:
-
-```sh
-./scripts/bundle-macos.sh
-```
 
 ## Command line
 
@@ -93,6 +108,21 @@ numi.addFunction({ id: "zum", phrases: "zum" }, (values) => ({
   double: values[0].double + values[1].double,
 }));
 ```
+
+## Building from source
+
+Rust (stable) and Xcode (for the Metal shader compiler GPUI needs):
+
+```sh
+cargo test --workspace
+cargo run -p napkin-app            # the app
+./scripts/bundle-macos.sh         # dist/Napkin.app
+./scripts/release-macos.sh        # dist/release: universal DMG, CLI tarball, Alfred workflow
+```
+
+The code follows the BeautifulRust guidelines (`.claude/skills/rust-best-practices`);
+`cargo clippy --workspace --all-targets -- -D warnings` must stay clean. After cloning, enable
+the secret-scanning hooks with `git config core.hooksPath .githooks`.
 
 ## Layout
 
