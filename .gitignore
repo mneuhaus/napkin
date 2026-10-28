@@ -2,3 +2,4 @@
 /.worktrees
 /tmp
 .DS_Store
+/dist
