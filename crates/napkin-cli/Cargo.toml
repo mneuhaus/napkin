@@ -16,6 +16,14 @@ napkin-core.workspace = true
 napkin-rates.workspace = true
 napkin-extensions.workspace = true
 anyhow.workspace = true
+clap = { version = "4.6", features = ["derive"] }
+percent-encoding = "2.3"
+serde.workspace = true
+serde_json.workspace = true
+tiny_http = "0.12"
+
+[dev-dependencies]
+tempfile = "3"
 
 [lints]
 workspace = true

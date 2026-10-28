@@ -12,8 +12,13 @@ napkin-core.workspace = true
 chrono.workspace = true
 dirs.workspace = true
 serde.workspace = true
-serde_json.workspace = true
+# Exact float parsing so cached rates read back bit-for-bit.
+serde_json = { workspace = true, features = ["float_roundtrip"] }
 thiserror.workspace = true
+ureq = { version = "3.5", default-features = false, features = ["rustls", "gzip"] }
+
+[dev-dependencies]
+tempfile = "3"
 
 # Full BeautifulRust lint set, including the library-only lints.
 [lints.rust]
