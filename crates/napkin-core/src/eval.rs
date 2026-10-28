@@ -373,7 +373,7 @@ impl Env<'_> {
             return match (q.is_percent(), q.is_plain()) {
                 (true, _) => Ok(q),
                 (false, true) => Ok(percent(q.value * 100.0)),
-                (false, false) => err("only plain numbers convert to percent"),
+                (false, false) => Ok(percent(self.units.convert(&q, unit)?)),
             };
         }
         if q.is_plain() {
