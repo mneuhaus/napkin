@@ -1,1 +1,383 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Afrikaans. Format: see crates/napkin-core/src/vocab.rs.
+
+# Arithmetic
+plus = en, met, bygetel by, vermeerder met
+minus = sonder, trek af, minder, afgetrek met, verminder met
+times = maal, maal met, keer, vermenigvuldig met, vermenigvuldig
+divide = gedeel deur, deel deur, gedeel met, deel met, gedeel, deel
+modulo = modulo
+# `op` also means `on` after a percentage (`5% op 30`); as a contested word it converts only when
+# a unit, currency, zone or format follows.
+convert = na, as, soos, aan, op, vir, omgeskakel na, omgereken na
+assign = is gelyk aan, is gelyk, gelyk aan, gelyk, is
+
+# Percentages
+percent = persent, persente, persentasie{,s}, ps{,.}
+percent.of = van, uit
+percent.on = by, bo-op, op
+percent.off = afgetrek van, afslag op, korting op
+as-percent.of = as {%,persent,persentasie,'n persentasie} van
+as-percent.off = as {%,persent,persentasie,'n persentasie} {afgetrek van,vermindering van}
+as-percent.on = as {%,persent,persentasie,'n persentasie} {by,vermeerdering van}
+what-is.of = van wat is
+what-is.off = afgetrek wat is, afgetrek van wat is
+what-is.on = by wat is
+
+# Scales (long scale: miljard = 10^9, biljoen = 10^12)
+scale.1e3 = duisend{,e}
+scale.1e6 = miljoen{,e}
+scale.1e9 = miljard{,e}, mjd{,.}
+scale.1e12 = biljoen{,e}
+
+# Dates and times
+today = vandag
+tomorrow = môre, more
+yesterday = gister, gisteraand
+day.2 = oormôre, oormore
+day.-2 = eergister
+now = nou, tyd, huidige tyd
+local = plaaslik, plaaslike tyd, plaaslike tydsone, plaaslike tydsones
+noon = middag
+midnight = middernag
+
+# Document references
+prev = vorige
+sum = som, totaal, altesaam
+average = gemiddeld{,e}, gem{,.}
+
+# Functions and formats
+function.sqrt = vierkantswortel{,s}, wortel
+function.cbrt = derdemagswortel, kubieke wortel, kubiekswortel
+function.round = afrond, afgerond
+function.abs = absolute waarde
+function.fact = faktoriaal, fakulteit
+function.sin = sinus
+function.cos = kosinus, cosinus
+function.tan = tangens
+format.hex = heksadesimaal
+format.bin = binêr
+format.oct = oktaal
+format.dec = desimaal, des
+format.sci = wetenskaplik, wet, eksp, eksponent, eksponensieel, eksponensiële notasie
+
+# Time
+show.s = sekonde | sekondes
+unit.s = sek., s.
+show.min = minuut | minute
+unit.min = min.
+show.h = uur | uur
+unit.h = ure, u.
+show.day = dag | dae
+show.week = week | weke
+unit.week = w.
+show.month = maand | maande
+unit.month = md{,.}
+show.year = jaar | jaar
+unit.year = jare, j{,.}
+show.decade = dekade | dekades
+show.century = eeu | eeue
+
+# SI and IEC prefixes that Afrikaans spells differently from English
+prefix.c = senti
+prefix.d = desi
+prefix.h = hekto
+prefix.µ = mikro
+prefix.p = piko
+prefix.E = eksa
+prefix.Y = jotta
+prefix.y = jokto
+prefix.Ei = eksbi
+
+# Length
+unit.m = meter{,s}
+show.inch = duim | duim
+unit.inch = duime, ”
+show.foot = voet | voet
+unit.foot = voete, vt{,.}
+show.yard = jaart | jaart
+unit.yard = jaarts, jt{,.}
+show.mile = myl | myl
+unit.mile = myle
+show.nautical mile = seemyl | seemyl
+unit.nautical mile = seemyle, sm{,.}
+show.chain = ketting | ketting
+unit.chain = kettings, chain{,s}
+show.cable = kabellengte | kabellengte
+unit.cable = kabellengtes, kabel{,s}
+show.light year = ligjaar | ligjaar
+unit.light year = ligjare
+unit.pt = punt{,e}
+unit.px = pieksel{,s}
+
+# Area
+square = vierkante *, vierkant *, vrknt *
+show.square = vierkante *
+unit.ha = hektaar, hektare
+show.are = aar | aar
+unit.are = are
+show.acre = akker | akker
+unit.acre = akkers, acres
+
+# Volume
+cubic = kubieke *, kub{,.} *, kub.*
+show.cubic = kubieke *
+unit.l = liter{,s}
+unit.inch3 = kd
+unit.cm3 = cc
+show.cup = koppie | koppies
+show.tablespoon = eetlepel | eetlepels
+unit.tablespoon = eet lepel{,s}, e.
+show.teaspoon = teelepel | teelepels
+unit.teaspoon = tee lepel{,s}
+show.quart = kwart | kwart
+unit.quart = kwarte, kw{,.}
+show.pint = pint | pinte
+show.gallon = gelling | gelling
+unit.gallon = gellings, gallons, gell{,.}
+
+# Weight
+unit.g = gramme
+unit.kg = kilo{,'s}
+unit.t = ton{,ne}, metrieke ton{,ne}
+show.stone = steen | steen
+unit.stone = stene, stones, st.
+show.carat = karaat | karaat
+unit.carat = karate, kar{,.}
+show.pound = pond | pond
+unit.pound = ponde, pd{,.}, lb.
+show.centner = sentenaar | sentenaar
+unit.centner = sentenaars, kwintaal, kwintale
+show.ounce = ons | ons
+unit.ounce = onse, oz.
+
+# Temperature, angles, data, speed
+unit.°C = grade Celsius
+unit.°F = grade Fahrenheit, fanhrenheit
+unit.° = graad, grade, booggraad, booggrade, º
+unit.rad = radiaal, radiale, rad., straalhoek{,e}, straalboog, straalboë
+unit.b = bis, bisse
+unit.B = greep, grepe
+unit.km/h = kilometer per uur
+show.knot = knoop | knope
+
+# Currencies: the region's and the major ones first, then the rest of the world by name
+currency.ZAR = Suid{-, }Afrikaanse rand{,e}, rand{,e}
+currency.EUR = euro's, Euro’s
+currency.USD = {VSA,V.S.} dollar{,s}, dollar{,s} VSA, Amerikaanse dollar{,s}, VSD
+currency.GBP = Britse pond{,e}, pond sterling, sterling,
+    {Verenigde Koninkryk,Groot-Brittanje}{-, }{pond,pond sterling,sterling}, pond, ponde
+currency.NAD = Namibiese dollar{,s}
+currency.BWP = Botswana{-, }pula, pula
+currency.LSL = Lesotho{-, }{loti,maloti}, maloti
+currency.SZL = Swazi{,se} {lilangeni,emalangeni}, lilangeni, emalangeni
+currency.MZN = Mosambiekse metical{,s}, metical{,s}
+currency.ZMW = Zambiese kwacha, ZMK
+currency.MWK = Malawiese kwacha, kwacha
+currency.AOA = Angolese kwanza, Angola{-, }kwanza, kwanza, Kz
+currency.CHF = Switserse frank{,s}, Switserland{-, }frank{,s}, SFr.
+currency.JPY = Japannese jen, Japanse jen, Japan{-, }jen, jen, 円
+currency.CAD = Kanadese dollar{,s}, CA$, $ CAD, $CAD
+currency.AUD = Australiese dollar{,s}, Australië{-, }dollar{,s}
+currency.NZD = Nieu{-, }Seelandse dollar{,s}
+currency.CNY = {Chinese,Sjinese} {yuan,yuans,joean,joeans}, yuan{,s}, 元, RMB
+currency.SEK = Sweedse kroon, Sweedse krone
+currency.NOK = Noorse kro{on,ne}, Noorweë{-, }kro{on,ne}
+currency.DKK = Deense kro{on,ne}, Denemarke{-, }kro{on,ne}, kr.
+currency.ISK = Yslandse kro{on,ne}, Ysland{-, }kro{on,ne}
+currency.RUB = Russiese roebel{,s}, {ru,rus} roebel{,s}, roebel{,s}
+currency.BYN = {Wit-Russiese,Belarussiese} roebel{,s}, Bel{,.} roebel
+currency.UAH = Oekraïnse {griwnja,griwni,griwen’}, griwnja, griwni, griwen’, grn.
+currency.PLN = Poolse z{ł,l}oty, Pole{-, }z{ł,l}oty, z{ł,l}oty, zl, zł
+currency.CZK = Tsjeggiese kroon, Tsjeggië{-, }kroon, Kč
+currency.HUF = Hongaarse forint, forint
+currency.RON = Roemeense {leu,lei}, Roemenië{-, }{leu,lei}, leu, lei
+currency.MDL = Moldawiese {leu,lei}, Moldawië{-, }{leu,lei}
+currency.BGN = Bulgaarse lev{,a}, Bulgarye{-, }lev{,a}, lev{,a}, Lv, лев, лв{,.}
+currency.HRK = Kroatiese kuna, Kroasië{-, }kuna, kuna
+currency.RSD = Serwiese dinar{,s}
+currency.MKD = Masedoniese denar, Masedonië{-, }denar, denar, den{,.}
+currency.ALL = Albanese lek{,ë}, Albani{ë,e}{-, }lek{,ë}, lek{,ë}
+currency.BAM = Bosniese {inwisselbare,omrekenbare,inwisselbare omrekenbare} mark,
+    {omrekenbare,inwisselbare} mark, maraka, marka, KM
+currency.TRY = Turkse lira, ₺
+currency.GEL = Georgiese lari, Georgië{-, }lari, lari
+currency.AMD = Armeense dram, Armenië{-, }dram, dram
+currency.AZN = Azerbeidjanse manat, Azerbeidjan{-, }manat, manat, man.
+
+# Americas
+currency.MXN = {Meksikaanse,Mexikaanse} peso{,s}
+currency.ARS = Argentynse peso{,s}, Argentinië{-, }peso{,s}, arg{,.} $
+currency.BRL = Brasiliaanse real{,s}, Brasilië{-, }real, real{,s}, R$
+currency.CLP = Chileense peso{,s}, Chili{-, }peso{,s}
+currency.COP = {Colombiaanse,Colombiese} peso{,s}
+currency.CUP = Kubaanse peso{,s}, Kuba{-, }peso{,s}, $MN
+currency.DOP = Dominikaanse peso{,s}, RD$
+currency.UYU = Uruguaanse peso{,s}, $U
+currency.PEN = Peruviaanse {sol,soles,nuwe sol,nuwe soles,nuevo sol,nuevos soles},
+    nuwe sol{,es}, nuevo sol, nuevos soles, S/., Sl/.
+currency.BOB = Boliviaanse boliviano{,s}, Bolivië{-, }boliviano, boliviano{,s}, Bs
+currency.PYG = Paraguayaanse guarani, Paraguay{-, }guarani, guarani, ₲
+currency.CRC = Costa Ricaanse col{o,ó}n{,es}, Costa Rica{-, }col{o,ó}n{,es}, colones
+currency.NIO = Nicaraguaanse c{ó,o}rdoba, c{ó,o}rdoba
+currency.GTQ = Guatemalteekse quetzal, Guatema{la,lta}{-, }quetzal, quetzal
+currency.HNL = Hondurese lempira{,s}, Honduras{-, }lempira{,s}, lempira{,s}
+currency.PAB = Panamese balboa, Panama{-, }balboa, balboa, B/.
+currency.HTG = Haïtiaanse gourde, Haïti{-, }gourde, gourde, Gde
+currency.JMD = Jamaikaanse dollar{,s}, Jamaika{-, }dollar{,s}, J$
+currency.BBD = Barbadiaanse dollar{,s}, Barbados{-, }dollar{,s}, Bds$
+currency.BSD = Bahamaanse dollar{,s}, Bahamas{-, }dollar{,s}
+currency.BZD = Belize{-, }dollar{,s}, Beliziese dollar{,s}, BZ$
+currency.BMD = Bermudaanse dollar{,s}, Bermuda{-, }dollar{,s}, BD$
+currency.KYD = Kaaimaneilandse dollar{,s}, Kaaimaneilande{-, }dollar{,s}
+currency.TTD = Trinidad en Tobago{-, }dollar{,s}, TT$
+currency.XCD = Oos{-, }Karibiese dollar{,s}, EC$
+currency.GYD = Guyaanse dollar{,s}, Guyana{-, }dol{,l}ar{,s}, G$
+currency.SRD = Surinaamse dollar{,s}
+currency.ANG = Antilliaanse gulden{,s}, Nederlandse Antille{-, }gulden{,s},
+    Antiliaanse{-, }{gulden,guldens,guldes}, gulden{,s}
+currency.AWG = Arubaanse {floryn,florin}, Aruba{-, }{floryn,florin}, Afl{,.}
+currency.FKP = Falklandeilandse {pond,pond sterling,sterling},
+    Falklandeilande{-, }{pond,pond sterling,sterling}
+currency.VES = Venezolaanse bol{í,i}var{,es}, bol{í,i}var{,es} fuerte
+
+# Africa
+currency.EGP = Egiptiese {pond,pond sterling,sterling}, Egipte{-, }{pond,pond sterling,sterling}, LE
+currency.MAD = Marokkaanse dirham{,s}, Marokko{-, }dirham{,s}, Dh
+currency.DZD = Algeriese dinar{,s}, Algerië{-, }dinar{,s}, Algerynse dinar{,s}
+currency.TND = Tunesiese dinar{,s}
+currency.LYD = Libiese dinar{,s}, Libië{-, }dinar{,s}, Ld, LD
+currency.NGN = Nigeriese naira, naira, ₦
+currency.GHS = Ghanese cedi{,’s,'s}, Ghana{-, }cedi{,’s,'s}, cedi{,’s,'s}, GH₵
+currency.KES = Keniaanse sjieling{,s}, Kenia{-, }sjieling{,s}, Ksh
+currency.TZS = Tanzaniese sjieling{,s}, TSj
+currency.UGX = Ugandese sjieling{,s}, USj
+currency.SOS = Somaliese sjieling{,s}, Sh.So.
+currency.ETB = Ethiopiese birr, Ethiopië{-, }birr, birr, Br
+currency.ERN = Eritrese nakfa, Eritrea{-, }nakfa, nakfa, Nfa, Nfk
+currency.DJF = Djiboetiese frank{,s}, Djiboeti{-, }frank{,s}
+currency.SDG = Soedanese pond{,s,e}
+currency.SSP = Suid{-, }Soedanese pond{,e}
+currency.MGA = {Madagassiese,Malgassiese} ariary, Madagaskar{-, }ariary, Ar
+currency.MUR = Mauritiaanse roepee{,s}, Mauritius{-, }roepee{,s}
+currency.SCR = Seychell{e,ese}{-, }roepee{,s}
+currency.CDF = Kongolese frank{,s}
+currency.RWF = Rwandese frank{,s}
+currency.BIF = Burundese frank{,s}, Burundi{-, }frank{,s}
+currency.KMF = Comoraanse frank{,s}, Comore{-, }frank{,s}, Comoro-eilande{-, }frank{,s}
+currency.GNF = Guinese frank{,s}, Guinee{-, }frank{,s}, FG
+currency.GMD = Gambiese dalasi, Gambië{-, }dalasi, dalasi
+currency.SLL = Sierra Leoonse leone{,s}, leone{,s}
+currency.LRD = Liberiese dollar{,s}, Liberië{-, }dollar{,s}, L$, Lib$
+currency.CVE = Kaap Verdiese escudo{,s}, escudo{,s}, Esc.
+currency.XAF = CFA{-, }frank{,s} {,(Beac),(BEAC)}, Sentraal{-, }Afrikaanse CFA{-, }frank{,s},
+    frank CFA BEAC
+currency.XOF = Wes{-, }Afrikaanse CFA{-, }frank{,s}, frank CFA BCEAO
+
+# Asia and the Middle East
+currency.INR = Indiese roepee{,s}, Indië{-, }roepee{,s}, roepee{,s}
+currency.PKR = Pakistanse r{oe,o}pee{,s}, Pakistan{-, }roepee{,s}
+currency.NPR = Nepal{,e,s}se roepee{,s}, Nepal{-, }roepee{,s}
+currency.LKR = Sri{-, }Lankaanse roepee{,s}, Sri{-, }Lanka{-, }roepee{,s}
+currency.MVR = Malediviese {rufiyaa,roepee,roepees}, Maldive roepees,
+    Maledive{-, }{rufiyaa,roepee,roepees}
+currency.BDT = {Bangladesji,Bengalese} taka{,s}, Bangladesj{-, }taka{,s}, taka{,s}
+currency.BTN = Bhutaanse ngultrum, Bhutan{-, }ngultrum, ngultrum, Nu., Ch.
+currency.IDR = Indonesiese {roepia,rupiah,roepie,roepies}, Indonesië{-, }{roepia,rupiah,roepie,roepies}
+currency.MYR = Maleisiese ringgit, ringgit
+currency.SGD = Singapoer{-, }dollar{,s}, Singapoerse dollar{,s}
+currency.THB = Thaise baht
+currency.VND = Viëtnamese dong, dong
+currency.KHR = Kambodjaanse riel, Kambodja{-, }riel, riel, CR
+currency.LAK = Laosiaanse kip, Laos{-, }kip, kip, ₭
+currency.MMK = {Mianmarese,Burmese} kyat, kyat
+currency.PHP = Filippynse peso{,s}
+currency.HKD = Hongkongse dollar{,s}, Hongkong{-, }dollar{,s}
+currency.MOP = Macause pataca, Macau{-, }pataca, Pat{,.}, pat{,.}
+currency.TWD = {,nuwe ,Nuwe }{Taiwannese,Taiwanse} dollar{,s}, Taiwan{-, }dollar{,s}, NT Dollar
+currency.KRW = Suid{-, }Koreaanse won
+currency.KPW = Noord{-, }Koreaanse won
+currency.MNT = Mongoolse tugrik, tugrik
+currency.KZT = Kasakse tenge, Kasakstan{-, }tenge, tenge
+currency.KGS = Kirgisiese som, {Kirgisië,Kirgistan}{-, }som, KS, K.S., сом, сому
+currency.UZS = Oesbekiese som, so‘m
+currency.TJS = Tadjiekse somoni, somoni
+currency.TMT = Turkmeense manat
+currency.AFN = Afghaanse afghani, Afghanistan{-, }afghani, afghani, Af.
+currency.IRR = Iranse {rial,rijal}, Iran{-, }{rial,rijal}, RI
+currency.IQD = Irakse dinar{,s}, Irak{-, }dinar{,s}, ID
+currency.SYP = Siriese pond{,e}
+currency.LBP = Libanese {pond,pond sterling,sterling}, Libanon{-, }{pond,pond sterling,sterling}, L£
+currency.JOD = Jordaanse dinar{,s}, Jordanië{-, }dinar{,s}
+currency.ILS = {,nuwe }Israeliese {,nuwe }{sjekel,shekel}{,s}, nuwe {sjekel,shekel}{,s}, sjekel{,s}
+currency.SAR = Saoedi{-, }{rijal,rial,riyal}{,s}, Saoedi-Arabiese {rijal,rial,riyal}{,s}
+currency.AED = Emiratiese dirham{,s}, Verenigde Arabiese Emirate{-, }dirham{,s},
+    {VAE,V.A.E.} dirham{,s}, dirham{,s}
+currency.QAR = Katarse {rial,rijal}{,s}
+currency.KWD = Koeweitse dinar{,s}, Koeweit{-, }dinar{,s}
+currency.BHD = Bahreinse dinar{,s}, Bahrein{-, }dinar{,s}
+currency.OMR = Omaanse {rial,riyal}{,s}, Oman{-, }{rial,riyal}, OR
+currency.YER = Jemense {rial,rijal}{,s}
+currency.BND = Broeneise dollar{,s}, Broenei{-, }dollar{,s}, B$, BR$
+
+# Oceania
+currency.FJD = Fidjiaanse dollar{,s}, Fidji{-, }dollar{,s}
+currency.PGK = Papoea-Nieu-Guinese kina, Papoea-Nieu-Guinee{-, }kina, kina
+currency.SBD = Solomoneiland{,se}{-, }dollar{,s}
+currency.WST = Samoaanse tala, tala
+currency.TOP = Tongaanse pa{’a,'a,a}nga, pa{’a,'a,a}nga
+currency.XPF = CFP{-, }frank{,s}, frank{,s} pacifique
+
+# Other territories
+currency.GIP = Gibraltarese {pond,pond sterling,sterling}, Gibraltar{-, }{pond,pond sterling,sterling}
+currency.SHP = {St.,St,Sint} {Helena,Helene} pond{,e}, St.Helene pond
+
+# Crypto
+currency.BTC = bismunt, bismunte, B⃦
+
+# Time zones: Afrikaans names of cities and countries
+zone.Africa/Johannesburg = Kaapstad, Pretoria, Bloemfontein, Durban, Gqeberha, Port Elizabeth,
+    Oos-Londen, Suid-Afrika
+zone.Africa/Windhoek = Namibië
+zone.Africa/Gaborone = Botswana
+zone.Africa/Harare = Zimbabwe
+zone.Africa/Maputo = Mosambiek
+zone.Europe/London = Londen, Engeland, Brittanje
+zone.Europe/Amsterdam = Nederland, Den Haag
+zone.Europe/Brussels = Brussel, België
+zone.Europe/Paris = Parys, Frankryk
+zone.Europe/Berlin = Berlyn, München, Keulen, Duitsland
+zone.Europe/Vienna = Wene, Oostenryk
+zone.Europe/Zurich = Genève, Switserland
+zone.Europe/Rome = Italië
+zone.Europe/Madrid = Spanje
+zone.Europe/Lisbon = Lissabon
+zone.Europe/Copenhagen = Kopenhagen, Denemarke
+zone.Europe/Warsaw = Warskou, Pole
+zone.Europe/Prague = Praag
+zone.Europe/Athens = Athene, Griekeland
+zone.Europe/Moscow = Moskou, Rusland
+zone.Europe/Istanbul = Turkye
+zone.Asia/Shanghai = Beijing, Sjanghai, Sjina
+zone.Asia/Tokyo = Tokio
+zone.Asia/Kolkata = Nieu-Delhi, Indië
+zone.Africa/Cairo = Kaïro, Egipte
+zone.America/Mexico_City = Meksikostad
+
+# Month names in dates (`12 Maart 2026`)
+month.1 = Januarie, Jan{,.}
+month.2 = Februarie, Feb{,.}
+month.3 = Maart, Mrt{,.}
+month.4 = April, Apr{,.}
+month.5 = Mei
+month.6 = Junie, Jun{,.}
+month.7 = Julie, Jul{,.}
+month.8 = Augustus, Aug{,.}
+month.9 = September, Sep{,.}, Sept{,.}
+month.10 = Oktober, Okt{,.}
+month.11 = November, Nov{,.}
+month.12 = Desember, Des{,.}
+
+# Display
+weekdays = Ma., Di., Wo., Do., Vr., Sa., So.
+months = Jan., Feb., Mrt., Apr., Mei, Jun., Jul., Aug., Sep., Okt., Nov., Des.
+date = %a %-d %b %Y

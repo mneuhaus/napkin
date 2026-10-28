@@ -1,0 +1,8 @@
+# Phrases of Numi's Korean vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+are.variants	a	`a` is the article (`5 a day`, `as a % of`); ares are `are`/`아르`
+pint.variants	pt	`pt` is the typographic point, as Numi lists it under point too; pints are `pint`/`파인트`
+pint.variants	pt.	`pt` is the typographic point, as Numi lists it under point too; pints are `pint`/`파인트`
+KPW.variants	won	Numi lists `won` under KRW too; the bare won is the South Korean won; `북한 원` works
+KPW.variants	₩	Numi lists ₩ under KRW too; the sign is the South Korean won; `북한 원` works
+KPW.variants	원	Numi lists 원 under KRW too; the bare 원 is the South Korean won; `북한 원` works

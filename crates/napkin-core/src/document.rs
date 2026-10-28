@@ -207,6 +207,7 @@ fn can_end(tok: &Tok) -> bool {
             | Tok::Power(_)
             | Tok::Func(_)
             | Tok::PrefixCurrency(_)
+            | Tok::PercentBefore
             | Tok::Gap
     )
 }
@@ -376,6 +377,7 @@ impl<'a> Document<'a> {
             .iter()
             .flat_map(|r| lexer::lex(&line[r.clone()], r.start, style))
             .collect();
+        let raws = classify::segment(line, raws, &self.lexicon);
         let result = self.code(line, &raws, &mut spans);
         if let (LineResult::Value(_), Some(value)) = (&result.0, result.1) {
             self.block.push(value.clone());

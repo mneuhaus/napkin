@@ -17,13 +17,18 @@
 //! | `convert` | conversion, like `in` |
 //! | `assign` | assignment after a variable name: `x ist gleich 5` |
 //! | `percent` | the word for `%` |
+//! | `percent.before` | a percent word written before its number (`百分之20`) |
 //! | `percent.of`, `percent.on`, `percent.off` | after a percentage: `20 % of 50`, `5 % on 30`, `6 % off 40` |
 //! | `as-percent.of`, `as-percent.on`, `as-percent.off` | `50 as a % of 100` |
 //! | `what-is.of`, `what-is.on`, `what-is.off` | `5 % of what is 6` |
 //! | `prev`, `sum`, `average` | the line above, the block's sum and mean |
 //! | `today`, `tomorrow`, `yesterday`, `day.<offset>` | days relative to today (`day.2 = übermorgen`) |
 //! | `now`, `local`, `noon`, `midnight` | the current time, the local time zone, 12:00, 0:00 |
-//! | `oclock` | after an hour a time of day (`14 Uhr`), alone the current time |
+//! | `oclock` | after an hour a time of day (`14 Uhr`, `3点`); add the word to `now` too if it means now alone |
+//! | `half-hour` | after an o'clock word: half past (`3点半`); minutes work as `3点20分` |
+//! | `am`, `pm` | before the hour: morning, afternoon (`下午3点`, `오후 3시`) |
+//! | `convert-after` | a conversion word after its target (`5인치 cm로`, `100ドルをユーロに`) |
+//! | `unit-before.<id>` | a unit written before its number (`unit-before.°C = 摄氏`: `摄氏100度`) |
 //! | `scale.<factor>` | after a number: `scale.1e3 = Tausend` |
 //! | `function.<name>` | a built-in function: `function.sqrt = Quadratwurzel` |
 //! | `format.<name>` | a conversion format: `format.hex = hexadezimal` |
@@ -31,7 +36,10 @@
 //! | `show.<id>` | how a word unit is shown, one form per plural category separated by `\|` (`Stunde \| Stunden`); the forms are inputs too |
 //! | `prefix.<symbol>` | SI and IEC prefix words (`prefix.c = Zenti`), joined to every phrase of a unit that takes prefixes |
 //! | `square`, `cubic` | squared and cubed lengths, `*` standing for any length phrase (`Quadrat*`) |
-//! | `show.square`, `show.cubic` | how squared and cubed word units are shown, `*` standing for the unit word |
+//! | `show.square`, `show.cubic` | how squared and cubed word units are shown, `*` standing for the unit word; plural forms separated by `\|` like `show.<id>` |
+//! | `per.<id>` | one of a unit in the denominator: `per.h = в час` (`100 рублей в час` is RUB/h) |
+//! | `filler` | a word between a number and its unit that adds nothing (Romanian `25 de kilograme`) |
+//! | `date-word` | a word joining day, month and year in date literals (`12 de março de 2026`) |
 //! | `currency.<CODE>` | currency names |
 //! | `zone.<Area/City>` | city names for a time zone: `zone.Europe/Vienna = Wien` |
 //! | `month.<1-12>` | month names in date literals (`12. März 2026`) |
@@ -67,6 +75,8 @@ pub(crate) enum Keyword {
     Modulo,
     Convert,
     Percent,
+    /// A percent word before its number: Chinese `百分之20`.
+    PercentBefore,
     Of,
     On,
     Off,
@@ -78,6 +88,8 @@ pub(crate) enum Keyword {
     Noon,
     Midnight,
     OClock,
+    /// A conversion word written after its target (Korean `유로로`, Japanese `ユーロに`).
+    ConvertAfter,
 }
 
 /// What a phrase of an input language can mean.
@@ -86,6 +98,16 @@ pub(crate) enum Meaning {
     Keyword(Keyword),
     /// Assignment after a variable name.
     Assign,
+    /// A word between a number and its unit that means nothing (Romanian `25 de kilograme`).
+    Filler,
+    /// A word joining the parts of a date literal (`12 de março de 2026`).
+    DateWord,
+    /// Before or after noon, written before the hour (`下午3点`, `오후 3시`).
+    HalfDay(HalfDay),
+    /// Half past, after an o'clock word (`3点半`).
+    HalfHour,
+    /// A unit written before its number (`摄氏100度`, `大さじ3`).
+    UnitBefore(usize),
     /// `as a % of`, `as a % on`, `as a % off` in one phrase.
     AsPercent(PercentOp),
     /// `of what is`, `on what is`, `off what is` in one phrase.
@@ -105,6 +127,13 @@ pub(crate) enum Meaning {
     Month(u32),
 }
 
+/// Morning or afternoon.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum HalfDay {
+    Am,
+    Pm,
+}
+
 /// How a language picks the form of a word after a number (CLDR plural rules, cardinals).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Plural {
@@ -114,6 +143,8 @@ pub(crate) enum Plural {
     OneOther,
     /// `one` below 2 (`1,5 heure`): French and Brazilian Portuguese.
     ZeroOne,
+    /// Danish: `one` for 1 and for fractions below 2 (`1,5 time`).
+    Danish,
     /// Russian and Ukrainian: 1, 21 / 2-4, 22 / 5-20, 25 / fractions.
     EastSlavic,
     /// Polish: 1 / 2-4, 22 / 5-21, 25 / fractions.
@@ -144,6 +175,7 @@ impl Plural {
         match language {
             Japanese | Korean | ChineseSimplified | ChineseTraditional | Turkish => Self::Invariant,
             French | PortugueseBrazil => Self::ZeroOne,
+            Danish => Self::Danish,
             Russian | Ukrainian => Self::EastSlavic,
             Polish => Self::Polish,
             Czech => Self::Czech,
@@ -159,7 +191,7 @@ impl Plural {
         use Category::*;
         match self {
             Self::Invariant => &[Other],
-            Self::OneOther | Self::ZeroOne => &[One, Other],
+            Self::OneOther | Self::ZeroOne | Self::Danish => &[One, Other],
             Self::EastSlavic | Self::Polish => &[One, Few, Many, Other],
             Self::Czech => &[One, Few, Other, Many],
             Self::Bosnian | Self::Romanian => &[One, Few, Other],
@@ -200,6 +232,7 @@ impl Plural {
         let whole = digits == Digits::Whole;
         match self {
             Self::ZeroOne if i <= 1 => One,
+            Self::Danish if i == 1 || (!whole && i == 0) => One,
             Self::EastSlavic | Self::Bosnian if whole && last == 1 && last_two != 11 => One,
             Self::OneOther | Self::Polish | Self::Czech | Self::Romanian | Self::Hebrew
                 if whole && i == 1 =>
@@ -211,7 +244,7 @@ impl Plural {
                 Few
             }
             Self::Czech if whole && (2..=4).contains(&i) => Few,
-            Self::Romanian if !whole || i == 0 || (2..=19).contains(&last_two) => Few,
+            Self::Romanian if !whole || i == 0 || (1..=19).contains(&last_two) => Few,
             Self::EastSlavic | Self::Polish if whole => Many,
             Self::Czech if !whole => Many,
             _ => Other,
@@ -238,8 +271,8 @@ pub(crate) struct Vocab {
     plural: Option<Plural>,
     /// Display forms of word units by unit index, in plural category order.
     shows: HashMap<usize, Vec<String>>,
-    show_square: Option<String>,
-    show_cubic: Option<String>,
+    show_square: Option<Vec<String>>,
+    show_cubic: Option<Vec<String>>,
     weekdays: Option<Vec<String>>,
     months: Option<Vec<String>>,
     date: Option<String>,
@@ -276,9 +309,8 @@ impl Vocab {
         self.starts.get(&first.to_lowercase()).copied().unwrap_or(0)
     }
 
-    /// The word for unit `index` after the formatted `number`, when the language has one.
-    pub(crate) fn unit_word(&self, index: usize, number: &str, style: NumberStyle) -> Option<&str> {
-        let forms = self.shows.get(&index)?;
+    /// The form for the formatted `number` among forms listed in plural category order.
+    fn form<'a>(&self, forms: &'a [String], number: &str, style: NumberStyle) -> Option<&'a str> {
         let plural = self.plural?;
         let category = plural.category(number, style);
         let position = plural
@@ -289,13 +321,20 @@ impl Vocab {
         forms.get(position).or_else(|| forms.first()).map(String::as_str)
     }
 
-    /// How squared (2) or cubed (3) word units are shown, `*` standing for the word.
-    pub(crate) fn power_template(&self, power: i8) -> Option<&str> {
-        match power {
-            2 => self.show_square.as_deref(),
-            3 => self.show_cubic.as_deref(),
-            _ => None,
-        }
+    /// The word for unit `index` after the formatted `number`, when the language has one.
+    pub(crate) fn unit_word(&self, index: usize, number: &str, style: NumberStyle) -> Option<&str> {
+        self.form(self.shows.get(&index)?, number, style)
+    }
+
+    /// How squared (2) or cubed (3) word units are shown after `number`, `*` standing for the
+    /// word (`* quadrado` / `* quadrados`).
+    pub(crate) fn power_template(&self, power: i8, number: &str, style: NumberStyle) -> Option<&str> {
+        let forms = match power {
+            2 => self.show_square.as_deref()?,
+            3 => self.show_cubic.as_deref()?,
+            _ => return None,
+        };
+        self.form(forms, number, style)
     }
 
     /// The short weekday name of `date`.
@@ -556,6 +595,14 @@ pub(crate) fn build(language: InputLanguage) -> Result<Vocab, String> {
     let mut vocab = builder.finish();
     vocab.plural = Some(Plural::of(language));
     let categories = Plural::of(language).categories().len();
+    for forms in vocab.show_square.iter().chain(&vocab.show_cubic) {
+        if forms.len() != 1 && forms.len() != categories {
+            return Err(format!(
+                "show.square or show.cubic has {} forms, the language has {categories} plural categories",
+                forms.len()
+            ));
+        }
+    }
     for (index, forms) in &vocab.shows {
         if forms.len() != 1 && forms.len() != categories {
             return Err(format!(
@@ -645,8 +692,8 @@ struct Builder {
     square: Vec<String>,
     cubic: Vec<String>,
     shows: HashMap<usize, Vec<String>>,
-    show_square: Option<String>,
-    show_cubic: Option<String>,
+    show_square: Option<Vec<String>>,
+    show_cubic: Option<Vec<String>>,
     weekdays: Option<Vec<String>>,
     months: Option<Vec<String>>,
     date: Option<String>,
@@ -717,6 +764,7 @@ impl Builder {
             "convert" => Some(keyword(Keyword::Convert)),
             "assign" => Some(Meaning::Assign),
             "percent" => Some(keyword(Keyword::Percent)),
+            "percent.before" => Some(keyword(Keyword::PercentBefore)),
             "prev" => Some(keyword(Keyword::Prev)),
             "sum" => Some(keyword(Keyword::Sum)),
             "average" => Some(keyword(Keyword::Average)),
@@ -728,6 +776,10 @@ impl Builder {
             "noon" => Some(keyword(Keyword::Noon)),
             "midnight" => Some(keyword(Keyword::Midnight)),
             "oclock" => Some(keyword(Keyword::OClock)),
+            "convert-after" => Some(keyword(Keyword::ConvertAfter)),
+            "am" => Some(Meaning::HalfDay(HalfDay::Am)),
+            "pm" => Some(Meaning::HalfDay(HalfDay::Pm)),
+            "half-hour" => Some(Meaning::HalfHour),
             _ => None,
         };
         if let Some(meaning) = simple {
@@ -736,8 +788,10 @@ impl Builder {
         match key {
             "square" => self.square.extend(phrases(value)?),
             "cubic" => self.cubic.extend(phrases(value)?),
-            "show.square" => self.show_square = Some(value.to_owned()),
-            "show.cubic" => self.show_cubic = Some(value.to_owned()),
+            "show.square" => self.show_square = Some(forms(value)?),
+            "show.cubic" => self.show_cubic = Some(forms(value)?),
+            "filler" => self.add(value, Meaning::Filler)?,
+            "date-word" => self.add(value, Meaning::DateWord)?,
             "weekdays" => self.weekdays = Some(names(value, 7)?),
             "months" => self.months = Some(names(value, 12)?),
             "date" => self.date = Some(value.to_owned()),
@@ -799,6 +853,11 @@ impl Builder {
                 return Ok(());
             }
             "show" => return self.show(argument, value),
+            "unit-before" => Meaning::UnitBefore(BUILTINS.by_id(argument).ok_or("unknown unit id")?),
+            "per" => {
+                let index = BUILTINS.by_id(argument).ok_or("unknown unit id")?;
+                Meaning::Unit { index, power: -1 }
+            }
             "prefix" => {
                 let (symbol, _) = units::prefix_names()
                     .find(|(symbol, _)| *symbol == argument)
@@ -818,10 +877,7 @@ impl Builder {
         if BUILTINS.def(index).style != Style::Word {
             return Err("only word units (time, imperial) are shown as words".to_owned());
         }
-        let forms: Vec<String> = value.split('|').map(normalize).collect();
-        if forms.iter().any(String::is_empty) {
-            return Err("empty form".to_owned());
-        }
+        let forms = forms(value)?;
         for form in &forms {
             self.unit_phrases.push((index, form.clone()));
             self.phrases
@@ -919,6 +975,15 @@ impl Builder {
             }
         }
     }
+}
+
+/// Display forms separated by `|`, one per plural category (or one for all).
+fn forms(value: &str) -> Result<Vec<String>, String> {
+    let forms: Vec<String> = value.split('|').map(normalize).collect();
+    if forms.iter().any(String::is_empty) {
+        return Err("empty form".to_owned());
+    }
+    Ok(forms)
 }
 
 /// A fixed-size list of display names, separated by commas.

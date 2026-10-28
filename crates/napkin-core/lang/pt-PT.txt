@@ -1,1 +1,18 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Portuguese as written in Portugal (português europeu). Format: see crates/napkin-core/src/vocab.rs.
+
+base = pt-BR
+
+# Portugal uses the long scale: `mil milhões` = 10^9 (from pt-BR), `bilião` = 10^12,
+# `trilião` = 10^18. The Brazilian `bilhão`/`trilhão` keep their Brazilian meaning.
+scale.1e12 = bilião, biliões, bilião de, biliões de
+scale.1e15 = mil biliões, mil biliões de
+scale.1e18 = trilião, triliões, trilião de, triliões de
+
+# A missing `l` that only appears where a time zone is expected (`14h PST em loca`)
+local = loca
+
+show.cup = chávena | chávenas
+
+# Display: `quarta, 28/10/2026`
+weekdays = segunda, terça, quarta, quinta, sexta, sábado, domingo
+date = %a, %d/%m/%Y

@@ -1,0 +1,43 @@
+# Phrases of Numi's Afrikaans vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+conversion.variants	met	Numi lists `met` as plus and as conversion; Napkin reads it as plus (`5 met 3`); convert with `na`, `in`, `as`
+are.variants	a	`a` is the English article (`5 a day`, `as a % of`); ares are `aar`/`are`
+byte.variants	g	`g` stays the gram; bytes are `B`/`greep`
+mile.variants	m.	`m` stays the metre; miles are `myl`
+minute.variants	m.	`m` stays the metre; minutes are `min`/`minuut`
+million.variants	m.	`m` stays the metre (`2 m` is two metres); millions are `miljoen`/`mil.`
+teaspoon.variants	t.	`t` stays the tonne; teaspoons are `teelepel`
+pint.variants	pt.	`pt` stays the typographic point; pints are `pint`/`pinte`
+gallon.variants	g.	`g` stays the gram; gallons are `gelling`/`gell.`
+nautical_mile.variants	sm.seemyl	two phrases run together in Numi's list; `sm.` and `seemyl` each work
+cbinch.variants	kub. dm.	`dm` is the decimetre, so this reads as cubic decimetres; cubic inches are `kubieke duim`/`kd`
+AZN.variants	AM	`3 AM` is three in the morning; `manat` works
+AZN.variants	A.M.	`3 A.M.` is three in the morning; `manat` works
+BIF.variants	BR$	Numi lists `BR$` under BND too; Napkin reads it as BND; `Burundese frank`, `FBu` work
+BSD.variants	B$	Numi lists `B$` under BND too; Napkin reads it as BND; `Bahamaanse dollar` works
+NIO.variants	C$	`C$` is the usual sign of the Canadian dollar; Napkin reads it as CAD
+EGP.variants	L£	Numi lists `L£` under LBP too; Napkin reads it as LBP; `LE`, `Egiptiese pond` work
+KMF.variants	FC	`FC` is the Congolese franc (CDF) in every language; `Comoraanse frank` works
+MDL.variants	Leu	Numi lists `leu` under RON too; Napkin reads it as RON; `Moldawiese leu` works
+TMT.variants	Manat	Numi lists `Manat` under AZN too; Napkin reads it as AZN; `Turkmeense manat` works
+ZMW.variants	Kwacha	Numi lists `Kwacha` under MWK too; Napkin reads it as MWK; `Zambiese kwacha` works
+SAR.variants	﷼‎	Numi's phrase is the rial sign plus an invisible left-to-right mark; the plain sign ﷼ is YER, as in Numi's list
+CRC.variants	colon	an everyday English word (punctuation, anatomy); `Costa Ricaanse colon` and `colones` work
+UZS.variants	som	`som` is the sum of the block above; `Oesbekiese som` works
+GBP.variants	pond	`pond` is the weight on lines without money, like `pound`; `pond sterling`, `Britse pond`, `£` work
+BZD.variants	BZDBelize Dollars	two phrases run together in Numi's list; `BZD` and `Belize dollars` each work
+FKP.variants	£%@FKP	a format template, not a phrase
+FKP.variants	£%@ FKP	a format template, not a phrase
+GIP.variants	£%@GIP	a format template, not a phrase
+GIP.variants	£%@ GIP	a format template, not a phrase
+MGA.variants	FMG	the Malagasy franc (FMG) gave way to the ariary in 2005 (5 FMG = 1 MGA), a code Napkin does not know
+STD.variants	Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know; the name reads as today's STN
+STD.variants	Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know; the name reads as today's STN
+VEF.variants	Venezolaanse Bolívar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Venezolaanse Bolivar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Venezolaanse Bolívares	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Venezolaanse Bolivares	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	bolívar fuerte	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	bolivar fuerte	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	bolívares fuerte	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Bs.F.	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know (`Bs` alone is the boliviano)

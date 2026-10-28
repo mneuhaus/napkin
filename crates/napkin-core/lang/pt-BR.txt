@@ -1,1 +1,515 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Portuguese as written in Brazil (português do Brasil). Format: see crates/napkin-core/src/vocab.rs.
+# Also the base of `pt-PT`: everything here must be right in Portugal too (spellings of both
+# countries are accepted, `bilhão` is the Brazilian word with its Brazilian meaning), and pt-PT
+# adds the long-scale words and its own display forms.
+
+# Arithmetic. `e` is "and" and also Euler's number, so it is an operator only between two
+# operands; `em` converts only when a unit, currency, zone or format follows (`2 em` stays the
+# CSS unit).
+plus = mais, e, com, somado a, somado com, adicionado a, acrescido de
+minus = menos, sem, subtrair, subtraído de, tirando, descontando
+times = vezes, multiplicado por, multiplicados por, multiplicada por, multiplicadas por,
+    multiplica, multiplicam, multiplicar por
+divide = dividido por, divididos por, dividida por, divididas por, dividido, divide por,
+    dividem por, dividem, dividir por
+per = por, a cada
+modulo = módulo, mod
+convert = em, no, na, nos, nas, para, como, convertido em, convertido para, em unidades de
+assign = é igual a, igual a, igual, iguais, é, são, dá, vale
+
+# Percentages
+percent = por cento, porcento, por centos, pct{,.}
+percent.of = de, do, da, dos, das
+percent.on = por aumento, de aumento {em,sobre,de}, de acréscimo {em,sobre,de}, a mais {em,sobre,de},
+    de juros sobre
+percent.off = por desconto, de desconto {em,sobre,de,no,na}, de abatimento {em,sobre}, a menos {em,sobre,de}
+as-percent.of = como{, um, uma} {%,porcentagem,percentagem} de, em {%,porcentagem,percentagem,por cento} de
+as-percent.on = como um aumento de %, como{, um, uma} {%,porcentagem,percentagem} de aumento {de,sobre},
+    como{, um} aumento {percentual,porcentual} {de,sobre}, em % de aumento {de,sobre}
+as-percent.off = como um desconto de %, como{, um, uma} {%,porcentagem,percentagem} de desconto {de,sobre},
+    como{, um} desconto {percentual,porcentual} {de,sobre}, em % de desconto {de,sobre}
+what-is.of = do que custa{,m}, de que {é,são}, de quanto {é,são,dá}, de que valor é
+what-is.on = sobre aquilo que {custa,custam,é,são}, sobre quanto é, a mais de quanto é,
+    de aumento sobre quanto é
+what-is.off = de desconto sobre o que custa{,m}, de desconto sobre quanto é, de desconto de quanto é,
+    a menos de quanto é
+
+# Scales. Brazil uses the short scale (bilhão = 10^9, trilhão = 10^12); `mil milhões` is the
+# Portuguese way of saying 10^9 and means the same in Brazil. The nouns take `de` before what
+# they count (`2 milhões de reais`).
+scale.1e3 = mil, mil., milhar{,es}
+scale.1e6 = milhão, milhões, milhão de, milhões de, milh{,.}
+scale.1e9 = bilhão, bilhões, bilhão de, bilhões de, bi, bilh{,.}, mil milhões, mil milhões de,
+    mil milhão, milhares de milhões, milhares milhões, milhares milhão
+scale.1e12 = trilhão, trilhões, trilhão de, trilhões de, tri, trilh{,.}
+
+# Dates and times
+today = hoje
+tomorrow = amanhã, amanha
+yesterday = ontem
+day.2 = depois de amanhã, depois de amanha
+day.-2 = anteontem, antes de ontem
+now = agora, tempo, hora atual, hora actual, horário atual, que horas são
+local = hora local, horário local, fuso horário local, fuso horário, fuso local
+noon = meio-dia, meio dia
+midnight = meia-noite, meia noite
+
+# Document references
+prev = anterior, ant{,.}, resultado anterior
+sum = soma, somatório, somatória, soma total
+average = média, méd{,.}, media
+
+# Functions and formats
+function.sqrt = raiz quadrada, raíz quadrada, raiz
+function.cbrt = raiz cúbica, raíz cúbica, raiz cubica
+function.round = arredondar, arredondado, arredonda
+function.ceil = arredondar para cima, teto
+function.floor = arredondar para baixo, piso
+function.abs = valor absoluto, módulo
+function.fact = fatorial, factorial
+function.sin = seno, sen
+function.cos = cosseno, coseno, co-seno
+function.tan = tangente, tg
+function.asin = arcsen, arco seno, arco-seno
+function.acos = arco cosseno, arco-cosseno
+function.atan = arctg, arco tangente, arco-tangente
+format.hex = hexadecimal
+format.bin = binário, binario
+format.oct = octal
+format.dec = decimal
+format.sci = notação científica, científica, científico, cientifico
+
+# SI prefixes that Portuguese spells differently from English. Accented compounds
+# (`quilômetro`, `centímetro`) are listed with their units; the prefixes also give the
+# unaccented spellings people type.
+prefix.k = quilo
+prefix.m = mili
+prefix.a = ato
+prefix.Z = zeta
+prefix.Y = iota
+prefix.y = iocto
+
+# Time
+show.s = segundo | segundos
+unit.s = seg{,.}
+unit.ms = milissegundo{,s}
+unit.µs = microssegundo{,s}
+unit.ns = nanossegundo{,s}
+show.min = minuto | minutos
+show.h = hora | horas
+show.day = dia | dias
+show.week = semana | semanas
+show.month = mês | meses
+unit.month = mes
+show.year = ano | anos
+show.decade = década | décadas
+unit.decade = decada{,s}, decênio{,s}, decénio{,s}
+show.century = século | séculos
+unit.century = seculo{,s}
+show.fortnight = quinzena | quinzenas
+# `hora` on its own is the time of day (`hora em Tóquio`); after a number it stays the hour
+# (listed after the unit so the unit is tried first)
+now = hora
+
+# Length
+unit.m = metro{,s}
+unit.km = quilômetro{,s}, quilómetro{,s}, km.
+unit.cm = centímetro{,s}
+unit.mm = milímetro{,s}
+unit.dm = decímetro{,s}
+unit.µm = micrômetro{,s}, micrómetro{,s}, mícron{,s}
+unit.nm = nanômetro{,s}, nanómetro{,s}
+unit.hm = hectômetro{,s}, hectómetro{,s}
+unit.dam = decâmetro{,s}
+show.inch = polegada | polegadas
+unit.inch = pol{,.}, plg{,.}
+show.foot = pé | pés
+unit.foot = pe, pes
+show.yard = jarda | jardas
+unit.yard = jd{,.}
+show.mile = milha | milhas
+unit.mile = milha terrestre, milhas terrestres
+show.nautical mile = milha náutica | milhas náuticas
+unit.nautical mile = mi. nau{,.}, milha{,s} marítima{,s}, milha nautica, milhas nauticas
+show.league = légua | léguas
+unit.league = legua{,s}
+show.furlong = furlong | furlongs
+show.chain = corrente | correntes
+unit.chain = cadeia{,s}
+show.cable = amarra | amarras
+show.light year = ano-luz | anos-luz
+unit.light year = ano luz, anos luz
+unit.pt = ponto{,s}
+unit.px = píxel, píxeis, pixeis
+
+# Area. The adjective agrees with the unit (`pés quadrados`, `milhas quadradas`); results show
+# symbols (`2 ft²`) because one display template cannot follow that agreement.
+square = * quadrado{,s}, * quadrada{,s}
+unit.ha = hectare{,s}
+show.are = are | ares
+show.acre = acre | acres
+show.ping = ping | pings
+
+# Volume
+cubic = * cúbico{,s}, * cúbica{,s}, * cubico{,s}, * cubica{,s}
+unit.l = litro{,s}
+unit.inch3 = plg cb{,.}, pol{,.} cúb{,.}
+show.cup = xícara | xícaras
+unit.cup = xicara{,s}, chávena{,s}, chavena{,s}
+show.tablespoon = colher de sopa | colheres de sopa
+unit.tablespoon = col{,.} de sopa, c. de sopa, colher{,es} {(sopa),sopa}
+show.teaspoon = colher de chá | colheres de chá
+unit.teaspoon = col{,.} de chá, c. de chá, colher{,es} {(chá),chá}, colher{,es} de cha
+show.quart = quarto | quartos
+unit.quart = qrto{,.}
+show.pint = pinta | pintas
+unit.pint = pta{,.}, quartilho{,s}
+show.gallon = galão | galões
+unit.gallon = galao, galoes
+show.fluid ounce = onça fluida | onças fluidas
+unit.fluid ounce = onça{,s} líquida{,s}
+
+# Weight. `libra` is the pound (weight) and the pound sterling, like English `pound`: money on
+# lines with money on them, the weight elsewhere.
+unit.g = grama{,s}
+unit.kg = quilo{,s}, kilo{,s}, quilograma{,s}
+unit.t = tonelada{,s}, tonelada{,s} métrica{,s}, ton.
+show.carat = quilate | quilates
+show.pound = libra | libras
+unit.pound = lb.
+show.ounce = onça | onças
+unit.ounce = onca{,s}
+show.stone = stone | stones
+unit.stone = pedra{,s}, pd
+show.centner = quintal | quintais
+unit.centner = quintal métrico, quintais métricos
+
+# Temperature, angles, data, speed
+unit.°C = grau{,s} Celsius, graus centígrados, centígrado{,s}
+unit.°F = grau{,s} Fahrenheit
+unit.K = grau{,s} Kelvin
+unit.° = grau{,s}, arcgrau{,s}
+unit.rad = radiano{,s}
+unit.b = bit{,s}
+unit.B = byte{,s}, octeto{,s}
+unit.km/h = quilômetros por hora, quilómetros por hora, quilometros por hora
+unit.mph = milhas por hora
+show.knot = nó | nós
+
+# Currencies. Bare names that several currencies share follow the best-known one: `florim` is
+# the Antillean guilder (as in Numi), `dinar` the Bahraini dinar (as in Numi), `leu` the
+# Romanian leu, `manate` the Azerbaijani manat, `franco` the Swiss franc, `franco CFA` the
+# Central African one. Retired currencies use today's code: `ouguiya` MRU, `dobra` STN,
+# `bolívar` VES.
+currency.BRL = real, reais, real brasileiro, reais brasileiros, {real,reais} do Brasil, R$
+currency.USD = dólar{,es}, dolar{,es}, dólar {americano,estadunidense,norte-americano,dos EUA},
+    dólares {americanos,estadunidenses,norte-americanos,dos EUA}
+currency.EUR = euro{,s}
+currency.GBP = libra{,s}, libra{,s} esterlina{,s}, libra{,s} britânica{,s},
+    {libra,libras} {do Reino Unido,da Grã-Bretanha}
+currency.CHF = franco{,s}, franco suíço, francos suíços, {franco,francos} da Suíça
+currency.JPY = {iene,yen}{,s}, {iene,yen} japonês, {ienes,yens} japoneses, {iene,ienes,yen,yens} do Japão
+currency.CNY = {yuan,iuane}{,s}, renminbi, {yuan,iuane} chinês, {yuans,iuanes} chineses,
+    {yuan,yuans,iuane,iuanes} da China
+currency.CAD = dólar {canadense,canadiano,canadianos}, dólares {canadenses,canadianos},
+    {dólar,dólares} do Canadá
+currency.AUD = dólar australiano, dólares australianos, {dólar,dólares} da Austrália
+currency.RUB = rublo{,s}, rublo russo, rublos russos, ru rublo{,s}, {rublo,rublos} da Rússia
+currency.RON = leu, leus, lei, leu romeno, {leus,lei} romenos, {leu,leus,lei} da {Romênia,Roménia}
+currency.AED = dirham{,s}, dirhans, {dirham,dirhams,dirhans} dos Emirados Árabes Unidos,
+    dirham dos {EAU,EUA}, dirham emiradense, dirhams emiradenses
+currency.AFN = afegane{,s}, afegane afegão, afeganes afegãos
+currency.ALL = leque{,s}, lek{,s}, leque albanês, leques albaneses
+currency.AMD = drame{,s}, {drame,dram} {armênio,arménio}, drames {armênios,arménios}
+currency.ANG = florim, florins, {florim,florins} das Antilhas {Holandesas,Neerlandesas}
+currency.AOA = kwanza{,s}, kwanza angolano, kwanzas angolanos
+currency.ARS = peso argentino, pesos argentinos, {peso,pesos} da Argentina
+currency.AWG = {florim,florins} {da,de} Aruba, florim arubano, florins arubanos
+currency.AZN = {manate,mánate}{,s}, {manate,mánate} {azerbaijanês,azerbaijano,azeri},
+    {manates,mánates} {azerbaijaneses,azerbaijanos,azeris}
+currency.BAM = marka, marco convertível, marcos convertíveis,
+    {marco convertível,marcos convertíveis} da Bósnia e Herzegovina
+currency.BBD = {dólar,dólares} {de,dos} Barbados, dólar {barbadiano,barbadense},
+    dólares {barbadianos,barbadenses}
+currency.BDT = taca{,s}, taka{,s}, {taca,tacas} de Bangladesh
+currency.BGN = leve{,s}, lev búlgaro, leve búlgaro, leves búlgaros, leva búlgara, levas búlgaras
+currency.BHD = dinar{,es}, dinar {bareinita,do Bahrein,do Barém}, dinares {bareinitas,do Bahrein,do Barém}
+currency.BIF = {franco,francos} do {Burúndi,Burundi}, franco {burundiano,burundinês},
+    francos {burudianos,burundianos,burundineses}
+currency.BMD = dólar {bermudense,das Bermudas}, dólares {bermudenses,das Bermudas}
+currency.BND = dólar {de Brunei,bruneíno,bruneano}, dólares {de Brunei,bruneínos,bruneanos}
+currency.BOB = boliviano{,s}, {boliviano,bolivianos} da Bolívia
+currency.BSD = dólar {baamiano,baamês,baamense,das Bahamas,das Baamas},
+    dólares {baamianos,baameses,baamense,baamenses,das Bahamas,das Baamas}
+currency.BTN = ngúltrume{,s}, ngúltrume butanês, ngúltrume{,s} butaneses
+currency.BWP = pula{,s}, {pula,pulas} de {Bostwana,Botsuana,Botswana}, pula {botsuana,botsuanesa},
+    pulas {bostuanas,botsuanas,botsuanesas}
+currency.BYN = rublo {bielorrusso,bielorusso,bielo-russo,bielo-russos}, rublo bel{,.},
+    rublos {bielorrussos,bielorussos,bielorrusos,bielo-russos}, rublos bels{,.}
+currency.BZD = {dólar,dólares} {do,de} Belize, dólar {belizenho,belizense}, dólares {belizenhos,belizenses}
+currency.CDF = {franco,francos} do Congo, franco {congolês,conguês,congolense},
+    francos {congoleses,congueses,congolenses}
+currency.CLP = peso chileno, pesos chilenos, {peso,pesos} do Chile
+currency.COP = peso colombiano, pesos colombianos, {peso,pesos} da Colômbia
+currency.CRC = colón, colone{,s}, colom, colons,
+    {colón,colone,colom} {costa-riquenho,costarriquenho,costa-riquense,costarriquense,costa-ricense,costarricense,da Costa Rica},
+    {colones,colons} {costa-riquenhos,costarriquenhos,costa-riquenses,costarriquenses,costa-ricenses,costarricenses,da Costa Rica}
+currency.CUP = peso cubano, pesos cubanos, {peso,pesos} {da,de} Cuba
+currency.CVE = escudo{,s}, {escudo,escudos} {do,de} Cabo Verde, escudo cabo-verdiano, escudos cabo-verdianos
+currency.CZK = coroa {checa,checo,tcheca,tcheco}, coroas {checas,checos,tchecas,tchecos},
+    {coroa,coroas} da {República Checa,República Tcheca,Chéquia,Tchéquia}
+currency.DJF = franco {jibutiano,djibutiano,do Djibuti,do Jibuti}, francos {jibutianos,djibutianos,do Djibuti,do Jibuti}
+currency.DKK = coroa dinamarquesa, coroas dinamarquesas, {coroa,coroas} da Dinamarca
+currency.DOP = peso dominicano, pesos dominicanos, {peso,pesos} da República Dominicana
+currency.DZD = dinar argelino, dinares argelinos, {dinar,dinares} da Argélia
+currency.EGP = libra egípcia, libras egípcias, {libra,libras} do {Egito,Egipto}
+currency.ERN = {nakfa,nacfa,nacfá}{,s}, {nakfa,nacfa,nacfá} eritreia, {nakfas,nacfas,nacfás} eritreias
+currency.ETB = {birr,birre}{,s}, {birr,birre} etíope, {birrs,birres} etíopes
+currency.FJD = dólar fijiano, dólares fijianos, {dólar,dólares} {das,de} Fiji
+currency.FKP = {libra,libras} das {Malvinas,Ilhas Malvinas,Falkland,Ilhas Falkland}
+currency.GEL = {lari,lári}{,s}, {lari,lári} georgiano, {laris,láris} georgianos
+currency.GHS = {cedi,cídi}{,s}, {cedi,cedis,cídi,cídis} do Gana
+currency.GIP = {libra,libras} {do,de} Gibraltar, libra {estrelina,esterlina} do Gibraltar,
+    libras {estrelinas,esterlinas} do Gibraltar
+currency.GMD = {dalasi,dalase,dalássi,dalassi}, {dalasis,dalases,dalássis,dalassis},
+    {dalasi,dalase,dalássi,dalassi} {gambiano,da Gâmbia},
+    {dalasis,dalases,dalássis,dalassis} {gambianos,da Gâmbia}
+currency.GNF = franco {guineense,guineano,da Guiné}, francos {guineenses,guineanos,da Guiné}
+currency.GTQ = quetzal, quetzais, {quetzal,quetzais} da Guatemala, quetzal guatemalteco, quetzais guatemaltecos
+currency.GYD = dólar {guianense,guianês,da Guiana}, dólares {guianenses,guianeses,fuianeses,da Guiana}
+currency.HKD = {dólar,dólares} de {Hong Kong,Honguecongue}, dólar honconguês, dólares honcongueses
+currency.HNL = lempira{,s}, {lempira,lempiras} {de,das} Honduras, lempira hondurenho, lempiras hondurenhos
+currency.HRK = {kuna,cuna}{,s}, {kuna,cuna} {croata,croácio,da Croácia}, {kunas,cunas} {croatas,croácios,da Croácia}
+currency.HTG = {gourde,gurde}{,s}, {gourde,gurde} {haitiano,do Haiti}, {gourdes,gurdes} {haitianos,do Haiti}
+currency.HUF = forint{,s}, forinte{,s}, {florim,forinte} húngaro, {florins,forintes} húngaros,
+    {florim,florins,forinte,forintes,florintes} da Hungria
+currency.IDR = rupia indonésia, rupias indonésias, {rupia,rupias} da Indonésia
+currency.ILS = shekel{,s}, novo shekel, novos shekeles, novo shekel {israelense,israelita,de Israel},
+    novos shekeles {israelenses,israelitas,de Israel}
+currency.INR = rupia indiana, rupias indianas, {rupia,rupias} da Índia
+currency.IQD = dinar iraquiano, dinares iraquianos, {dinar,dinares} {de,do} Iraque
+currency.IRR = rial iraniano, {rials,riais} iranianos, {rial,rials,riais} do {Irã,Irão}
+currency.ISK = coroa islandesa, coroas islandesas, {coroa,coroas} da Islândia
+currency.JMD = dólar jamaicano, dólares jamaicanos, {dólar,dólares} da Jamaica
+currency.JOD = dinar jordano, dinares jordanos, {dinar,dinares} da Jordânia
+currency.KES = xelim queniano, xelins quenianos, {xelim,xelins} {da,do} {Quênia,Quénia}
+currency.KGS = som quirguiz, {soms,somes} quirguizes, som {guirguistanês,guirguizistanês,quirguistanês},
+    {soms,somes} {guirguistaneses,guirguizistaneses,quirguistaneses},
+    {som,somes,soms} do {Quirguistão,Quirguizistão}
+currency.KHR = riel{,s}, riéis, riel cambojano, {riéis,riels} cambojanos,
+    {riel,riels,riéis} {da Camboja,da Cambodja,do Camboja}
+currency.KMF = franco {comoriano,das Comores}, francos {comorianos,das Comores}
+currency.KPW = {won,uone} norte-coreano, {wones,uones} norte-coreanos, {won,wones,uone,uones} da Coreia do Norte
+currency.KRW = won, wones, uone{,s}, {won,uone} sul-coreano, {wones,uones} sul-coreanos,
+    {won,wones,uone,uones} da Coreia do Sul
+currency.KWD = dinar {kuwaitiano,coveitiano,couaitiano}, dinares {kuwaitianos,coveitianos,couaitianos},
+    {dinar,dinares} {do,de} {Kuwait,Koweit,Kuweit,Cuvaite,Kuaite,Cuaite}
+currency.KYD = {dólar,dólares} das Ilhas {Caimão,Cayman,Caimã}, dólar caimanês, dólares caimaneses
+currency.KZT = {tenge,tengue,tengué}{,s}, {tenge,tengue,tengué} {cazaque,cazaquistanês,do Cazaquistão},
+    {tenges,tengues,tengués} {cazaques,cazaquistaneses,do Cazaquistão}
+currency.LAK = {kip,kipe,quipe}{,s}, {kip,kipe,quipe} {laosiano,laociano,lau,do Laos,do Laus},
+    {kips,kipes,quipes} {laosianos,laocianos,laus,do Laos,do Laus}
+currency.LBP = libra libanesa, libras libanesas, {libra,libras} do Líbano
+currency.LKR = rupia {ceilandesa,cingalesa}, rupias {ceilandesas,cingalesas}, {rupia,rupias} do Sri {Lanka,Lanca}
+currency.LRD = dólar liberiano, dólares liberianos, {dólar,dólares} da Libéria
+currency.LSL = {loti,lóti}, {lotis,lótis,maloti}, {loti,lóti} {lesotiano,lesotense,lesoto,do Lesoto},
+    {lotis,lótis} {lesotianos,lesotenses,lesotos,lesoto,do Lesoto}
+currency.LYD = dinar líbio, dinares líbios, {dinar,dinares} da Líbia
+currency.MAD = {dirham,dirame,dirrã,dirém} marroquino, {dirhams,dirhans,dirames,dirrãs,diréns} marroquinos,
+    dinheiro marroquino, dinheiros marroquinos, {dirham,dirhams} de Marrocos
+currency.MDL = leu {moldávio,moldavo}, leus {moldávios,moldavos}, {leu,leus} da {Moldova,Moldávia}
+currency.MGA = {ariary,ariari,ariári}, {ariarys,ariaris,ariáris}, {ariary,ariari,ariári} malgaxe,
+    {ariarys,ariaris,ariáris} malgaxes
+currency.MKD = {denar,dinar} {macedônio,macedónio}, {denares,dinares} {macedônios,macedónios},
+    {denar,denares,dinar,dinares} da {Macedônia,Macedónia,Macedônia do Norte,Macedónia do Norte}
+currency.MMK = {kyat,quiat,quiate}{,s},
+    {kyat,quiat,quiate} {de Myanmar,da Birmânia,birmanês,birmã,birmane,birmano,birmaniano,birmanense,mianmarense},
+    {kyats,quiats,quiates} {de Myanmar,da Birmânia,birmaneses,birmãs,birmanes,birmanos,birmanianos,birmanenses,mianmarenses},
+    kyat birmanes
+currency.MNT = tugrik{,s}, tugrik mongol, tugriks mongóis, {tugrik,tugriks} da Mongólia
+currency.MOP = pataca{,s}, {pataca,patacas} de Macau
+currency.MRU = {ouguiya,uguia,oguia}{,s}, {ouguiya,uguia,oguia} mauritano, {ouguiyas,uguias,oguias} mauritanos
+currency.MUR = {rupia,rúpia} {mauriciana,da Maurícia,do Maurício}, {rupias,rúpias} {mauricianas,da Maurícia,do Maurício}
+currency.MVR = {rupia,rúpia} {maldívia,das Maldivas}, {rupias,rúpias} {maldívias,das Maldivas}
+currency.MWK = {kwacha,cuacha,quacha}{,s},
+    {kwacha,cuacha,quacha} {do Malawi,do Maláui,do Malaui,malawiana,malauiana,malaviana,malawiense,malauiense,malauita,malavita},
+    {kwachas,cuachas,quachas} {do Malawi,do Maláui,do Malaui,malawianas,malauianas,malavianas,malawienses,malauienses,malauitas,malavitas},
+    kwacha {malauitas,malavitas}
+currency.MXN = peso mexicano, pesos mexicanos, {peso,pesos} do México
+currency.MYR = {ringgit,ringgite,ringuite}{,s},
+    {ringgit,ringgite,ringuite} {malaio,malásio,malasiano,malaico,da Malásia},
+    {ringgits,ringgites,ringuites} {malaios,malásios,malasianos,malaicos,da Malásia}
+currency.MZN = metical, meticais, metical moçambicano, meticais moçambicanos, {metical,meticais} de Moçambique
+currency.NAD = dólar namibiano, dólares namibianos, {dólar,dólares} da Namíbia
+currency.NGN = naira{,s}, naira {nigeriano,nigeriana,da Nigéria}, nairas {nigerianos,nigerianas,da Nigéria}
+currency.NIO = {córdoba,córdova,cordoba}{,s}, {córdoba,córdova} {nicaraguense,nica},
+    {córdobas,córdovas} {nicaraguenses,nicas}
+currency.NOK = coroa norueguesa, coroas norueguesas, {coroa,coroas} da Noruega
+currency.NPR = {rupia,rúpia} {nepalesa,do Nepal}, {rupias,rúpias} {nepalesas,do Nepal}
+currency.NZD = dólar neozelandês, dólares neozelandeses, {dólar,dólares} da Nova Zelândia
+currency.OMR = rial {omanense,omaniano,omani,de Omã,de Omão}, {rials,riais} {omanenses,omanianos,omanis,de Omã,de Omão}
+currency.PAB = balboa{,s}, balboa {panamenha,panamense,do Panamá}, balboas {panamenhas,panamenses,do Panamá}
+currency.PEN = {nuevo,novo} sol, {nuevos,novos} sóis, {nuevo,novo} sol {peruano,peruviano,do Peru},
+    {nuevos,novos} sóis {peruanos,peruvianos,do Peru}, novo sóis peruvianos, sol peruano, sóis peruanos
+currency.PGK = {kina,quina}{,s}, {kina,quina} papuásio, {kinas,quinas} papuásios,
+    {kina,kinas,quina,quinas} da {Papua-Nova Guiné,Papua Nova Guiné,Papuásia Nova Guiné}
+currency.PHP = peso filipino, pesos filipinos, {peso,pesos} das Filipinas
+currency.PKR = {rupia,rúpia} {paquistanesa,do Paquistão}, {rupias,rúpias} {paquistanesas,do Paquistão}
+currency.PLN = {zloty,zloti,zlóti}, {zlotys,zlotis,zlótis}, {zloty,zloti,zlóti} {polaco,polonês},
+    {zloty,zlotis,zlótis} {polacos,poloneses}, {zloty,zloti,zlóti,zlotis,zlótis} da {Polônia,Polónia}
+currency.PYG = guarani{,s}, guarani {paraguaio,paraguaiano,do Paraguai}, guaranis {paraguaios,paraguaianos,do Paraguai}
+currency.QAR = rial {catarense,catari,catariano,qatariano,qatari,do Qatar,do Catar},
+    {rials,riais} {catarenses,cataris,catarianos,qatarianos,qataris,do Qatar,do Catar}
+currency.RSD = dinar sérvio, dinares sérvios, {dinar,dinares} da Sérvia
+currency.RWF = franco {ruandês,de Ruanda,do Ruanda}, francos {ruandeses,de Ruanda,do Ruanda}
+currency.SAR = {riyal,rial} saudita, {riyals,rials,riais} sauditas, {riyal,riyals,riayls,rial,riais} da Arábia Saudita
+currency.SBD = {dólar,dólares} das Ilhas Salomão, dólar {salomónico,salomônico,salomonense},
+    dólares {salomónicos,salomônicos,salomonenses}
+currency.SCR = {rupia,rúpia} {das,da} {Seychelles,Seicheles}, {rupias,rúpias} das {Seychelles,Seicheles},
+    {rupia,rúpia} seichelense, {rupias,rúpias} seichelenses
+currency.SDG = libra sudanesa, libras sudanesas, {libra,libras} do Sudão, dinar sudanês, dinares sudaneses,
+    {dinar,dinares} do Sudão
+currency.SEK = coroa sueca, coroas suecas, {coroa,coroas} da Suécia
+currency.SGD = {dólar,dólares} {de,da} {Singapura,Cingapura}, dólar {singapurense,cingapurense,singapurano,cingapurano},
+    dólares {singapurenses,cingapurenses,singapuranos,cingapuranos}
+currency.SHP = {libra,libras} de Santa Helena
+currency.SLL = leone{,s}, leone {serra-leonês,serra-leonino,da Serra Leoa},
+    leones {serra-leoneses,serra-leoninos,da Serra Leoa}
+currency.SOS = xelim {somali,somaliano,somaliense,da Somália}, {xelims,xelins} {somalis,somalianos,somalienses,da Somália}
+currency.SRD = dólar {do Suriname,surinamês,surinamense}, dólares {do Suriname,surinameses,surinamenses}
+currency.SSP = libra {sul-sudanesa,do Sudão do Sul,do Sudão Meridional},
+    libras {sul-sudanesas,do Sudão do Sul,do Sudão Meridional}
+currency.STN = dobra{,s}, dobra são-tomense, dobras são-tomenses, {dobra,dobras} de São Tomé e Príncipe
+currency.SYP = libra {síria,siríaca,da Síria}, libras {sírias,siríacas,da Síria}
+currency.SZL = lilangeni{,s}, emalangeni, lilangeni {suazi,suazilandês,da Suazilândia},
+    lilangenis {suazis,suazilandeses,da Suazilândia}
+currency.THB = {baht,bate}, {bahts,bahtes,bates}, {baht,bate} {tailandês,da Tailândia},
+    {bahts,bahtes,bates} {tailandeses,da Tailândia}
+currency.TJS = somoni{,s}, somoni {tajique,tajiquistanês,do Tajiquistão,do Tadjiquistão},
+    somonis {tajiques,tajiquistaneses,do Tajiquistão,do Tadjiquistão}
+currency.TMT = manate {turcomeno,turquemeno,turquemenistanês,do Turquemenistão,do Turcomenistão},
+    manates {turcomenos,turquemenos,turquemenistaneses,do Turquemenistão,do Turcomenistão}
+currency.TND = dinar {tunisino,tunisiano,da Tunísia}, dinares {tunisinos,tunisianos,da Tunísia}
+currency.TOP = {pa'anga,paanga,paʻanga}{,s}, {pa'anga,paanga} {tonganês,tonga,de Tonga},
+    {pa'anga,pa'angas,paanga,paangas} {tonganeses,tongas}, {pa'angas,paangas} de Tonga
+currency.TRY = lira{,s}, lira turca, liras turcas, {lira,liras} da Turquia
+currency.TTD = {dólar,dólares} de {Trinidad,Trinidade} e Tobago,
+    dólar {trinitário,trinitino,trinitário-tobagense,tobaguiano},
+    dólares {trinitários,trinitinos,trinitário-tobagenses,tobaguianos}
+currency.TWD = novo dólar {taiwanês,formosano,formosino,taiuanês,de Taiwan},
+    novos dólares {taiwaneses,formosanos,formosinos,taiuaneses,de Taiwan}, novos dóalres de Taiwan,
+    dólar taiwanês, dólares taiwaneses
+currency.TZS = xelim {tanzaniano,da Tanzânia}, {xelims,xelins} {tanzanianos,da Tanzânia}
+currency.UAH = {grívnia,grivna,hryvnia}{,s}, grívnia ucraniana, grívnias ucranianas, {grívnia,grívnias} da Ucrânia
+currency.UGX = xelim {ugandense,ugandês,do Uganda}, {xelims,xelins} {ugandenses,ugandeses,do Uganda}
+currency.UYU = peso uruguaio, pesos uruguaios, {peso,pesos} do Uruguai
+currency.UZS = soms, som {uzbeque,usbeque,usbequistanês,do Uzbequistão,do Usbequistão},
+    soms {uzbeques,usbeques,usbequistaneses,do Uzbequistão,do Usbequistão}
+currency.VES = {bolívar,bolivar}{,es}, bolívares, {bolívar,bolivar} venezuelano,
+    {bolívares,bolivares} venezuelanos, bolivares benezuelanos,
+    {bolivar,bolivares,bolívar,bolívares} da Venezuela, bolívar{,es} soberano{,s}
+currency.VND = {dong,dongue}{,s}, {dong,dongue} {vietnamita,vietnamiano,vietnamês,vietnamense},
+    {dongs,dongues} {vietnamitas,vietnamianos,vietnameses,vietnamenses}, {dong,dongs,dongue,dongues} do {Vietnã,Vietname}
+currency.VUV = vatu{,s}, vatu {vanuatuano,vanuatuense,de Vanuatu}, vatus {vanuatuanos,vanuatuenses,de Vanuatu}
+currency.WST = tala{,s}, tala {samoano,samoana,de Samoa}, talas {samoanos,samoanas,de Samoa}
+currency.XAF = {franco,francos} CFA, franco {centrafricano,centro-africano,centro-africanos,da República Centro-Africana},
+    francos {centrafricanos,centro-africanos,da República Centro-Africana}
+currency.XCD = {dólar,dólares} {do Caribe Oriental,das Caraíbas Orientais}
+currency.XOF = franco CFA ocidental, francos CFA ocidentais
+currency.XPF = {franco,francos} CFP, francs pacifiques, {franco,francos} do Pacífico
+currency.YER = rial {iemenita,do Iémen,do Iêmen}, {rials,riais} {iemenitas,do Iémen,do Iêmen}
+currency.ZAR = {rand,rande}{,s}, {rand,rande} {sul-africano,da África do Sul}, {rands,randes} {sul-africanos,da África do Sul}
+currency.ZMW = {kwacha,cuacha,quacha} {zambiana,da Zâmbia}, {kwachas,cuachas,quachas} {zambianas,da Zâmbia}
+
+# Time zones: Portuguese names of cities and countries (Brazilian and European spellings)
+zone.America/Sao_Paulo = Brasil, Brasília, Brasilia, Rio, Belo Horizonte, Curitiba, Porto Alegre,
+    Florianópolis, Goiânia, Campinas, Vitória
+zone.America/Bahia = Salvador
+zone.America/Recife = Olinda, João Pessoa, Natal, Maceió
+zone.America/Fortaleza = Fortaleza, São Luís, Teresina
+zone.America/Belem = Belém
+zone.America/Manaus = Manaus
+zone.America/Cuiaba = Cuiabá
+zone.America/Campo_Grande = Campo Grande
+zone.America/Porto_Velho = Porto Velho
+zone.America/Rio_Branco = Rio Branco
+zone.America/Noronha = Fernando de Noronha
+zone.Europe/Lisbon = Lisboa, Porto, Coimbra, Braga, Faro, Portugal
+zone.Atlantic/Azores = Açores, Ponta Delgada
+zone.Atlantic/Madeira = Funchal
+zone.Atlantic/Cape_Verde = Cabo Verde, Praia
+zone.Africa/Luanda = Angola
+zone.Africa/Maputo = Moçambique
+zone.Africa/Bissau = Guiné-Bissau
+zone.Africa/Sao_Tome = São Tomé e Príncipe
+zone.Asia/Dili = Díli, Timor-Leste
+zone.Europe/London = Londres, Inglaterra, Reino Unido, Edimburgo
+zone.Europe/Moscow = Moscou, Moscovo, São Petersburgo, Rússia
+zone.Asia/Shanghai = Pequim, Xangai, China
+zone.Europe/Vienna = Viena, Áustria
+zone.Europe/Berlin = Berlim, Munique, Colônia, Colónia, Hamburgo, Frankfurt, Alemanha
+zone.Europe/Warsaw = Varsóvia, Cracóvia, Polônia, Polónia
+zone.Europe/Brussels = Bruxelas, Antuérpia, Bélgica
+zone.Europe/Copenhagen = Copenhague, Copenhaga, Dinamarca
+zone.Europe/Zurich = Genebra, Zurique, Basileia, Berna, Suíça
+zone.America/New_York = Nova York, Nova Iorque, Filadélfia
+zone.Asia/Tokyo = Tóquio, Japão
+zone.Europe/Paris = França
+zone.Europe/Rome = Roma, Milão, Nápoles, Florença, Veneza, Turim, Itália
+zone.Europe/Madrid = Madri, Sevilha, Valência, Espanha
+zone.Europe/Amsterdam = Amsterdã, Amesterdão, Haia, Roterdã, Roterdão, Holanda, Países Baixos
+zone.Europe/Athens = Atenas, Grécia
+zone.Europe/Prague = Praga, Chéquia, Tchéquia
+zone.Europe/Budapest = Budapeste, Hungria
+zone.Europe/Bucharest = Bucareste, Romênia, Roménia
+zone.Europe/Stockholm = Estocolmo, Suécia
+zone.Europe/Oslo = Noruega
+zone.Europe/Helsinki = Helsinque, Helsínquia, Finlândia
+zone.Europe/Dublin = Dublim, Irlanda
+zone.Europe/Istanbul = Istambul, Ancara, Turquia
+zone.Europe/Kyiv = Kiev, Quieve, Ucrânia
+zone.Europe/Belgrade = Belgrado
+zone.Asia/Jerusalem = Jerusalém, Israel
+zone.Asia/Tehran = Teerã, Teerão, Irã, Irão
+zone.Asia/Baghdad = Bagdá, Bagdade
+zone.Asia/Riyadh = Riad, Riade, Arábia Saudita
+zone.Asia/Dubai = Abu Dhabi, Abu Dabi
+zone.Asia/Kolkata = Nova Délhi, Nova Deli, Bombaim, Calcutá, Índia
+zone.Asia/Seoul = Seul, Coreia do Sul
+zone.Asia/Singapore = Cingapura, Singapura
+zone.Asia/Bangkok = Banguecoque, Tailândia
+zone.Asia/Ho_Chi_Minh = Hanói, Vietnã, Vietname
+zone.Asia/Jakarta = Jacarta
+zone.Africa/Cairo = Egito, Egipto
+zone.Africa/Johannesburg = Joanesburgo, Cidade do Cabo, África do Sul
+zone.Africa/Algiers = Argel
+zone.Africa/Casablanca = Marrocos, Marraquexe
+zone.America/Mexico_City = Cidade do México, México
+zone.America/Bogota = Colômbia
+zone.America/Argentina/Buenos_Aires = Argentina
+zone.America/Asuncion = Assunção, Paraguai
+zone.America/Montevideo = Montevidéu, Montevideu, Uruguai
+zone.America/Lima = Peru
+zone.America/Santiago = Chile
+zone.America/Los_Angeles = São Francisco, Califórnia
+zone.America/Chicago = Nova Orleans
+zone.Pacific/Auckland = Nova Zelândia
+
+# Month names in dates (`12 março 2026`)
+month.1 = janeiro, jan{,.}
+month.2 = fevereiro, fev{,.}
+month.3 = março, mar{,.}
+month.4 = abril, abr{,.}
+month.5 = maio, mai{,.}
+month.6 = junho, jun{,.}
+month.7 = julho, jul{,.}
+month.8 = agosto, ago{,.}
+month.9 = setembro, set{,.}
+month.10 = outubro, out{,.}
+month.11 = novembro, nov{,.}
+month.12 = dezembro, dez{,.}
+
+# Display
+weekdays = seg., ter., qua., qui., sex., sáb., dom.
+months = jan., fev., mar., abr., mai., jun., jul., ago., set., out., nov., dez.
+date = %a, %-d de %b de %Y

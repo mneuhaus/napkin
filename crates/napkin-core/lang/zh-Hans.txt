@@ -1,1 +1,407 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Chinese in simplified characters (简体中文). Format: see crates/napkin-core/src/vocab.rs.
+#
+# Chinese is written without spaces: every character is a token of its own and the longest
+# known phrase wins (`5千米` is 5 km, `5千` is 5000, `5千克` is 5 kg). Characters this file does
+# not know stay prose. Numbers are written in digits; Chinese numerals (`二十`) are prose.
+
+# Arithmetic. `和` is also the sum (an operator only between two operands); `的` and `里的` put
+# the base first (`50的20%` is 20% of 50, so they multiply).
+plus = 加, 加上, 和, 增加, 外加, 再加
+minus = 减, 减去, 减掉, 减少, 扣除, 扣掉, 再减
+times = 乘, 乘以, 乘上, 的, 里的
+# Colloquially `6除3` is read like `6除以3` (strictly it means 3 ÷ 6).
+divide = 除以, 除
+per = 每
+modulo = 取模, 取余, 模
+convert = 换成, 换算, 换算成, 换算为, 换算至, 换算到, 兑换, 兑换成, 兑换为, 转换, 转换成, 转换为,
+    转成, 转为, 折算, 折算成, 折算为, 折合, 折合成, 等于多少, 是多少
+assign = 等于, 是, 为
+
+# Percentages. `百分之` stands before its number (`百分之20`); after it (`20 百分之`) it is read
+# like `百分比`.
+percent = 百分比, 百分之
+percent.before = 百分之
+percent.of = 的, 里的
+as-percent.of = 占%, 占比, 占百分比, 占
+as-percent.off = 差%, 差比
+
+# Scales. 万 is 10^4 and 亿 10^8; 千米 and 千克 stay kilometres and kilograms (longest phrase).
+scale.1e2 = 百
+scale.1e3 = 千
+scale.1e4 = 万
+scale.1e5 = 十万
+scale.1e6 = 百万
+scale.1e7 = 千万
+scale.1e8 = 亿
+scale.1e9 = 十亿
+scale.1e12 = 万亿
+
+# Time (one form for every count). `分` alone is minutes (`3分20秒`); before a unit it is the
+# deci prefix (`分米`). `3月` is March, so months are `个月`.
+show.s = 秒
+unit.s = 秒钟
+show.min = 分钟
+unit.min = 分
+show.h = 小时
+unit.h = 个小时, 个钟头, 钟头
+show.day = 天
+show.week = 周
+unit.week = 星期, 个星期, 礼拜, 个礼拜, 个周
+show.month = 个月
+show.year = 年
+show.decade = 个十年
+show.century = 世纪
+unit.century = 个世纪
+
+# SI prefixes (`千米`, `厘米`, `毫升`, `微秒`, `兆赫`, `吉字节`). 十 and 百 are left out: `5百米`
+# reads as 500 m, not 5 hectometres.
+prefix.Y = 尧, 尧它
+prefix.Z = 泽, 泽它
+prefix.E = 艾, 艾可萨
+prefix.P = 拍, 拍它
+prefix.T = 太, 太拉
+prefix.G = 吉, 吉咖
+prefix.M = 兆
+prefix.k = 千
+prefix.d = 分
+prefix.c = 厘
+prefix.m = 毫
+prefix.µ = 微
+prefix.n = 纳, 纳诺
+prefix.p = 皮, 皮可
+prefix.f = 飞, 飞母托
+prefix.a = 阿托
+prefix.z = 仄, 仄普托
+prefix.y = 幺, 幺科托, 攸
+
+# Length. `点` is the time of day (`3点`), so typographic points keep `pt`.
+unit.m = 米, 公尺
+unit.km = 公里, ㎞
+unit.cm = 公分, ㎝
+unit.mm = ㎜
+show.inch = 英寸
+unit.inch = 吋
+show.foot = 英尺
+unit.foot = 呎
+show.yard = 码
+show.mile = 英里
+unit.mile = 哩
+show.nautical mile = 海里
+unit.nautical mile = 浬
+show.league = 里格
+show.furlong = 弗隆
+unit.furlong = 浪
+show.chain = 链
+show.cable = 缆
+show.light year = 光年
+show.mil = 密耳
+unit.px = 像素
+unit.em = 艾米
+
+# Area
+square = 平方*, 平方 *
+show.square = 平方*
+unit.m2 = 平米, 平方, ㎡
+unit.km2 = ㎢
+unit.cm2 = ㎠
+unit.ha = 公顷
+show.are = 公亩
+show.acre = 英亩
+show.ping = 坪
+
+# Volume
+cubic = 立方*, 立方 *
+show.cubic = 立方*
+unit.l = 升, 公升
+unit.cm3 = 西西, ㎤
+unit.m3 = ㎥
+unit.ml = ㎖
+show.cup = 杯
+show.tablespoon = 汤匙
+unit.tablespoon = 大匙, 大勺, 汤勺
+show.teaspoon = 茶匙
+unit.teaspoon = 小匙, 小勺, 茶勺
+show.quart = 夸脱
+show.pint = 品脱
+show.gallon = 加仑
+show.fluid ounce = 液量盎司
+unit.fluid ounce = 液体盎司, 液盎司
+
+# Weight. `磅` is the pound weight (`英镑` the currency).
+unit.g = 克, 公克
+unit.kg = 公斤, ㎏
+unit.mg = ㎎
+unit.t = 吨, 公吨
+show.stone = 英石
+show.carat = 克拉
+show.pound = 磅
+show.centner = 公担
+unit.centner = 森特纳
+show.ounce = 盎司
+unit.ounce = 安士, 英两
+
+# Temperature, angles, data, frequency, speed
+unit.°C = 摄氏度, 摄氏
+unit.°F = 华氏度, 华氏
+unit.K = 开尔文, 开氏度, 开
+unit.° = 度
+unit.rad = 弧度
+unit.b = 比特, 位
+unit.B = 字节
+unit.Hz = 赫兹, 赫
+show.knot = 节
+unit.knot = 海里每小时
+
+# Dates and times. `点` after an hour is the time of day (`3点`, `15点`); alone it is now.
+today = 今天, 今日
+tomorrow = 明天, 明日
+yesterday = 昨天, 昨日
+day.2 = 后天
+day.-2 = 前天
+day.3 = 大后天
+day.-3 = 大前天
+now = 现在, 时间, 现在时间, 当前时间, 目前时间, 此刻
+oclock = 点
+half-hour = 半
+am = 上午, 早上, 凌晨
+pm = 下午, 晚上, 傍晚
+unit-before.°C = 摄氏
+unit-before.°F = 华氏
+local = 当地, 当地时间, 当地时区, 本地, 本地时间, 本地时区
+noon = 中午, 正午
+midnight = 午夜, 子夜, 半夜
+
+# Document references. `和` is the sum unless it stands between two operands.
+prev = 上一个结果, 上个结果, 上一结果, 上一个, 上一行, 上行, 上面的结果, 前一个结果
+sum = 总和, 合计, 共计, 总计, 一共, 总共, 总数, 总额, 共, 和
+average = 平均, 平均数, 平均值, 均值
+
+# Functions and formats
+function.sqrt = 平方根, 开平方, 开方, 根号, 根
+function.cbrt = 立方根, 开立方
+function.round = 四舍五入
+function.ceil = 向上取整
+function.floor = 向下取整
+function.abs = 绝对值
+function.fact = 阶乘
+function.ln = 自然对数
+function.log = 对数
+function.sin = 正弦
+function.cos = 余弦
+function.tan = 正切
+format.hex = 十六进制
+format.bin = 二进制
+format.oct = 八进制
+format.dec = 十进制
+format.sci = 科学计数法, 科学记数法, 科学计数
+
+# Currencies: the mainland names first, then the Taiwan and Hong Kong spellings people paste.
+currency.CNY = 元, 块, 块钱, 人民币, 人民币元, RMB
+currency.USD = 美元, 美金
+currency.EUR = 欧元
+currency.GBP = 英镑
+currency.JPY = 日元, 日圆, 日币
+currency.HKD = 港币, 港元
+currency.TWD = 新台币, 台币, 新台幣, 台幣, NT$
+currency.MOP = 澳门元, 澳门币, 澳門幣
+currency.KRW = 韩元, 韩币, 韩圆
+currency.KPW = 朝鲜元, 朝元
+currency.CHF = 瑞士法郎, 瑞郎, 法郎
+currency.CAD = 加拿大元, 加元, 加币
+currency.AUD = 澳元, 澳大利亚元, 澳币
+currency.NZD = 新西兰元, 纽元, 纽西兰元, 紐西蘭元
+currency.SGD = 新加坡元, 新币
+currency.RUB = 卢布, 俄罗斯卢布
+currency.BYN = 白俄罗斯卢布
+currency.UAH = 乌克兰格里夫纳, 格里夫纳, 里夫纳
+currency.INR = 印度卢比, 卢比
+currency.PKR = 巴基斯坦卢比, 巴基斯坦盧比
+currency.LKR = 斯里兰卡卢比
+currency.NPR = 尼泊尔卢比, 尼泊爾盧比
+currency.MUR = 毛里求斯卢比, 模里西斯盧比
+currency.SCR = 塞舌尔卢比, 塞席爾盧比
+currency.IDR = 印尼盾, 印度尼西亚卢比
+currency.VND = 越南盾
+currency.THB = 泰铢, 铢
+currency.MYR = 马来西亚林吉特, 林吉特, 令吉, 馬來西亞令吉
+currency.PHP = 菲律宾比索, 菲律賓比索
+currency.MMK = 缅元, 缅甸元
+currency.KHR = 柬埔寨瑞尔, 瑞尔, 柬埔寨瑞爾, 里耳
+currency.LAK = 老挝基普, 基普, 寮國基普
+currency.MNT = 蒙古图格里克, 图格里克, 蒙古圖格里克
+currency.KZT = 哈萨克斯坦坚戈, 坚戈, 哈薩克坦吉
+currency.KGS = 吉尔吉斯斯坦索姆, 吉爾吉斯斯坦索姆
+currency.UZS = 乌兹别克斯坦苏姆, 烏茲別克斯坦蘇姆
+currency.TJS = 塔吉克斯坦索莫尼
+currency.TMT = 土库曼斯坦马纳特, 土庫曼斯坦馬納特
+currency.AZN = 阿塞拜疆马纳特
+currency.GEL = 格鲁吉亚拉里, 拉里, 喬治亞拉里
+currency.AMD = 亚美尼亚德拉姆, 德拉姆
+currency.AFN = 阿富汗尼
+currency.BDT = 孟加拉塔卡, 塔卡
+currency.BTN = 不丹努尔特鲁姆, 不丹努扎姆
+currency.MVR = 马尔代夫拉菲亚, 馬爾地夫拉菲亞
+currency.TRY = 土耳其里拉, 里拉
+currency.ILS = 以色列新谢克尔, 以色列谢克尔, 以色列新锡克尔, 谢克尔
+currency.AED = 阿联酋迪拉姆, 迪拉姆, 阿拉伯聯合大公國迪爾汗
+currency.SAR = 沙特里亚尔, 沙特阿拉伯里亚尔, 沙烏地阿拉伯里亞爾, 里亚尔
+currency.QAR = 卡塔尔里亚尔
+currency.OMR = 阿曼里亚尔, 阿曼里亞爾
+currency.YER = 也门里亚尔, 葉門里亞爾
+currency.IRR = 伊朗里亚尔, 伊朗里亞爾
+currency.BHD = 巴林第纳尔, 第纳尔
+currency.KWD = 科威特第纳尔, 科威特第納爾
+currency.IQD = 伊拉克第纳尔, 伊拉克第納爾
+currency.JOD = 约旦第纳尔, 約旦第納爾
+currency.LYD = 利比亚第纳尔, 利比亞第納爾
+currency.TND = 突尼斯第纳尔, 突尼斯第納爾
+currency.DZD = 阿尔及利亚第纳尔, 阿爾及利亞第納爾
+currency.RSD = 塞尔维亚第纳尔, 塞爾維亞第納爾
+currency.MKD = 马其顿第纳尔, 北马其顿代纳尔, 前南馬其頓代納爾
+currency.MAD = 摩洛哥迪拉姆
+currency.EGP = 埃及镑, 埃及鎊
+currency.SDG = 苏丹镑
+currency.SSP = 南苏丹镑, 南蘇丹南蘇丹鎊
+currency.SYP = 叙利亚镑, 叙利亚磅
+currency.LBP = 黎巴嫩镑, 黎巴嫩鎊
+currency.FKP = 福克兰群岛镑, 福克蘭鎊
+currency.GIP = 直布罗陀镑, 直布羅陀鎊
+currency.SHP = 圣赫勒拿镑, 聖赫倫那鎊
+currency.SEK = 瑞典克朗
+currency.NOK = 挪威克朗
+currency.DKK = 丹麦克朗, 丹麥克朗
+currency.ISK = 冰岛克朗
+currency.CZK = 捷克克朗
+currency.PLN = 波兰兹罗提, 兹罗提, 波蘭茲羅提
+currency.HUF = 匈牙利福林, 福林
+currency.RON = 罗马尼亚列伊, 羅馬尼亞列伊
+currency.MDL = 摩尔多瓦列伊, 摩爾多瓦列伊
+currency.BGN = 保加利亚列弗, 列弗, 保加利亞列弗
+currency.ALL = 阿尔巴尼亚列克, 阿爾巴尼亞列克
+currency.BAM = 波黑可兑换马克, 波斯尼亚和黑塞哥维那可兑换马克, 波士尼亞和黑塞哥維那可兌換馬克
+currency.HRK = 克罗地亚库纳, 库纳
+currency.BRL = 巴西雷亚尔, 雷亚尔, 巴西雷亞爾
+currency.MXN = 墨西哥比索, 比索
+currency.ARS = 阿根廷比索
+currency.CLP = 智利比索
+currency.COP = 哥伦比亚比索
+currency.CUP = 古巴比索
+currency.DOP = 多米尼加比索, 多明尼加比索
+currency.UYU = 乌拉圭比索, 烏拉圭比索
+currency.PEN = 秘鲁索尔, 秘鲁新索尔, 新索尔, 索尔
+currency.BOB = 玻利维亚诺, 玻利維亞玻利維亞諾, 利維亞玻利維亞諾
+currency.PYG = 巴拉圭瓜拉尼, 瓜拉尼
+currency.VES = 委内瑞拉玻利瓦尔, 玻利瓦尔
+currency.CRC = 哥斯达黎加科朗, 哥斯大黎加科郎
+currency.NIO = 尼加拉瓜科多巴, 金科多巴, 科多巴
+currency.GTQ = 危地马拉格查尔, 格查尔
+currency.HNL = 洪都拉斯伦皮拉, 宏都拉斯倫皮拉
+currency.PAB = 巴拿马巴波亚, 巴拿馬巴波亞
+currency.HTG = 海地古德, 古德
+currency.JMD = 牙买加元, 牙買加元
+currency.BBD = 巴巴多斯元
+currency.BSD = 巴哈马元, 巴哈馬元
+currency.BZD = 伯利兹元, 貝里斯元
+currency.BMD = 百慕大元, 百慕達元
+currency.KYD = 开曼元, 開曼元
+currency.TTD = 特立尼达和多巴哥元, 特立尼達和多巴哥元
+currency.XCD = 东加勒比元, 東加勒比元
+currency.GYD = 圭亚那元, 圭亚那
+currency.SRD = 苏里南元, 蘇利南元
+currency.AWG = 阿鲁巴弗罗林
+currency.ANG = 荷属安的列斯盾, 荷屬安的列斯盾
+currency.FJD = 斐济元, 斐濟元
+currency.PGK = 巴布亚新几内亚基那, 基那
+currency.SBD = 所罗门群岛元, 索羅門群島元
+currency.TOP = 汤加潘加, 東加潘加
+currency.VUV = 瓦努阿图瓦图, 萬那杜瓦圖
+currency.WST = 萨摩亚塔拉, 薩摩亞塔拉
+currency.XPF = 太平洋法郎, CFP法郎
+currency.ZAR = 南非兰特, 兰特, 南非蘭特
+currency.NGN = 尼日利亚奈拉, 奈拉
+currency.GHS = 加纳塞地, 塞地, 加納塞地
+currency.KES = 肯尼亚先令, 肯亞先令
+currency.TZS = 坦桑尼亚先令, 坦尚尼亞先令
+currency.UGX = 乌干达先令, 烏干達先令
+currency.SOS = 索马里先令, 索馬利亞先令
+currency.ETB = 埃塞俄比亚比尔, 衣索比亞比爾
+currency.ERN = 厄立特里亚纳克法, 厄利垂亞奈克法
+currency.XAF = 中非法郎
+currency.XOF = 西非法郎
+currency.CDF = 刚果法郎
+currency.BIF = 布隆迪法郎
+currency.RWF = 卢旺达法郎, 盧安達法郎
+currency.DJF = 吉布提法郎, 吉布地法郎
+currency.KMF = 科摩罗法郎, 葛摩法郎
+currency.GNF = 几内亚法郎, 幾內亞法郎
+currency.AOA = 安哥拉宽扎, 安哥拉寬扎
+currency.MZN = 莫桑比克梅蒂卡尔, 莫三比克梅蒂卡爾
+currency.ZMW = 赞比亚克瓦查, 尚比亞克瓦查
+currency.MWK = 马拉维克瓦查, 馬拉維克瓦查
+currency.BWP = 博茨瓦纳普拉, 普拉
+currency.NAD = 纳米比亚元, 奈米比亞元
+currency.LSL = 莱索托洛蒂, 賴索托洛蒂
+currency.SZL = 斯威士兰里兰吉尼, 斯威士埃马兰吉尼, 埃马兰吉尼
+currency.MGA = 马达加斯加阿里亚里, 馬達加斯加阿里亞里
+currency.CVE = 佛得角埃斯库多, 維德角埃斯庫多
+currency.GMD = 冈比亚达拉西, 甘比亞達拉西
+currency.SLL = 塞拉利昂利昂, 獅子山利昂
+currency.LRD = 利比里亚元
+currency.BND = 文莱元
+currency.BTC = 比特币
+currency.ETH = 以太坊, 以太币
+
+# Time zones: Chinese names of cities and countries
+zone.Asia/Shanghai = 北京, 上海, 广州, 深圳, 天津, 重庆, 成都, 武汉, 杭州, 南京, 西安, 中国
+zone.Asia/Hong_Kong = 香港
+zone.Asia/Macau = 澳门
+zone.Asia/Taipei = 台北, 台中, 高雄, 台湾
+zone.Asia/Tokyo = 东京, 大阪, 京都, 日本
+zone.Asia/Seoul = 首尔, 汉城, 釜山, 韩国
+zone.Asia/Pyongyang = 平壤
+zone.Asia/Singapore = 新加坡
+zone.Asia/Kuala_Lumpur = 吉隆坡, 马来西亚
+zone.Asia/Bangkok = 曼谷, 泰国
+zone.Asia/Ho_Chi_Minh = 胡志明市, 河内, 越南
+zone.Asia/Jakarta = 雅加达, 印度尼西亚
+zone.Asia/Manila = 马尼拉, 菲律宾
+zone.Asia/Kolkata = 新德里, 孟买, 班加罗尔, 印度
+zone.Asia/Dubai = 迪拜, 阿布扎比, 阿联酋
+zone.Asia/Ulaanbaatar = 乌兰巴托
+zone.Asia/Jerusalem = 耶路撒冷, 特拉维夫, 以色列
+zone.Europe/London = 伦敦, 英国
+zone.Europe/Paris = 巴黎, 法国
+zone.Europe/Berlin = 柏林, 慕尼黑, 法兰克福, 汉堡, 德国
+zone.Europe/Rome = 罗马, 米兰, 意大利
+zone.Europe/Madrid = 马德里, 巴塞罗那, 西班牙
+zone.Europe/Amsterdam = 阿姆斯特丹, 荷兰
+zone.Europe/Brussels = 布鲁塞尔
+zone.Europe/Zurich = 苏黎世, 日内瓦, 瑞士
+zone.Europe/Vienna = 维也纳, 奥地利
+zone.Europe/Prague = 布拉格
+zone.Europe/Warsaw = 华沙
+zone.Europe/Stockholm = 斯德哥尔摩
+zone.Europe/Athens = 雅典
+zone.Europe/Istanbul = 伊斯坦布尔, 土耳其
+zone.Europe/Moscow = 莫斯科, 圣彼得堡, 俄罗斯
+zone.Europe/Kyiv = 基辅
+zone.Africa/Cairo = 开罗, 埃及
+zone.Africa/Johannesburg = 约翰内斯堡, 开普敦, 南非
+zone.America/New_York = 纽约, 华盛顿, 波士顿, 费城, 迈阿密
+zone.America/Chicago = 芝加哥, 休斯顿, 达拉斯
+zone.America/Denver = 丹佛
+zone.America/Los_Angeles = 洛杉矶, 旧金山, 西雅图, 硅谷
+zone.America/Toronto = 多伦多, 渥太华, 蒙特利尔
+zone.America/Vancouver = 温哥华
+zone.America/Mexico_City = 墨西哥城
+zone.America/Sao_Paulo = 圣保罗, 里约热内卢, 巴西
+zone.America/Argentina/Buenos_Aires = 布宜诺斯艾利斯
+zone.Pacific/Honolulu = 檀香山, 夏威夷
+zone.Australia/Sydney = 悉尼
+zone.Australia/Melbourne = 墨尔本
+zone.Pacific/Auckland = 奥克兰, 惠灵顿, 新西兰
+
+# Display: `2026年10月28日 周三`
+weekdays = 周一, 周二, 周三, 周四, 周五, 周六, 周日
+months = 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月
+date = %Y年%-m月%-d日 %a

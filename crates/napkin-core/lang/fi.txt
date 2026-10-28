@@ -1,1 +1,229 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Finnish (Suomi). Format: see crates/napkin-core/src/vocab.rs.
+# Units after a number take the partitive (`1 tunti`, `2 tuntia`), so `show.*` lists the
+# nominative for one and the partitive for every other count. Conversion targets also read in
+# the translative and essive plural (`muunnettuna tunneiksi`, `senttimetreinä`).
+
+# Arithmetic
+plus = plus, ja, lisättynä, lisää
+minus = miinus, vähennettynä, vähennä, ilman
+times = kertaa, kerrottuna, kerrottuna luvulla
+divide = jaettuna, jaettuna luvulla, jaa
+per = per
+modulo = modulo
+convert = muunnettuna, muunna
+assign = on yhtä suuri kuin, yhtä suuri kuin, on yhtä kuin, yhtä kuin
+
+# Percentages: `20 % summasta 50`, `10 % päälle 50`, `10 % alennus 50`
+percent = prosentti, prosenttia
+percent.of = summasta, luvusta, määrästä, arvosta
+percent.on = päälle, lisättynä
+percent.off = alennus, alennusta, pois
+as-percent.of = prosentteina {luvusta,summasta}
+
+# Scales (long scale: miljardi = 10^9, biljoona = 10^12)
+scale.1e3 = tuhat, tuhatta
+scale.1e6 = miljoona{,a}, milj{,.}
+scale.1e9 = miljardi{,a}, mrd{,.}
+scale.1e12 = biljoona{,a}
+
+# Dates and times
+today = tänään
+tomorrow = huomenna
+yesterday = eilen
+day.2 = ylihuomenna
+day.-2 = toissapäivänä
+now = nyt, aika, kello
+local = paikallinen, paikallinen aika, paikallista aikaa, paikallinen aikavyöhyke
+noon = keskipäivä
+midnight = keskiyö
+
+# Document references
+prev = edellinen
+sum = summa, yhteensä, kaikkiaan
+average = keskiarvo, ka{,.}
+
+# Functions and formats
+function.sqrt = neliöjuuri
+function.cbrt = kuutiojuuri
+function.round = pyöristä, pyöristettynä
+function.abs = itseisarvo
+function.fact = kertoma
+function.sin = sini
+function.cos = kosini
+function.tan = tangentti
+format.hex = heksadesimaali{,na}
+format.bin = binääri{,nä}
+format.oct = oktaali{,na}
+format.dec = desimaali{,na}
+format.sci = tieteellinen, tieteellisenä
+
+# Time. `sek` would also swallow the code `SEK`, so seconds are `s`, `sek.` or `sekunti`.
+show.s = sekunti | sekuntia
+unit.s = sekunnit, sekunnin, sekunneiksi, sekunteina, sek.
+show.min = minuutti | minuuttia
+unit.min = minuutit, minuutin, minuuteiksi, minuutteina
+show.h = tunti | tuntia
+unit.h = tunnit, tunnin, tunneiksi, tunteina
+show.day = päivä | päivää
+unit.day = päivät, päivän, päiviksi, päivinä, vrk, vuorokausi, vuorokautta
+show.week = viikko | viikkoa
+unit.week = viikot, viikon, viikoiksi, viikkoina, vk{,.}
+show.month = kuukausi | kuukautta
+unit.month = kuukaudet, kuukauden, kuukausiksi, kuukausina, kk
+show.year = vuosi | vuotta
+unit.year = vuodet, vuoden, vuosiksi, vuosina, v.
+show.decade = vuosikymmen | vuosikymmentä
+show.century = vuosisata | vuosisataa
+
+# SI prefixes as Finnish spells them
+prefix.c = sentti
+prefix.d = desi
+prefix.h = hehto
+prefix.µ = mikro
+prefix.p = piko
+
+# Length
+unit.m = metri, metriä, metrin, metrit, metreiksi, metreinä
+show.inch = tuuma | tuumaa
+unit.inch = tuumiksi, tuumina
+show.foot = jalka | jalkaa
+unit.foot = jaloiksi, jalkoina
+show.yard = jaardi | jaardia
+show.mile = maili | mailia
+unit.mile = maileiksi, maileina
+show.nautical mile = meripeninkulma | meripeninkulmaa
+unit.nautical mile = mpk
+show.light year = valovuosi | valovuotta
+unit.px = pikseli, pikseliä
+unit.em = emejä
+
+# Area
+square = neliö*, neliö *, neliö-*
+show.square = neliö*
+unit.ha = hehtaari, hehtaaria
+show.are = aari | aaria
+show.acre = eekkeri | eekkeriä
+show.ping = ping | pingiä
+unit.ping = píngiä
+
+# Volume
+cubic = kuutio*, kuutio *
+show.cubic = kuutio*
+unit.l = litra, litraa, litran, litroiksi, litroina
+show.cup = kuppi | kuppia
+show.tablespoon = ruokalusikka | ruokalusikallista
+unit.tablespoon = rkl, ruokalusikkaa
+show.teaspoon = teelusikka | teelusikallista
+unit.teaspoon = tl, teelusikkaa
+show.pint = pintti | pinttiä
+show.gallon = gallona | gallonaa
+show.quart = kvartti | kvarttia
+
+# Weight
+unit.g = gramma, grammaa, grammoiksi, grammoina
+unit.kg = kilo, kiloa, kiloiksi, kiloina
+unit.t = tonni, tonnia
+show.pound = pauna | paunaa
+unit.pound = paunoiksi, paunoina
+show.ounce = unssi | unssia
+unit.ounce = unsseiksi, unsseina
+show.carat = karaatti | karaattia
+
+# Temperature, angles, data, speed
+unit.°C = celsiusastetta, celsiusaste
+unit.° = aste, astetta
+unit.rad = radiaani, radiaania
+unit.b = bitti, bittiä
+unit.B = tavu, tavua
+show.knot = solmu | solmua
+
+# Currencies
+currency.EUR = euro, euroa, euron, euroina, euroiksi
+currency.USD = dollari, dollaria, dollareina, dollareiksi, Yhdysvaltain dollari{,a}
+currency.GBP = punta, puntaa, punniksi, puntina, Englannin punta{,a}, Ison-Britannian punta{,a}
+currency.SEK = Ruotsin kruunu{,a}
+currency.NOK = Norjan kruunu{,a}
+currency.DKK = Tanskan kruunu{,a}
+currency.ISK = Islannin kruunu{,a}
+currency.CHF = Sveitsin frangi{,a}, frangi, frangia
+currency.JPY = jeni, jeniä, Japanin jeni{,ä}
+currency.CNY = juan, juania, Kiinan juan{,ia}, renminbi{,ä}
+currency.RUB = rupla, ruplaa, Venäjän rupla{,a}
+currency.PLN = Puolan zloty{,ä}
+currency.CZK = Tšekin koruna{,a}
+currency.HUF = Unkarin forintti{,a}
+currency.CAD = Kanadan dollari{,a}
+currency.INR = Intian rupia{,a}
+currency.TRY = Turkin liira{,a}
+currency.BYN = Valko-Venäjän rupla{,a}
+currency.AED = {Yhdistyneiden arabiemiirikuntien,Arabiemiirikuntien} dirhami{,a}
+currency.AFN = afgaani, afgaania, Afganistanin afgaani{,a}
+currency.ALL = lek, lekiä, Albanian lek{,iä}
+currency.AMD = Armenian dram{,ia}, dram, dramia
+currency.ANG = Alankomaiden Antillien guldeni{,a}
+currency.AOA = Angolan kwanza{,a}, kwanzaa
+currency.ARS = Argentiinan peso{,a}
+currency.AUD = Australian dollari{,a}
+currency.AWG = Aruban floriini{,a}
+currency.AZN = Azerbaidžanin manat{,ia}
+currency.BAM = Bosnian markka{,a}, Bosnian ja Hertsegovinan vaihdettava{,a} markka{,a}
+currency.BBD = Barbadoksen dollari{,a}
+currency.BDT = Bangladeshin taka{,a}, takaa
+currency.BGN = Bulgarian leva{,a}, levaa, лв
+currency.BHD = Bahrainin dinaari{,a}
+currency.BIF = Burundin frangi{,a}
+currency.BMD = Bermudan dollari{,a}
+currency.BND = Brunein dollari{,a}, B$
+
+# Time zones: Finnish names of cities and countries, also in the genitive (`Lontoon aika`,
+# London time)
+zone.Europe/Helsinki = Helsingin, Espoo{,n}, Tampere{,en}, Vantaa{,n}, Oulu{,n}, Turku, Turun,
+    Suomi, Suomen
+zone.Europe/Stockholm = Tukholma{,n}, Göteborg{,in}, Ruotsi, Ruotsin
+zone.Europe/Oslo = Oslon, Norja{,n}
+zone.Europe/Copenhagen = Kööpenhamina{,n}, Tanska{,n}
+zone.Europe/Tallinn = Tallinna{,n}, Viro, Viron
+zone.Europe/Riga = Riika, Riian, Latvia{,n}
+zone.Europe/Vilnius = Vilna{,n}, Liettua{,n}
+zone.Atlantic/Reykjavik = Islanti, Islannin
+zone.Europe/Berlin = Berliini{,n}, Saksa{,n}
+zone.Europe/Amsterdam = Amsterdamin, Alankomaat, Alankomaiden, Hollanti, Hollannin
+zone.Europe/Brussels = Bryssel{,in}, Belgia{,n}
+zone.Europe/Paris = Pariisi{,n}, Ranska{,n}
+zone.Europe/London = Lontoo, Lontoon, Englanti, Englannin, Iso-Britannia, Ison-Britannian
+zone.Europe/Madrid = Madridin, Espanja{,n}
+zone.Europe/Rome = Rooma{,n}, Italia{,n}
+zone.Europe/Lisbon = Lissabon{,in}, Portugali{,n}
+zone.Europe/Zurich = Geneve{,n}, Zürichin, Sveitsi, Sveitsin
+zone.Europe/Vienna = Wienin, Itävalta, Itävallan
+zone.Europe/Warsaw = Varsova{,n}, Puola{,n}
+zone.Europe/Prague = Prahan, Tšekki, Tšekin
+zone.Europe/Athens = Ateena{,n}, Kreikka, Kreikan
+zone.Europe/Moscow = Moskova{,n}, Pietari, Pietarin, Venäjä, Venäjän
+zone.Europe/Kyiv = Kiova{,n}, Ukraina{,n}
+zone.Europe/Istanbul = Istanbulin, Turkki, Turkin
+zone.America/New_York = New Yorkin
+zone.Asia/Shanghai = Pekingin, Kiina{,n}
+zone.Asia/Tokyo = Tokio{,n}, Japani{,n}
+zone.Asia/Seoul = Soul, Soulin
+zone.Asia/Kolkata = Uusi-Delhi, Uuden-Delhin, Intia{,n}
+zone.Africa/Cairo = Kairo{,n}, Egypti, Egyptin
+
+# Month names in dates (`12. maaliskuuta 2026`)
+month.1 = tammikuu{,ta}, tammik{,.}
+month.2 = helmikuu{,ta}, helmik{,.}
+month.3 = maaliskuu{,ta}, maalisk{,.}
+month.4 = huhtikuu{,ta}, huhtik{,.}
+month.5 = toukokuu{,ta}, toukok{,.}
+month.6 = kesäkuu{,ta}, kesäk{,.}
+month.7 = heinäkuu{,ta}, heinäk{,.}
+month.8 = elokuu{,ta}, elok{,.}
+month.9 = syyskuu{,ta}, syysk{,.}
+month.10 = lokakuu{,ta}, lokak{,.}
+month.11 = marraskuu{,ta}, marrask{,.}
+month.12 = joulukuu{,ta}, jouluk{,.}
+
+# Display
+weekdays = ma, ti, ke, to, pe, la, su
+months = tammik., helmik., maalisk., huhtik., toukok., kesäk., heinäk., elok., syysk., lokak., marrask., jouluk.
+date = %a %-d.%-m.%Y

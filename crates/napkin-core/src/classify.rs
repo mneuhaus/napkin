@@ -14,12 +14,13 @@
 //!   Portuguese) converts only when a unit, currency, zone or format follows.
 //! - Percentage words (`von`, `of what is`) apply after a percentage before anything else.
 //! - A word that is both a weight and a currency (`Pfund`, like English `pound`) is the
-//!   currency on lines with money on them and the weight elsewhere.
+//!   currency on lines with money on them and the weight elsewhere; an uppercase currency code
+//!   beats a language's unit word (`5 SEK`, `3 CUP`).
 
 use std::f64::consts::{E, PI};
 use std::ops::Range;
 
-use chrono::{NaiveDate, NaiveTime};
+use chrono::{NaiveDate, NaiveTime, Timelike as _};
 use chrono_tz::Tz;
 
 use crate::SpanKind;
@@ -29,7 +30,7 @@ use crate::format::Radix;
 use crate::functions::Builtin;
 use crate::lexer::{Raw, RawKind, Sym};
 use crate::units::{BUILTINS, Form, Unit, UnitRef, is_length};
-use crate::vocab::{Keyword, Lexicon, Meaning};
+use crate::vocab::{HalfDay, Keyword, Lexicon, Meaning};
 use crate::zones;
 
 /// An operator.
@@ -99,6 +100,8 @@ pub(crate) enum Tok {
     Percent(PercentOp),
     What,
     Is,
+    /// A percent word before its number (`百分之20`).
+    PercentBefore,
     /// `as a % of` and its translations in one token.
     AsPercent(PercentOp),
     /// `of what is` and its translations in one token.
@@ -201,6 +204,8 @@ pub(crate) fn classify(raws: &[Raw], ctx: &Context<'_>) -> Vec<Item> {
         out: Vec::with_capacity(raws.len()),
         money_line,
         context: None,
+        half_day: None,
+        unit_before: None,
     };
     let mut i = 0;
     while i < raws.len() {
@@ -349,13 +354,16 @@ fn scale(word: &str) -> Option<f64> {
 /// Markers of East Asian dates: `2026年3月12日`, `3月12号`, `2026년 3월 12일`.
 const YEAR_MARKERS: &[&str] = &["年", "년"];
 const MONTH_MARKERS: &[&str] = &["月", "월"];
-const DAY_MARKERS: &[&str] = &["日", "号", "일"];
+const DAY_MARKERS: &[&str] = &["日", "号", "號", "일"];
 
 /// Whether a phrase has other meanings (in the language or in English) to give way to.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Rivals {
     None,
     Some,
+    /// One of the other meanings is a unit (`min` is minus and minutes in Dutch), whose index is
+    /// kept to compare dimensions.
+    Unit(usize),
 }
 
 /// Whether a phrase is spelt like a short English unit symbol (`m`, `ft`).
@@ -380,6 +388,10 @@ struct Classifier<'a> {
     money_line: bool,
     /// Index in `out` of the token context rules look at; articles after `as` are skipped.
     context: Option<usize>,
+    /// `下午` before an hour: shifts the next time of day.
+    half_day: Option<HalfDay>,
+    /// `摄氏` before a number: the unit (and its range) to put after the number.
+    unit_before: Option<(usize, Range<usize>)>,
 }
 
 impl Classifier<'_> {
@@ -401,6 +413,11 @@ impl Classifier<'_> {
         match self.prev() {
             Some(Tok::Op(Op::Percent | Op::RParen) | Tok::Var(_) | Tok::Doc(_)) => true,
             Some(Tok::Unit(unit)) => unit.is_percent(),
+            // `百分之20 的 50`: the number after a percent word is the share.
+            Some(Tok::Num(_)) => self
+                .context
+                .and_then(|index| index.checked_sub(1))
+                .is_some_and(|before| self.out[before].tok == Tok::PercentBefore),
             _ => false,
         }
     }
@@ -450,6 +467,10 @@ impl Classifier<'_> {
     }
 
     fn push(&mut self, tok: Tok, range: Range<usize>, kind: SpanKind) {
+        let tok = match (tok, self.half_day.take()) {
+            (Tok::Time(time), Some(half_day)) => Tok::Time(shift_half_day(time, half_day)),
+            (tok, _) => tok,
+        };
         self.out.push(Item { tok, range, kind });
         self.context = Some(self.out.len() - 1);
     }
@@ -540,16 +561,42 @@ impl Classifier<'_> {
     }
 
     fn number(&mut self, i: usize, n: f64) -> usize {
+        let unit_before = self.unit_before.take();
         if let Some((date, used)) = self.east_asian_date(i, n).or_else(|| self.day_month_year(i, n)) {
             self.push(Tok::Date(date), self.span(i, i + used - 1), SpanKind::DateTime);
             return used;
         }
-        if let Some(time) = self.oclock(i) {
-            self.push(Tok::Time(time), self.span(i, i + 1), SpanKind::DateTime);
-            return 2;
+        if let Some((time, used)) = self.oclock(i) {
+            self.push(Tok::Time(time), self.span(i, i + used - 1), SpanKind::DateTime);
+            return used;
         }
         self.push(Tok::Num(n), self.raws[i].range.clone(), SpanKind::Number);
-        1
+        let Some((index, range)) = unit_before else {
+            return 1;
+        };
+        self.push(
+            Tok::Unit(Unit::simple(UnitRef::Builtin(index), Form::Default)),
+            range,
+            SpanKind::Unit,
+        );
+        // `摄氏100度`: the degree word after the number belongs to the temperature.
+        let degree = BUILTINS.by_id("°");
+        match self.language_phrase_at(i + 1) {
+            Some((meanings, last))
+                if self.spaced(i)
+                    && meanings.iter().any(
+                        |m| matches!(m, Meaning::Unit { index, power: 1 } if Some(*index) == degree),
+                    ) =>
+            {
+                self.out.push(Item {
+                    tok: Tok::Text,
+                    range: self.span(i + 1, last),
+                    kind: SpanKind::Unit,
+                });
+                last - i + 1
+            }
+            _ => 1,
+        }
     }
 
     /// Whether the phrase right after raw `i` is an o'clock word (`Uhr`).
@@ -561,8 +608,9 @@ impl Classifier<'_> {
             })
     }
 
-    /// `14 Uhr`, `14.30 Uhr`: an hour (and minutes) followed by an o'clock word.
-    fn oclock(&self, i: usize) -> Option<NaiveTime> {
+    /// `14 Uhr`, `14.30 Uhr`, `3点半`, `3点20分`: an hour (and minutes) followed by an
+    /// o'clock word, and how many raws that takes.
+    fn oclock(&self, i: usize) -> Option<(NaiveTime, usize)> {
         if !self.oclock_follows(i) {
             return None;
         }
@@ -572,7 +620,40 @@ impl Classifier<'_> {
             Some(_) => return None,
             None => (text.parse::<u32>().ok()?, 0),
         };
-        NaiveTime::from_hms_opt(if hour == 24 { 0 } else { hour }, minute, 0)
+        let (minute, used) = match self.minutes_after_oclock(i + 2) {
+            Some((extra, used)) if minute == 0 => (extra, 2 + used),
+            _ => (minute, 2),
+        };
+        let time = NaiveTime::from_hms_opt(if hour == 24 { 0 } else { hour }, minute, 0)?;
+        Some((time, used))
+    }
+
+    /// Minutes after an o'clock word at raw `k`: `半` (30) or `20分`, and how many raws.
+    fn minutes_after_oclock(&self, k: usize) -> Option<(u32, usize)> {
+        if !self.spaced(k - 1) {
+            return None;
+        }
+        let half = self.word_at(k).is_some()
+            && self
+                .language_phrase_at(k)
+                .is_some_and(|(meanings, last)| last == k && meanings.contains(&Meaning::HalfHour));
+        if half {
+            return Some((30, 1));
+        }
+        let minute = BUILTINS.by_id("min");
+        let minutes = small_int(self.number_at(k)?, 59).filter(|_| self.spaced(k))?;
+        let unit = self
+            .word_at(k + 1)
+            .and_then(|word| BUILTINS.lookup(word).map(|hit| hit.index))
+            .or_else(|| {
+                self.language_phrase_at(k + 1).and_then(|(meanings, _)| {
+                    meanings.into_iter().find_map(|m| match m {
+                        Meaning::Unit { index, power: 1 } => Some(index),
+                        _ => None,
+                    })
+                })
+            });
+        (unit == minute).then_some((minutes, 2))
     }
 
     /// `12 March [2026]`, `12. März [2026]`.
@@ -585,13 +666,24 @@ impl Classifier<'_> {
         if !self.spaced(month_at - 1) {
             return None;
         }
+        month_at += self.date_word(month_at);
         let (month, month_len) = self.month_at(month_at)?;
         let after = month_at + month_len;
-        let (year, end) = match self.year_at(after).filter(|_| self.spaced(after - 1)) {
-            Some(year) => (year, after + 1),
+        let year_at = after + self.date_word(after);
+        let (year, end) = match self.year_at(year_at).filter(|_| self.spaced(year_at - 1)) {
+            Some(year) => (year, year_at + 1),
             None => (self.ctx.year, after),
         };
         Some((NaiveDate::from_ymd_opt(year, month, day)?, end - i))
+    }
+
+    /// 1 when raw `k` is a word joining the parts of a date (`de` in `12 de março`), else 0.
+    fn date_word(&self, k: usize) -> usize {
+        let joins = self.spaced(k)
+            && self
+                .word_at(k)
+                .is_some_and(|word| self.ctx.lexicon.meanings(word).contains(&Meaning::DateWord));
+        usize::from(joins)
     }
 
     /// A month name at raw `k`, with a touching `.` after an abbreviation (`Okt.`).
@@ -820,13 +912,23 @@ impl Classifier<'_> {
     /// phrase's meanings applies here.
     fn language(&mut self, i: usize, j: usize, text: &str) -> bool {
         let mut meanings = self.ctx.lexicon.meanings(text);
+        // An uppercase currency code beats a language's unit word (`5 SEK`, not `Sek` seconds).
+        if text.len() >= 3 && text.chars().all(|c| c.is_ascii_uppercase()) && currency::code(text).is_some() {
+            meanings.retain(|m| !matches!(m, Meaning::Unit { .. } | Meaning::Scale(_)));
+        }
         if meanings.is_empty() {
             return false;
         }
-        let rivals = if meanings.len() > 1 || (i == j && english_meaning(text)) {
-            Rivals::Some
-        } else {
-            Rivals::None
+        let unit_reading = BUILTINS.lookup(text).map(|hit| hit.index).or_else(|| {
+            meanings.iter().find_map(|m| match m {
+                Meaning::Unit { index, power: 1 } => Some(*index),
+                _ => None,
+            })
+        });
+        let rivals = match unit_reading {
+            _ if meanings.len() <= 1 && !(i == j && english_meaning(text)) => Rivals::None,
+            Some(index) => Rivals::Unit(index),
+            None => Rivals::Some,
         };
         let spelling = if english_symbol(text) {
             Spelling::EnglishSymbol
@@ -849,8 +951,50 @@ impl Classifier<'_> {
     fn apply(&mut self, meaning: Meaning, i: usize, j: usize, rivals: Rivals, spelling: Spelling) -> bool {
         let symbol = spelling == Spelling::EnglishSymbol;
         let item = match meaning {
-            Meaning::Keyword(keyword) => self.language_keyword(keyword, j, rivals),
-            Meaning::Assign | Meaning::Month(_) => None,
+            Meaning::Keyword(Keyword::ConvertAfter) => return self.convert_after(i, j),
+            Meaning::Keyword(keyword) => {
+                // `à`, `a`, `zu`, `в`: short conversion words need a target after them.
+                let short = self.ctx.line[self.span(i, j)].chars().count() <= 2;
+                let rivals = if short && keyword == Keyword::Convert && rivals == Rivals::None {
+                    Rivals::Some
+                } else {
+                    rivals
+                };
+                self.language_keyword(keyword, j, rivals)
+            }
+            Meaning::Assign | Meaning::Month(_) | Meaning::DateWord | Meaning::HalfHour => None,
+            Meaning::HalfDay(half_day) => {
+                let hour_follows = self.spaced(j)
+                    && self
+                        .raws
+                        .get(j + 1)
+                        .is_some_and(|r| matches!(r.kind, RawKind::Number(_) | RawKind::Time(_)));
+                if !hour_follows {
+                    return false;
+                }
+                self.push(Tok::Text, self.span(i, j), SpanKind::DateTime);
+                self.half_day = Some(half_day);
+                return true;
+            }
+            Meaning::UnitBefore(index) => {
+                if !(self.spaced(j) && self.number_at(j + 1).is_some()) {
+                    return false;
+                }
+                self.unit_before = Some((index, self.span(i, j)));
+                return true;
+            }
+            Meaning::Filler => {
+                if !self.prev_ends_value() {
+                    return false;
+                }
+                // Prose that leaves the context alone, so a unit can still attach.
+                self.out.push(Item {
+                    tok: Tok::Text,
+                    range: self.span(i, j),
+                    kind: SpanKind::Text,
+                });
+                return true;
+            }
             Meaning::AsPercent(op) => self
                 .prev_ends_value()
                 .then_some((Tok::AsPercent(op), SpanKind::Keyword)),
@@ -895,10 +1039,15 @@ impl Classifier<'_> {
     }
 
     fn language_keyword(&self, keyword: Keyword, j: usize, rivals: Rivals) -> Option<(Tok, SpanKind)> {
-        let contested = rivals == Rivals::Some;
+        let contested = rivals != Rivals::None;
         let key = |tok| Some((tok, SpanKind::Keyword));
+        // `5 min 30 sec` is a duration, `10 min 3` a subtraction.
+        let measured = match rivals {
+            Rivals::Unit(index) => self.same_unit_after_operand(j, index),
+            Rivals::None | Rivals::Some => false,
+        };
         let operator = |op| {
-            (self.operand_follows(j) && (!contested || self.prev_ends_value()))
+            (self.operand_follows(j) && (!contested || self.prev_ends_value()) && !measured)
                 .then_some((Tok::Op(op), SpanKind::Keyword))
         };
         match keyword {
@@ -912,6 +1061,8 @@ impl Classifier<'_> {
             }
             Keyword::Convert => (!contested || self.target_follows(j))
                 .then_some((Tok::Convert(ConvertWord::In), SpanKind::Keyword)),
+            Keyword::PercentBefore => (self.spaced(j) && self.number_at(j + 1).is_some())
+                .then_some((Tok::PercentBefore, SpanKind::Operator)),
             Keyword::Percent => self.unit_context().then(|| {
                 (
                     Tok::Unit(Unit::simple(UnitRef::Percent, Form::Default)),
@@ -921,11 +1072,13 @@ impl Classifier<'_> {
             Keyword::Of if self.prev_is_share() => key(Tok::Percent(PercentOp::Of)),
             Keyword::On if self.prev_is_share() => key(Tok::Percent(PercentOp::On)),
             Keyword::Off if self.prev_is_share() => key(Tok::Percent(PercentOp::Off)),
-            Keyword::Of | Keyword::On | Keyword::Off => None,
             Keyword::Prev => Some((Tok::Doc(DocRef::Prev), SpanKind::Variable)),
             Keyword::Sum => Some((Tok::Doc(DocRef::Sum), SpanKind::Variable)),
             Keyword::Average => Some((Tok::Doc(DocRef::Average), SpanKind::Variable)),
-            Keyword::Now | Keyword::OClock => Some((Tok::Now, SpanKind::DateTime)),
+            Keyword::Now => Some((Tok::Now, SpanKind::DateTime)),
+            // O'clock words work after an hour only (`14 Uhr`), alone they are prose unless also
+            // listed under `now`; percentage words only after a percentage.
+            Keyword::OClock | Keyword::ConvertAfter | Keyword::Of | Keyword::On | Keyword::Off => None,
             Keyword::Local => self
                 .zone_context(j)
                 .then_some((Tok::LocalZone, SpanKind::DateTime)),
@@ -934,9 +1087,57 @@ impl Classifier<'_> {
         }
     }
 
-    /// Applies a scale word to the number right before raw `i` (`5 Millionen`).
+    /// Whether the number after raw `j` carries a unit of the same dimension as unit `index`
+    /// (`min 30 sec`), so a word that is an operator and a unit is the unit there.
+    fn same_unit_after_operand(&self, j: usize, index: usize) -> bool {
+        if self.number_at(j + 1).is_none() || !self.spaced(j + 1) {
+            return false;
+        }
+        let Some(word) = self.word_at(j + 2) else {
+            return false;
+        };
+        let dim = &BUILTINS.def(index).dim;
+        let english = BUILTINS.lookup(word).map(|hit| hit.index);
+        let language = self.language_phrase_at(j + 2).and_then(|(meanings, _)| {
+            meanings.into_iter().find_map(|m| match m {
+                Meaning::Unit { index, power: 1 } => Some(index),
+                _ => None,
+            })
+        });
+        english
+            .into_iter()
+            .chain(language)
+            .any(|other| BUILTINS.def(other).dim == *dim)
+    }
+
+    /// `5인치 cm로`: a conversion word after its target puts a conversion before the unit it
+    /// follows, when that unit itself follows a value.
+    fn convert_after(&mut self, i: usize, j: usize) -> bool {
+        let Some(target) = self.context else {
+            return false;
+        };
+        let value_before = self.out[..target]
+            .iter()
+            .rev()
+            .find(|item| item.tok != Tok::Text)
+            .is_some_and(|item| item.tok.ends_value());
+        if !matches!(self.out[target].tok, Tok::Unit(_)) || !value_before {
+            return false;
+        }
+        let item = Item {
+            tok: Tok::Convert(ConvertWord::In),
+            range: self.span(i, j),
+            kind: SpanKind::Keyword,
+        };
+        self.out.insert(target, item);
+        self.context = Some(target + 1);
+        true
+    }
+
+    /// Applies a scale word to the number right before raw `i` (`5 Millionen`), also after
+    /// another scale word (`2 mille miliardi`, `2 thousand million`).
     fn scale(&mut self, i: usize, j: usize, factor: f64) -> bool {
-        if i == 0 || self.number_at(i - 1).is_none() {
+        if i == 0 {
             return false;
         }
         let end = self.raws[j].range.end;
@@ -983,21 +1184,25 @@ impl Classifier<'_> {
                         | "noon"
                         | "midnight"
                 );
+                // A word that is also a unit (`hora`: hour and now) is the unit after an operator.
                 let language = self.language_phrase_at(j + 1).is_some_and(|(meanings, _)| {
+                    let unit = meanings.iter().any(|m| matches!(m, Meaning::Unit { .. }));
                     meanings.iter().any(|m| {
-                        matches!(
-                            m,
-                            Meaning::Day(_)
-                                | Meaning::Function(_)
-                                | Meaning::Keyword(
-                                    Keyword::Prev
-                                        | Keyword::Sum
-                                        | Keyword::Average
-                                        | Keyword::Now
-                                        | Keyword::Noon
-                                        | Keyword::Midnight
-                                )
-                        )
+                        !(unit && *m == Meaning::Keyword(Keyword::Now))
+                            && matches!(
+                                m,
+                                Meaning::Day(_)
+                                    | Meaning::Function(_)
+                                    | Meaning::Keyword(
+                                        Keyword::Prev
+                                            | Keyword::PercentBefore
+                                            | Keyword::Sum
+                                            | Keyword::Average
+                                            | Keyword::Now
+                                            | Keyword::Noon
+                                            | Keyword::Midnight
+                                    )
+                            )
                     })
                 });
                 english
@@ -1279,6 +1484,17 @@ fn powered_length(text: &str) -> Option<Unit> {
     Some(Unit::power_of(UnitRef::Builtin(hit.index), power, hit.form))
 }
 
+/// A time of day moved into the morning or afternoon (`下午3点` is 15:00, `午前12時` 0:00).
+fn shift_half_day(time: NaiveTime, half_day: HalfDay) -> NaiveTime {
+    let hour = time.hour();
+    let shifted = match half_day {
+        HalfDay::Pm if hour < 12 => hour + 12,
+        HalfDay::Am if hour == 12 => 0,
+        HalfDay::Am | HalfDay::Pm => hour,
+    };
+    time.with_hour(shifted).unwrap_or(time)
+}
+
 fn small_int(n: f64, max: u32) -> Option<u32> {
     let int = crate::num::to_i64(n).filter(|_| n.fract() == 0.0)?;
     u32::try_from(int).ok().filter(|v| (1..=max).contains(v))
@@ -1304,4 +1520,53 @@ fn symbol(sym: Sym) -> Op {
         Sym::Sup2 => Op::Sup2,
         Sym::Sup3 => Op::Sup3,
     }
+}
+
+/// Splits Korean words the vocabulary does not know into known words when they consist of them
+/// entirely (`인치를` → `인치` + `를`, `만원` → `만` + `원`), so attached particles and units
+/// separate; other words (`초과`) stay whole.
+pub(crate) fn segment(line: &str, raws: Vec<Raw>, lexicon: &Lexicon) -> Vec<Raw> {
+    let mut out = Vec::with_capacity(raws.len());
+    for raw in raws {
+        let text = &line[raw.range.clone()];
+        let korean = raw.kind == RawKind::Word && text.chars().next().is_some_and(crate::lexer::is_hangul);
+        let cuts = korean.then(|| decompose(text, lexicon)).flatten();
+        match cuts {
+            Some(cuts) if !cuts.is_empty() => {
+                let mut start = raw.range.start;
+                for cut in cuts.into_iter().chain([text.len()]) {
+                    let end = raw.range.start + cut;
+                    out.push(Raw {
+                        kind: RawKind::Word,
+                        range: start..end,
+                    });
+                    start = end;
+                }
+            }
+            _ => out.push(raw),
+        }
+    }
+    out
+}
+
+/// Byte offsets that cut `text` into known words, longest first; `Some(empty)` when `text` is
+/// known as a whole, `None` when it cannot be cut into known words.
+fn decompose(text: &str, lexicon: &Lexicon) -> Option<Vec<usize>> {
+    let known = |word: &str| !lexicon.meanings(word).is_empty() || lexicon.window(word) > 0;
+    if known(text) {
+        return Some(Vec::new());
+    }
+    let cuts: Vec<usize> = text.char_indices().map(|(at, _)| at).skip(1).collect();
+    cuts.into_iter().rev().find_map(|cut| {
+        let (head, tail) = text.split_at(cut);
+        if !known(head) {
+            return None;
+        }
+        let rest = decompose(tail, lexicon)?;
+        Some(
+            std::iter::once(cut)
+                .chain(rest.into_iter().map(|c| c + cut))
+                .collect(),
+        )
+    })
 }

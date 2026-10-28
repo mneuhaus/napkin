@@ -34,7 +34,7 @@ tomorrow = morgen
 yesterday = gestern
 day.2 = übermorgen
 day.-2 = vorgestern
-now = jetzt, Zeit, Uhrzeit, aktuelle Zeit
+now = jetzt, Zeit, Uhrzeit, aktuelle Zeit, Uhr
 oclock = Uhr
 local = Lokalzeit, lokale Zeit, lokale Zeitzone, Ortszeit, lokal, Zeitzone
 noon = Mittag
@@ -176,15 +176,212 @@ unit.km/h = Stundenkilometer, Kilometer pro Stunde
 show.knot = Knoten | Knoten
 
 # Currencies
+# Adjectives take every ending they can have before the currency word: masculine currencies
+# (Dollar, Peso, Franc, Dinar, Rial) `{e,er,em,en}`, feminine ones (Krone, Rupie, Lira)
+# `{e,er,en}`, neuter Pfund `{e,es,em,en}`. Country compounds come with and without a hyphen.
+
+# Europe
 currency.EUR = Euro{,s}
-currency.USD = US-Dollar{,s}, US Dollar{,s}, amerikanische{,r,m,n} Dollar{,s}
-currency.GBP = Pfund, Pfund Sterling, britische{,s,m,n} Pfund, Britische{,s,m,n} Pfund
-currency.CHF = Franken, Schweizer Franken, Schweizerfranken, Fränkli, sFr{,.}, SFr{,.}
-currency.RUB = Rubel
-currency.CZK = Tschechische Krone{,n}, tschechische Krone{,n}
-currency.SEK = Schwedische Krone{,n}, schwedische Krone{,n}
-currency.NOK = Norwegische Krone{,n}, norwegische Krone{,n}
-currency.DKK = Dänische Krone{,n}, dänische Krone{,n}
+currency.GBP = Pfund, Pfund Sterling, britische{,s,m,n} Pfund{,e},
+    {UK,VK,GB,Großbritannien,Grossbritannien,Vereinigtes Königreich,Vereinigtes-Königreich}{-, }Pfund{,e}
+currency.CHF = Franken, Schweizer Franken, Schweizerfranken, Fränkli, SFr{,.},
+    schweizerische{,r,m,n} {Franken,Franc,Francs}, Schweiz{-, }Franc{,s}
+currency.CZK = tschechische{,r,n} Krone{,n}, Tschechien{-, }Krone{,n}, Koruna
+currency.SEK = schwedische{,r,n} Krone{,n}, Schweden{-, }Krone{,n}
+currency.NOK = norwegische{,r,n} Krone{,n}, Norwegen{-, }Krone{,n}
+currency.DKK = dänische{,r,n} Krone{,n}, Dänemark{-, }Krone{,n}, DKr, dkr{,.}
+currency.ISK = isländische{,r,n} Krone{,n}, Island{-, }Krone{,n}
+currency.PLN = Zloty{,s}, Złoty{,s}, polnische{,r,m,n} {Zloty,Złoty}{,s}, Polen{-, }{Zloty,Złoty}, zl
+currency.HUF = ungarische{,r,m,n} Forint{,s}, Ungarn{-, }Forint{,s}
+currency.RON = Leu, Lei, rumänische{,r,m,n} {Leu,Lei}, Rumänien{-, }{Leu,Lei}, {Leu,Lei} Rumäniens
+currency.MDL = {moldauisch,moldawisch,moldovisch}{e,er,em,en} {Leu,Lei}, {Moldau,Moldawien,Moldova}{-, }{Leu,Lei}
+currency.BGN = Lew, Lewa, bulgarische{,r,m,n} {Lew,Lewa}, Bulgarien{-, }{Lew,Lewa}
+currency.RSD = serbische{,r,m,n} Dinar{,e,s}, Serbien{-, }Dinar{,e,s}, Dinar{,e} Serbiens, Din.
+currency.MKD = Denar{,i,s}, ден, {mazedonisch,nordmazedonisch}{e,er,em,en} Denar{,e,i,s},
+    {Mazedonien,Nordmazedonien}{-, }Denar{,e,i,s}
+currency.BAM = Konvertible{,r,n} Mark{,en}, bosnische{,r,n} Konvertible{,r,n} Mark{,en},
+    bosnische{,r,n} Mark{,en}, Bosnien und Herzegowina{-, }Mark{,en}, Marka
+currency.ALL = Lek, Leke, Lekë, Lekët, albanische{,r,m,n} {Lek,Leke,Lekë,Lekët}, Albanien{-, }Lek
+currency.HRK = Kuna, kroatische{,r,n} Kuna{,s}, Kroatien{-, }Kuna
+currency.RUB = Rubel{,n,s}, {russisch,russländisch}{e,er,em,en} Rubel{,n,s}, Russland{-, }Rubel{,n,s},
+    Rubel Russlands
+currency.BYN = {belarussisch,belarusisch,weißrussisch,weissrussisch}{e,er,em,en} Rubel{,n,s},
+    {Belarus,Weißrussland,Weissrussland}{-, }Rubel{,n,s}
+currency.UAH = Hrywnja{,s}, Hrywna{,s}, Griwna{,s}, ukrainische{,r,n} {Hrywnja,Hrywna,Griwna}{,s},
+    Ukraine{-, }{Hrywnja,Hrywna,Griwna}
+currency.TRY = türkische{,r,n} Lira{,s}, Türkei{-, }Lira{,s}
+currency.GEL = Lari, georgische{,r,m,n} Lari, Georgien{-, }Lari, Lari Georgiens
+currency.AMD = armenische{,r,m,n} Dram{,s}, Armenien{-, }Dram{,s}
+currency.AZN = aserbaidschanische{,r,m,n} Manat{,s}, Aserbaidschan{-, }Manat{,s}
+currency.GIP = gibraltarische{,s,m,n} Pfund{,e}, Gibraltar{-, }Pfund{,e}
+currency.FKP = falkländische{,s,m,n} Pfund{,e}, {Falkland,Falklandinseln}{-, }Pfund{,e}
+currency.SHP = sankt-helenische{,s,m,n} Pfund{,e}, {St. Helena,St.-Helena,Sankt Helena,Sankt-Helena}{-, }Pfund{,e}
+
+# Americas
+currency.USD = US{-, }Dollar{,s}, USA{-, }Dollar{,s}, US$, Vereinigte{,n} Staaten{-, }Dollar{,s},
+    {amerikanisch,US-amerikanisch}{e,er,em,en} Dollar{,s}
+currency.CAD = kanadische{,r,m,n} Dollar{,s}, Kanada{-, }Dollar{,s}, Dollar{,s} Kanadas
+currency.MXN = mexikanische{,r,m,n} Peso{,s}, Mexiko{-, }Peso{,s}, Peso{,s} Mexikos
+currency.ARS = argentinische{,r,m,n} Peso{,s}, {Argentinien,Argentina}{-, }Peso{,s}, Peso{,s} Argentiniens, arg$
+currency.CLP = chilenische{,r,m,n} Peso{,s}, Chile{-, }Peso{,s}, Peso{,s} Chiles, chil$
+currency.COP = kolumbianische{,r,m,n} Peso{,s}, Kolumbien{-, }Peso{,s}, Peso{,s} Kolumbiens
+currency.CUP = kubanische{,r,m,n} Peso{,s}, Kuba{-, }Peso{,s}, Cub$
+currency.CUC = konvertible{,r,m,n} Peso{,s}, Peso{,s} convertible{,s}
+currency.DOP = dominikanische{,r,m,n} Peso{,s}, dom$
+currency.UYU = uruguayische{,r,m,n} Peso{,s}, Uruguay{-, }Peso{,s}
+currency.BOB = {bolivisch,bolivianisch}{e,er,em,en} Boliviano{,s}, Bolivien{-, }Boliviano{,s}
+# No bare `Sol`: phrases match any case, so it would take `SOL` (Solana) away.
+currency.PEN = peruanische{,r,m,n} {Nuevo Sol,Nuevo Soles,Sol,Soles}, Peru{-, }{Sol,Soles}, Nuevo Sol{,es},
+    Soles
+currency.PYG = paraguayische{,r,m,n} Guaran{i,í}{,s,es}, Paraguay{-, }Guaran{i,í}{,s,es}
+currency.BRL = brasilianische{,r,m,n} {Real,Reals,Reais}, Brasilien{-, }{Real,Reais}, Reals, Reais
+currency.VES = venezolanische{,r,m,n} Bol{i,í}var{,es}, Bol{i,í}var{,es}
+currency.CRC = costa-ricanische{,r,m,n} Col{o,ó}n{,es}, Costa{-, }Rica{-, }Col{o,ó}n{,es},
+    Col{o,ó}n{,es} Costa{-, }Ricas
+currency.GTQ = guatemaltekische{,r,m,n} Quetzal{,s,es}, Guatemala{-, }Quetzal{,s,es}, Quetzal{,s,es}
+currency.HNL = honduranische{,r,m,n} Lempira{,s}, Honduras{-, }Lempira{,s}
+currency.NIO = nicaraguanische{,r,m,n} C{o,ó}rdoba{,s}, Nicaragua{-, }C{o,ó}rdoba{,s}
+currency.PAB = {panamaisch,panamesisch}{e,er,em,en} Balboa{,s}, Panama{-, }Balboa{,s}
+currency.HTG = {haitisch,haitianisch}{e,er,en} Gourde{,s}, Haiti{-, }Gourde{,s}, Gde{,s}.
+currency.JMD = jamaikanische{,r,m,n} Dollar{,s}, Jamaika{-, }Dollar{,s}
+currency.BBD = barbadische{,r,m,n} Dollar{,s}, Barbados{-, }Dollar{,s}
+currency.BSD = {bahamaisch,bahamisch}{e,er,em,en} Dollar{,s}, {Bahama,Bahamas}{-, }Dollar{,s},
+    Dollar{,s} {der ,}Bahamas
+currency.BZD = belizische{,r,m,n} Dollar{,s}, Belize{-, }Dollar{,s}
+currency.BMD = bermudische{,r,m,n} Dollar{,s}, bermudanische{,r,m,n} Dollar{,s}, {Bermuda,Bermudas}{-, }Dollar{,s}
+currency.KYD = {Kaiman,Kaimaninseln,Cayman,Cayman-Inseln}{-, }Dollar{,s}
+currency.TTD = Trinidad{-, }und{-, }Tobago{-, }Dollar{,s}, Dollar{,s} Trinidad und Tobagos,
+    trinidadische{,r,m,n} Dollar{,s}
+currency.XCD = ostkaribische{,r,m,n} Dollar{,s}
+currency.GYD = guyanische{,r,m,n} Dollar{,s}, Guyana{-, }Dollar{,s}
+currency.SRD = surinamische{,r,m,n} Dollar{,s}, Suriname{-, }Dollar{,s}, Dollar{,s} Surinames
+currency.ANG = Antillen{-, }Gulden, antillische{,r,m,n} Gulden
+currency.AWG = {arubanisch,arubaisch}{e,er,em,en} Florin{,s,e}, Aruba{-, }Florin{,s,e}, Florin{,s,e} Arubas
+
+# Asia and the Pacific
+currency.JPY = japanische{,r,m,n} Yen, Japan{-, }Yen
+currency.CNY = Yuán, chinesische{,r,m,n} {Yuan,Yuán,Renminbi}, China{-, }{Yuan,Yuán}
+currency.HKD = Hongkong{-, }Dollar{,s}, hongkongische{,r,m,n} Dollar{,s}
+currency.TWD = {taiwanisch,taiwanesisch}{e,er,em,en} Dollar{,s}, Taiwan{-, }Dollar{,s},
+    Neue{,r,m,n} Taiwan{-, }Dollar{,s}
+currency.MOP = {Macau,Macao}{-, }Pataca{,s}, macauische{,r,m,n} Pataca{,s}
+currency.KRW = südkoreanische{,r,m,n} Won, Südkorea{-, }Won, Won Südkoreas
+currency.KPW = nordkoreanische{,r,m,n} Won, Nordkorea{-, }Won
+currency.PHP = philippinische{,r,m,n} Peso{,s}, Philippinen{-, }Peso{,s}
+currency.SGD = singapurische{,r,m,n} Dollar{,s}, Singapur{-, }Dollar{,s}
+currency.BND = bruneiische{,r,m,n} Dollar{,s}, Brunei{-, }Dollar{,s}
+currency.MYR = malaysische{,r,m,n} Ringgit{,s}, Malaysia{-, }Ringgit{,s}
+currency.IDR = Rupiah, indonesische{,r,n} {Rupiah,Rupie,Rupien}, Indonesien{-, }{Rupiah,Rupie,Rupien},
+    {Rupiah,Rupie,Rupien} Indonesiens
+currency.THB = Bahts, thailändische{,r,m,n} Baht{,s}, Thailand{-, }Baht{,s}, Bt
+currency.VND = Đồng, vietnamesische{,r,m,n} {Dong,Đồng}, Vietnam{-, }{Dong,Đồng}
+currency.KHR = kambodschanische{,r,m,n} Riel{,s}, {Kambodscha,Khmer}{-, }Riel{,s}, CR
+currency.LAK = laotische{,r,m,n} Kip, Laos{-, }Kip, Kip Laos'
+currency.MMK = Kyat{,s}, {myanmarisch,birmanisch,burmesisch}{e,er,em,en} Kyat{,s}, {Myanmar,Birma,Burma}{-, }Kyat{,s}
+currency.MNT = Tugrik, Tögrög, Tugrig, mongolische{,r,m,n} {Tugrik,Tögrög,Tugrig},
+    Mongolei{-, }{Tugrik,Tögrög,Tugrig}
+currency.INR = Rupie{,n}, indische{,r,n} Rupie{,n}, Indien{-, }Rupie{,n}
+currency.PKR = pakistanische{,r,n} Rupie{,n}, Pakistan{-, }Rupie{,n}
+currency.LKR = {sri-lankisch,singhalesisch}{e,er,en} Rupie{,n}, {Sri-Lanka,Sri Lanka}{-, }Rupie{,n}
+currency.NPR = nepalesische{,r,n} Rupie{,n}, Nepal{-, }Rupie{,n}, Rupie{,n} Nepals, NR, NRs
+currency.BDT = bangladeschische{,r,m,n} Taka{,s}, Bangladesch{-, }Taka{,s}
+currency.BTN = bhutanische{,r,m,n} Ngultrum{,s}, Bhutan{-, }Ngultrum{,s}, NU, NU.
+currency.MVR = maledivische{,r,n} {Rufiyaa,Rupie,Rupien}, Malediven{-, }{Rufiyaa,Rupie,Rupien}
+currency.KZT = Tenge, kasachische{,r,m,n} Tenge, Kasachstan{-, }Tenge
+currency.KGS = kirgisische{,r,m,n} Som, {Kirgisistan,Kirgistan,Kirgisien}{-, }Som, Сом, K.S.
+currency.UZS = So'm, usbekische{,r,m,n} {Som,So'm,Sum}, Usbekistan{-, }{Som,So'm,Sum}
+currency.TJS = Somoni, tadschikische{,r,m,n} Somoni, Tadschikistan{-, }Somoni, Somoni Tadschikistans
+currency.TMT = Manats, turkmenische{,r,m,n} Manat{,s}, Turkmenistan{-, }Manat{,s}
+currency.AFN = Afghani{,s}, afghanische{,r,m,n} Afghani{,s}, Afghanistan{-, }Afghani{,s}
+currency.AUD = australische{,r,m,n} Dollar{,s}, Australien{-, }Dollar{,s}, Dollar{,s} Australiens, $A, A$, AU$
+currency.NZD = neuseeländische{,r,m,n} Dollar{,s}, Neuseeland{-, }Dollar{,s}, Dollar{,s} Neuseelands, NZ$
+currency.FJD = fidschianische{,r,m,n} Dollar{,s}, Fidschi{-, }Dollar{,s}
+currency.PGK = Kinas, papua-neuguineische{,s,m,n} Kina{,s}, Papua-Neuguinea-Kina{,s}
+currency.SBD = salomonische{,r,m,n} Dollar{,s},
+    {Salomonen,Salomon,Salomon-Inseln,Salomon Inseln,Salomoninseln}{-, }Dollar{,s}
+currency.TOP = Pa'anga, Paanga, tongaische{,r,m,n} {Pa'anga,Paanga,Dollar,Dollars}, Tonga{-, }{Pa'anga,Dollar,Dollars}
+currency.VUV = Vatu, vanuatuische{,r,m,n} Vatu, Vanuatu{-, }Vatu, Vt
+currency.WST = Tala{,s}, samoanische{,r,m,n} Tala{,s}, Samoa{-, }Tala{,s}
+currency.XPF = CFP, CFP{-, }Franc{,s}, Franc{,s} Pacifique{,s}
+
+# Middle East
+currency.ILS = Schekel, israelische{,r,m,n} Schekel, Neue{,r,m,n} Schekel
+currency.AED = {VAE,UAE}{-, }Dirham{,s}, emiratische{,r,m,n} Dirham{,s}, Dh
+currency.SAR = {saudisch,saudi-arabisch}{e,er,em,en} {Rial,Riyal}{,s}, Saudi{-, }{Rial,Riyal}{,s}
+currency.QAR = katarische{,r,m,n} {Rial,Riyal}{,s}, {Katar,Katari}{-, }{Rial,Riyal}{,s}
+currency.OMR = omanische{,r,m,n} {Rial,Riyal}{,s}, Oman{-, }{Rial,Riyal}{,s}
+currency.BHD = bahrainische{,r,m,n} {Dinar,Dinare,Dollar,Dollars}, Bahrain{-, }{Dinar,Dinare,Dollar,Dollars}
+currency.KWD = kuwaitische{,r,m,n} Dinar{,e,s}, Kuwait{-, }Dinar{,e,s}
+currency.JOD = jordanische{,r,m,n} Dinar{,e}, Jordanien{-, }Dinar{,e}
+currency.IQD = irakische{,r,m,n} Dinar{,e}, Irak{-, }Dinar{,e}
+currency.IRR = iranische{,r,m,n} {Rial,Riyal}{,s}, Iran{-, }{Rial,Riyal}{,s}
+currency.YER = jemenitische{,r,m,n} {Rial,Riyal}{,s}, Jemen{-, }{Rial,Riyal}{,s}, RI, Y. RI
+currency.LBP = libanesische{,s,m,n} Pfund{,e}, Libanon{-, }Pfund{,e}, L£
+currency.SYP = syrische{,s,m,n} Pfund{,e}, Syrien{-, }Pfund{,e}
+
+# Africa
+currency.ZAR = südafrikanische{,r,m,n} Rand, Südafrika{-, }Rand, Rand Südafrikas
+currency.EGP = ägyptische{,s,m,n} Pfund{,e}, Ägypten{-, }Pfund{,e}, Pfund{,e} Ägyptens, LE, £E
+currency.SDG = sudanesische{,s,m,n} Pfund{,e}, Sudan{-, }Pfund{,e}
+currency.SSP = südsudanesische{,s,m,n} Pfund{,e}, Südsudan{-, }Pfund{,e}
+currency.MAD = marokkanische{,r,m,n} Dirham{,s}, Marokko{-, }Dirham{,s}, Dirham Marokkos
+currency.DZD = algerische{,r,m,n} Dinar{,e}, Algerien{-, }Dinar{,e}
+currency.TND = tunesische{,r,m,n} Dinar{,e}, Tunesien{-, }Dinar{,e}, Dinar{,e} Tunesiens
+currency.LYD = libysche{,r,m,n} Dinar{,e}, Libyen{-, }Dinar{,e}, LD, Ld
+currency.NGN = nigerianische{,r,m,n} Naira, Nigeria{-, }Naira
+currency.GHS = ghanaische{,r,m,n} Cedi{,s}, Ghana{-, }Cedi{,s}
+currency.KES = kenianische{,r,m,n} Schilling{,e}, Kenia{-, }Schilling{,e}, K.Sh.
+currency.UGX = ugandische{,r,m,n} Schilling{,e}, Uganda{-, }Schilling{,e}
+currency.TZS = tansanische{,r,m,n} Schilling{,e}, Tansania{-, }Schilling{,e}
+currency.SOS = somalische{,r,m,n} Schilling{,e}, Somalia{-, }Schilling{,e}, SoSh
+currency.ETB = äthiopische{,r,m,n} Birr, Äthiopien{-, }Birr
+currency.ERN = eritreische{,r,m,n} Nakfa, Eritrea{-, }Nakfa, Nfa
+currency.AOA = angolanische{,r,m,n} Kwanza{,s}, Angola{-, }Kwanza{,s}
+currency.MWK = malawische{,r,m,n} Kwacha{,s}, Malawi{-, }Kwacha{,s}, Kwacha{,s} Malawis
+currency.ZMW = sambische{,r,m,n} Kwacha{,s}, Sambia{-, }Kwacha{,s}
+currency.MZN = mosambikanische{,r,m,n} {Metical,Meticais}, Mosambik{-, }{Metical,Meticais},
+    Neue{,r,m,n} {Metical,Meticais}
+currency.MGA = Ariary, madagassische{,r,m,n} Ariary, Madagaskar{-, }Ariary
+currency.MUR = mauritische{,r,n} Rupie{,n}, Mauritius{-, }Rupie{,n}, Re
+currency.SCR = seychellische{,r,n} Rupie{,n}, Seychellen{-, }Rupie{,n}
+currency.BWP = {botswanisch,botsuanisch}{e,er,em,en} Pula, {Botswana,Botsuana}{-, }Pula
+currency.NAD = namibische{,r,m,n} Dollar{,s}, Namibia{-, }Dollar{,s}
+currency.LSL = Loti, Lotis, lesothische{,r,m,n} {Loti,Lotis,Maloti}, Lesotho{-, }{Loti,Maloti}
+currency.SZL = {swasiländisch,eswatinisch}{e,er,em,en} {Lilangeni,Emalangeni}
+currency.LRD = liberianische{,r,m,n} Dollar{,s}, Liberia{-, }Dollar{,s}
+currency.SLL = sierra-leonische{,r,m,n} Leone{,s}, Sierra-Leone-Leone{,s}
+currency.GMD = gambische{,r,m,n} Dalasi{,s}, Gambia{-, }Dalasi{,s}, Dollar Gambias
+currency.GNF = guineische{,r,m,n} Franc{,s}, Guinea{-, }Franc{,s}, Franc{,s} Guineas, Franc Guinéen,
+    Francs Guinéens
+currency.CVE = kapverdische{,r,m,n} Escudo{,s}, Kap{-, }Verde{-, }Escudo{,s}
+currency.CDF = kongolesische{,r,m,n} Franc{,s}, Kongo{-, }Franc{,s}
+currency.BIF = burundische{,r,m,n} Franc{,s}, Burundi{-, }Franc{,s}
+currency.RWF = {ruandisch,rwandisch}{e,er,em,en} Franc{,s}, {Ruanda,Rwanda}{-, }Franc{,s}
+currency.DJF = dschibutische{,r,m,n} Franc{,s}, Dschibuti{-, }Franc{,s}
+currency.KMF = komorische{,r,m,n} Franc{,s}, Komoren{-, }Franc{,s}
+currency.MRU = Ouguiya, mauretanische{,r,m,n} Ouguiya
+currency.STN = {são-toméisch,sao-tomeisch}{e,er,em,en} Dobra{,s},
+    {São Tomé und Príncipe,Sao Tome und Principe}{-, }Dobra{,s}
+# The bare CFA franc reads as the Central African one, as in Numi's English list.
+currency.XAF = zentralafrikanische{,r,m,n} {CFA-Franc,Franc}{,s}, CFA{-, }Franc{,s}, CFA-Franc{,s} (BEAC)
+currency.XOF = westafrikanische{,r,m,n} {CFA-Franc,Franc}{,s}, CFA{-, }Franc{,s}{-, }Zone
+
+# Crypto: an ASCII drawing of the bitcoin sign
+currency.BTC = B||
+
+# Misspellings that cannot mean anything else
+currency.BOB = bolvianische{,r,m,n} Boliviano{,s}
+currency.COP = kolumbische{,r,m,n} Peso{,s}
+currency.CDF = kongolese{,r,m} Franc{,s}
+currency.GNF = guinesiche{,r,m,n} Franc{,s}
+currency.LYD = Lyben{-, }Dinar{,e}
+currency.NAD = nambische{,r,m,n} Dollar{,s}
+currency.MWK = malawaische{,r,m,n} Kwacha{,s}
+currency.SEK = Schwede{-, }Krone{,n}
+currency.UAH = ukrainische{,r,n} riwna, Ukrainie{-, }{Hrywnja,Griwna}
+currency.HUF = Florint
+currency.ERN = Eritrea{-, }Nafka
+currency.AWG = Florine Aruba
 
 # Time zones: German names of cities and countries
 zone.Europe/Vienna = Wien, Österreich, Salzburg, Innsbruck, Graz, Linz

@@ -1,1 +1,205 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Swedish (Svenska). Format: see crates/napkin-core/src/vocab.rs.
+
+# Arithmetic
+plus = och, med, adderat med, adderat till, lagt till
+minus = minus, subtraherat med, dragit från, utan
+times = gånger, multiplicerat med, multiplicerat
+divide = delat med, delat på, dividerat med, dividerat
+per = per
+modulo = modulo
+convert = i, till, som, omräknat till, omvandlat till
+assign = är lika med, lika med, är
+
+# Percentages. `av` is `of` (`20 % av 50`); discounts are `rabatt på`.
+percent = procent
+percent.of = av
+percent.on = på, ovanpå, påslag på
+percent.off = rabatt på, avdrag på, avdraget från
+as-percent.of = {som,i} {%,procent} av
+as-percent.on = som {%,procent} på
+as-percent.off = som {%,procent} rabatt på
+what-is.of = av vad är
+what-is.on = på vad är
+what-is.off = rabatt på vad är
+
+# Scales (long scale: miljard = 10^9, biljon = 10^12). `kilo` is the kilogram in Swedish.
+scale.1e3 = tusen
+scale.1e6 = miljon{,er}, milj{,.}, mn
+scale.1e9 = miljard{,er,en,erna}, mdr{,.}
+scale.1e12 = biljon{,er}
+scale.1e15 = biljard{,er}
+
+# Dates and times. Swedish `middag` is dinner, so there is no noon word.
+today = idag, i dag
+tomorrow = imorgon, i morgon
+yesterday = igår, i går
+day.2 = i övermorgon, övermorgon
+day.-2 = i förrgår, förrgår
+now = nu, tid, klockan
+local = lokal, lokal tid, lokaltid, lokal tidszon, lokal tidzon
+midnight = midnatt
+
+# Document references
+prev = föregående, förra
+sum = summa, totalt, total, sammanlagt, totalsumma
+average = medelvärde, medel, genomsnitt, snitt
+
+# Functions and formats
+function.sqrt = kvadratrot, roten ur
+function.cbrt = kubikrot, tredjeroten ur
+function.round = avrunda, avrundat
+function.abs = absolutbelopp
+function.fact = fakultet
+function.sin = sinus
+function.cos = cosinus
+function.tan = tangens
+format.bin = binär, binärt, binärtal
+format.oct = oktal
+format.sci = vetenskaplig, vetenskaplig notation
+
+# Time. `sek` would also swallow the code `SEK`, so seconds are `s`, `sek.` or `sekund`.
+show.s = sekund | sekunder
+unit.s = sek.
+show.min = minut | minuter
+show.h = timme | timmar
+unit.h = tim{,.}
+show.day = dag | dagar
+unit.day = dygn
+show.week = vecka | veckor
+unit.week = veckan
+show.month = månad | månader
+unit.month = mån{,.}
+show.year = år | år
+show.decade = decennium | decennier
+show.century = sekel | sekler
+unit.century = århundrade{,n}
+
+# SI prefixes that Swedish spells differently from English
+prefix.h = hekto
+prefix.µ = mikro
+
+# Length. A Swedish `mil` is the Scandinavian mile of 10 km; English miles are `engelsk mil`.
+unit.m = meter, metern, metrar, metrarna
+show.inch = tum | tum
+show.foot = fot | fot
+show.yard = yard | yard
+show.scandinavian mile = mil | mil
+show.mile = engelsk mil | engelska mil
+show.nautical mile = sjömil | sjömil
+unit.nautical mile = nautisk mil, nautiska mil, distansminut{,er}
+show.light year = ljusår | ljusår
+unit.px = pixlar
+
+# Area
+square = kvadrat*, kvadrat *, kv *, kv*
+show.square = kvadrat*
+unit.ha = hektar
+show.are = ar | ar
+unit.are = aret, aren
+show.acre = acre | acre
+show.ping = ping | ping
+unit.ping = pinga, pingar
+
+# Volume
+cubic = kubik*, kubik *
+show.cubic = kubik*
+unit.l = liter
+unit.ml = krm
+show.cup = kopp | koppar
+show.tablespoon = matsked | matskedar
+unit.tablespoon = msk
+show.teaspoon = tesked | teskedar
+unit.teaspoon = tsk
+show.pint = pint | pint
+show.gallon = gallon | gallon
+show.quart = quart | quart
+
+# Weight. `hekto` is 100 g, `kilo` the kilogram.
+unit.kg = kilo, kilot
+unit.hg = hekto, hekton
+unit.t = ton{,net}
+show.pound = pund | pund
+show.ounce = uns | uns
+show.centner = centner | centner
+show.carat = karat | karat
+show.stone = stone | stone
+
+# Temperature, angles, data, speed
+unit.°C = grader celsius
+unit.°F = grader fahrenheit
+unit.° = grad, grader
+unit.rad = radianer
+unit.b = biten, bitar
+unit.B = byten
+unit.km/h = kilometer i timmen, km i timmen
+show.knot = knop | knop
+
+# Currencies
+currency.SEK = krona, kronor, kr{,.}, svensk{,a} kron{a,or}
+currency.NOK = norsk{,a} kron{a,or}
+currency.DKK = dansk{,a} kron{a,or}
+currency.ISK = isländsk{,a} kron{a,or}
+currency.EUR = euro{,s}
+currency.USD = dollar{,s}, amerikansk{,a} dollar, USA{-, }dollar
+currency.GBP = pund, brittisk{,a} pund, pund sterling
+currency.CHF = schweizerfranc, schweizisk{,a} franc
+currency.JPY = japansk{,a} yen
+currency.CNY = kinesisk{,a} yuan
+currency.CAD = kanadensisk{,a} dollar
+currency.AUD = australisk{,a} dollar
+currency.PLN = polsk{,a} zloty
+currency.CZK = tjeckisk{,a} kron{a,or}
+currency.HUF = ungersk{,a} forint
+currency.RUB = rubel, rubler, rysk{,a} rub{e,}l{,er}
+currency.UAH = ukrainsk{,a} hryvnja
+currency.TRY = turkisk{,a} lira
+currency.INR = indisk{,a} rupie{,r}
+currency.BYN = vitrysk{,a} rub{e,}l{,er}, belarusisk{,a} rub{e,}l{,er}
+currency.AFN = afghani, afghansk{,a} afghani, afganska afghani, AFS
+currency.ALL = albansk{,a} lek
+currency.AMD = armenisk{,a} dram, armensk{,a} dram
+
+# Time zones: Swedish names of cities and countries
+zone.Europe/Stockholm = Göteborg, Malmö, Uppsala, Sverige
+zone.Europe/Oslo = Norge
+zone.Europe/Copenhagen = Köpenhamn, Danmark
+zone.Europe/Helsinki = Helsingfors, Åbo, Finland
+zone.Europe/Tallinn = Estland
+zone.Atlantic/Reykjavik = Island
+zone.Europe/Berlin = Tyskland
+zone.Europe/Amsterdam = Nederländerna, Holland
+zone.Europe/Brussels = Bryssel, Belgien
+zone.Europe/Paris = Frankrike
+zone.Europe/London = Storbritannien
+zone.Europe/Madrid = Spanien
+zone.Europe/Rome = Rom, Italien
+zone.Europe/Lisbon = Lissabon
+zone.Europe/Zurich = Genève, Schweiz
+zone.Europe/Vienna = Wien, Österrike
+zone.Europe/Warsaw = Warszawa, Polen
+zone.Europe/Prague = Prag, Tjeckien
+zone.Europe/Athens = Aten, Grekland
+zone.Europe/Moscow = Moskva, Ryssland
+zone.Europe/Istanbul = Turkiet
+zone.Asia/Shanghai = Kina
+zone.Asia/Kolkata = Indien
+zone.Africa/Cairo = Kairo, Egypten
+
+# Month names in dates (`12 mars 2026`)
+month.1 = januari, jan{,.}
+month.2 = februari, feb{,.}
+month.3 = mars, mar{,.}
+month.4 = april, apr{,.}
+month.5 = maj
+month.6 = juni, jun{,.}
+month.7 = juli, jul{,.}
+month.8 = augusti, aug{,.}
+month.9 = september, sep{,.}, sept{,.}
+month.10 = oktober, okt{,.}
+month.11 = november, nov{,.}
+month.12 = december, dec{,.}
+
+# Display
+weekdays = mån, tis, ons, tors, fre, lör, sön
+months = jan., feb., mars, apr., maj, juni, juli, aug., sep., okt., nov., dec.
+date = %a %-d %b %Y

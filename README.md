@@ -43,6 +43,9 @@ Everything in Numi's documentation, plus a little more:
   radians, and more.
 - **Notes as documents**: `# headers`, `// comments`, `"quoted comments"`, `Labels:`, variables,
   `prev`, `sum`/`total`, `avg`/`average`. Prose between the numbers is ignored.
+- **28 input languages**, Numi's set, on top of English: `5 Zoll in cm`, `20 Prozent von 50`,
+  `heute + 2 Wochen`, `3 fois 4`, `5厘米加3毫米`, `2 часа в минутах`. Word units and dates come
+  out in the chosen language (`2 Stunden`, `Mi., 28. Okt. 2026`).
 
 ## The app
 
@@ -50,8 +53,8 @@ Everything in Numi's documentation, plus a little more:
 - Multiple notes saved as plain `.numi` files (point the notes folder at iCloud Drive or Dropbox
   to sync), a searchable notes list (`⌘L`), import/export/print.
 - Numi's shortcuts (`⇧⌘C` copy result, `⌥⌘C` copy all, `⇧⌘0` parenthesise, …), six themes
-  including Numi Classic and Solarized, settings for precision, number style, angle unit and
-  clock format.
+  including Numi Classic and Solarized, settings for input language, precision, number
+  style, angle unit and clock format.
 - Menu bar icon, global hotkey (`⌥⌘N`), launch at login, optional Dock icon.
 - Numi's Alfred endpoint on `http://localhost:15055/?q=…`, so Numi's Alfred workflow works too.
 
@@ -68,6 +71,7 @@ cargo install --path crates/napkin-cli
 napkin "20 inches in cm"          # 50.8 cm
 napkin -f trip.numi               # every line with its result
 napkin --json "1 BTC in EUR"
+napkin --language de "5 Zoll in cm"   # 12.7 cm (default: the system language)
 napkin serve                      # Alfred-compatible HTTP endpoint without the app
 ```
 

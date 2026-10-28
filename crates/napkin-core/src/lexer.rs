@@ -88,6 +88,11 @@ enum Script {
     Alphabetic,
 }
 
+/// Whether `c` is a Korean letter or syllable.
+pub(crate) fn is_hangul(c: char) -> bool {
+    script(c) == Script::Hangul
+}
+
 fn script(c: char) -> Script {
     match c {
         '\u{3005}'..='\u{3007}'
@@ -528,6 +533,30 @@ mod tests {
         assert_eq!(
             kinds("2026-03-12T14:30", NumberStyle::English),
             [d(2026, 3, 12), t(14, 30)]
+        );
+    }
+
+    #[test]
+    fn scripts_split_words() {
+        let texts = |line: &'static str| -> Vec<&'static str> {
+            lex(line, 0, NumberStyle::English)
+                .into_iter()
+                .map(|r| &line[r.range])
+                .collect()
+        };
+        assert_eq!(texts("5厘米加3毫米"), ["5", "厘", "米", "加", "3", "毫", "米"]);
+        assert_eq!(texts("5cm加3"), ["5", "cm", "加", "3"]);
+        assert_eq!(texts("5센티미터 더하기 3"), ["5", "센티미터", "더하기", "3"]);
+        assert_eq!(texts("3時間"), ["3", "時", "間"]);
+        assert_eq!(texts("km2 Straße"), ["km2", "Straße"]);
+        assert_eq!(
+            kinds("５＋３", NumberStyle::English).len(),
+            3,
+            "full-width digits are prose, the plus an operator"
+        );
+        assert_eq!(
+            kinds("（1＋2）％", NumberStyle::English)[4],
+            RawKind::Sym(Sym::RParen)
         );
     }
 

@@ -286,7 +286,7 @@ impl Units<'_> {
                     (Style::Word, _, power @ (2 | 3)) => {
                         let localized = vocab::vocab(language);
                         match (
-                            localized.power_template(power),
+                            localized.power_template(power, number, style),
                             localized.unit_word(*index, number, style),
                         ) {
                             (Some(template), Some(word)) => format!("{number} {}", compound(template, word)),

@@ -1,0 +1,3 @@
+# Phrases of Numi's Japanese vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+month.variants	月	`3月` is March, not three months; months are か月/ヶ月

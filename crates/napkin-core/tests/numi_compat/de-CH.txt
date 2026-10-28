@@ -1,0 +1,75 @@
+# Phrases of Numi's Swiss German vocabulary that Napkin reads differently on purpose (the
+# decisions of tests/numi_compat/de.txt apply, except the Zentner, which de-CH reads).
+# key<TAB>phrase<TAB>reason
+million.variants	m	`m` stays the metre (`2 m` is two metres); millions are `Mio`/`Millionen`
+inch.variants	'	`'` is the foot mark and the Swiss thousands separator, not inches
+foot.variants	fb. Ft	two phrases run together in Numi's list; `fb.` and `Ft` each work
+carat.variants	kt	`kt` is the knot; carats are `Kt`/`Karat`
+AED.variants	DM	`DM` is the Deutsche Mark to German readers; reading it as the dirham would compute wrong amounts (`VAE-Dirham` works)
+BAM.variants	KM	many people write kilometres as `KM` (`30 KM`); reading it as the convertible mark would turn distances into money (`Konvertible Mark`, `Marka` work)
+MAD.variants	Dh	Numi lists `Dh` under AED too; Napkin reads it as AED (`marokkanischer Dirham` works)
+AMD.variants	d.	`d` is the day; `armenischer Dram` works
+AMD.variants	dr.	`Dr.` is the doctor's title (`Zimmer 3 Dr. Meier`); `armenischer Dram` works
+AZN.variants	A.M.	`3 A.M.` is a time of day; `aserbaidschanischer Manat` works
+BRL.variants	Real	`real` is an everyday German adjective (`2 % real gestiegen` must stay a percentage); `brasilianischer Real` and `Reais` work
+PEN.variants	Sol	phrases match any case, so `Sol` would take `SOL` (Solana) away; `peruanischer Sol` and `Soles` work
+MWK.variants	MK	`MK` is a unit symbol (megakelvin), which language words cannot redefine; `Malawi-Kwacha` works
+SSP.variants	£Sd	`£Sd` is the Sudanese pound (SDG), as in Numi's English list
+XOF.variants	CFA Franc	Numi lists the bare CFA franc under XAF too; Napkin reads it as XAF like Numi's English list (`westafrikanischer CFA-Franc` works)
+XOF.variants	CFA Francs	Numi lists the bare CFA franc under XAF too; Napkin reads it as XAF like Numi's English list (`westafrikanischer CFA-Franc` works)
+XOF.variants	CFA-Franc	Numi lists the bare CFA franc under XAF too; Napkin reads it as XAF like Numi's English list (`westafrikanischer CFA-Franc` works)
+XOF.variants	CFA-Francs	Numi lists the bare CFA franc under XAF too; Napkin reads it as XAF like Numi's English list (`westafrikanischer CFA-Franc` works)
+CUP.variants	Konvertibler Peso	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	Konvertiblem Peso	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	Konvertible Pesos	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	konvertibler Peso	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	konvertiblem Peso	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	konvertible Pesos	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	Peso convertible	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	Pesos convertibles	the convertible peso is CUC (1 CUC was 24 CUP), which Napkin knows; Numi files it under CUP
+CUP.variants	CUC	CUC is its own code (the convertible peso), not CUP
+MRO.variants	Ouguiya	MRO is the ouguiya before 2018 (10 MRO = 1 MRU), a code Napkin does not know; the name reads as today's MRU
+MRO.variants	mauretanischer Ouguiya	MRO is the ouguiya before 2018 (10 MRO = 1 MRU), a code Napkin does not know; the name reads as today's MRU
+MRO.variants	mauretanischem Ouguiya	MRO is the ouguiya before 2018 (10 MRO = 1 MRU), a code Napkin does not know; the name reads as today's MRU
+MRO.variants	mauretanische Ouguiya	MRO is the ouguiya before 2018 (10 MRO = 1 MRU), a code Napkin does not know; the name reads as today's MRU
+STD.variants	são-toméischer Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	são-toméischem Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	são-toméische Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	são-toméische Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	sao-tomeischer Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	sao-tomeischem Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	sao-tomeische Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	sao-tomeische Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	São Tomé und Príncipe-Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	São Tomé und Príncipe Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	São Tomé und Príncipe-Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	São Tomé und Príncipe Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	Sao Tome und Principe Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+STD.variants	Sao Tome und Prinicpe Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know (`STD` reads as Stunden); the name reads as today's STN
+VEF.variants	venezolanischer Bolivar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	venezolanischem Bolivar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	venezolanische Bolivar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	venezolanische Bolivares	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Bolivar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Bolivares	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Bolivar Fuerte	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; `Bolivar` reads as VES
+VEF.variants	Bolivares Fuertes	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; `Bolivar` reads as VES
+VEF.variants	bolivares fuertes	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; `Bolivar` reads as VES
+VEF.variants	Bs	VEF is a code Napkin does not know; `Bs` is the boliviano (BOB), as in Numi's English list
+VEF.variants	Bs.	VEF is a code Napkin does not know; `Bs` is the boliviano (BOB), as in Numi's English list
+SVC.variants	El-Slavador-Colón	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+SVC.variants	El-Slavador-Colon	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+SVC.variants	El-Slavador-Colones	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+SVC.variants	El Salvador Colón	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+SVC.variants	El Salvador Colones	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+SVC.variants	Colones El Salvadors	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+quart.variants	Viertele	a Viertele is a quarter-litre glass of wine, not a US quart (0.95 l)
+BYR.variants	weißrussischer Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	weißrussische Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	weißrussischem Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	weissrussischer Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	weissrussische Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	weissrussischem Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	Belarus-Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	Weißrussland-Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BYR.variants	Weissrussland-Rubel	BYR is the Belarusian rubel before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN

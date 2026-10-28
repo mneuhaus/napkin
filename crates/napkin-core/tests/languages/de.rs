@@ -246,6 +246,25 @@ const GERMAN: Table = &[
         ],
         &[Text("2,27 kg"), Text("€5,33"), Text("£8"), Fails],
     ),
+    // Currency names
+    (
+        &[
+            "5 Schweizer Franken in Euro",
+            "3 US-Dollar",
+            "10 britische Pfund in Euro",
+            "100 kanadische Dollar in Euro",
+        ],
+        &[Text("€4,44"), Text("$3"), Text("€10,67"), Text("€64")],
+    ),
+    (
+        &[
+            "1000 japanische Yen in Euro",
+            "2 australische Dollar",
+            "50 indische Rupien",
+            "3 schwedische Kronen",
+        ],
+        &[Text("€5,33"), Text("2 AUD"), Text("50 INR"), Text("3 SEK")],
+    ),
     // Functions and formats
     (
         &[
@@ -275,12 +294,13 @@ const AUSTRIAN: Table = &[(
 )];
 
 const SWISS: Table = &[(
-    &["3 Fuss", "2 Zentner in kg", "5 Fr.", "heute"],
+    &["3 Fuss", "2 Zentner in kg", "5 Fr.", "heute", "20 Stutz in Euro"],
     &[
         Text("3 Fuss"),
         Text("200 kg"),
         Text("5 CHF"),
         Text("Mi., 28. Okt. 2026"),
+        Text("€17.78"),
     ],
 )];
 

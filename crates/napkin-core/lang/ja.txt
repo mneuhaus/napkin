@@ -1,1 +1,272 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Japanese (日本語). Format: see crates/napkin-core/src/vocab.rs.
+#
+# Japanese is written without spaces: every kanji and kana is a token of its own and the longest
+# known phrase wins (`5キロメートル`, `5インチをセンチ`). Characters this file does not know stay
+# prose. Numbers are written in digits; kanji numerals (`二十`) are prose.
+
+# Arithmetic. `の` puts the base first (`50の20%` is 20% of 50, so it multiplies).
+plus = 足す, たす, 足して, プラス, 加算
+minus = 引く, ひく, 引いて, マイナス, 減算
+times = 掛ける, かける, 掛けて, 乗算, の
+divide = 割る, わる, 割って, 除算
+per = 毎, あたり, 当たり, につき
+# `5インチをセンチに`, `9ドルをユーロで`, `5インチは何センチ`: the particle after the target is
+# prose.
+convert = を, は何, って何
+# `価格は500円`
+assign = は
+
+# Percentages
+percent = パーセント
+percent.of = の
+
+# Scales. 万 is 10^4, 億 10^8 and 兆 10^12.
+scale.1e2 = 百
+scale.1e3 = 千
+scale.1e4 = 万, 萬
+scale.1e5 = 十万
+scale.1e6 = 百万
+scale.1e7 = 千万
+scale.1e8 = 億
+scale.1e9 = 十億
+scale.1e12 = 兆
+
+# Time (one form for every count). `時` after an hour is the time of day (`3時`); hours are
+# `時間`. `3月` is March, so months are `か月`.
+show.s = 秒
+unit.s = 秒間
+show.min = 分
+unit.min = 分間
+show.h = 時間
+show.day = 日
+unit.day = 日間
+show.week = 週間
+unit.week = 週
+show.month = か月
+unit.month = ヶ月, ケ月, カ月, ヵ月, 箇月, か月間, ヶ月間, カ月間
+show.year = 年
+unit.year = 年間
+show.century = 世紀
+
+# SI prefixes (`キロメートル`, `センチメートル`, `ミリリットル`, `ギガバイト`)
+prefix.Y = ヨタ
+prefix.Z = ゼタ
+prefix.E = エクサ
+prefix.P = ペタ
+prefix.T = テラ
+prefix.G = ギガ
+prefix.M = メガ
+prefix.k = キロ
+prefix.h = ヘクト
+prefix.da = デカ
+prefix.d = デシ
+prefix.c = センチ
+prefix.m = ミリ
+prefix.µ = マイクロ
+prefix.n = ナノ
+prefix.p = ピコ
+prefix.f = フェムト
+prefix.a = アト
+prefix.z = ゼプト
+prefix.y = ヨクト
+
+# Length. `センチ` alone is centimetres; `キロ` (km or kg) and `ミリ` (mm or ml) alone are left
+# out.
+unit.m = メートル, ㍍
+unit.cm = センチ, ㌢, ㎝
+unit.km = ㎞
+unit.mm = ㎜
+show.inch = インチ
+show.foot = フィート
+show.yard = ヤード
+show.mile = マイル
+show.nautical mile = 海里
+unit.nautical mile = ノーティカルマイル
+show.league = リーグ
+show.furlong = ハロン
+unit.furlong = ファーロング
+show.chain = チェーン
+show.cable = ケーブル
+show.hand = ハンド
+show.rod = ロッド
+show.light year = 光年
+show.mil = ミル
+unit.pt = ポイント
+unit.px = ピクセル
+unit.em = エム
+
+# Area
+square = 平方*, 平方 *
+show.square = 平方*
+unit.m2 = 平米, ㎡
+unit.km2 = ㎢
+unit.cm2 = ㎠
+unit.ha = ヘクタール
+show.are = アール
+show.acre = エーカー
+show.ping = 坪
+
+# Volume
+cubic = 立方*, 立方 *
+show.cubic = 立方*
+unit.l = リットル, リッター, ㍑
+unit.ml = ㎖
+unit.cm3 = ㎤
+unit.m3 = ㎥
+show.cup = カップ
+show.tablespoon = 大さじ
+unit.tablespoon = 大匙, テーブルスプーン
+show.teaspoon = 小さじ
+unit.teaspoon = 小匙, ティースプーン
+show.quart = クォート
+show.pint = パイント
+show.gallon = ガロン
+show.fluid ounce = 液量オンス
+
+# Weight. `ポンド` is the pound on lines without money and sterling on money lines.
+unit.g = グラム, ㌘
+unit.kg = ㎏
+unit.mg = ㎎
+unit.t = トン, ㌧
+show.stone = ストーン
+show.carat = カラット
+show.pound = ポンド
+show.centner = ツェントナー
+unit.centner = センテナー
+show.ounce = オンス
+
+# Temperature, angles, data, frequency, speed
+unit.°C = 摂氏, 摂氏温度, 摂氏度, セルシウス度
+unit.°F = 華氏, 華氏温度, 華氏度
+unit.K = ケルビン
+unit.° = 度
+unit.rad = ラジアン
+unit.b = ビット
+unit.B = バイト
+unit.Hz = ヘルツ
+show.knot = ノット
+
+# Dates and times. `時` alone is the current time; `今` alone is left out (it starts 今回, 今度).
+today = 今日, 本日
+tomorrow = 明日, あした, あす
+yesterday = 昨日, きのう
+day.2 = 明後日, あさって
+day.-2 = 一昨日, おととい
+day.3 = 明明後日, しあさって
+now = 現在, 現在時刻, 時刻, 時間, 今の時間, 今の時刻
+oclock = 時
+half-hour = 半
+am = 午前, 朝
+pm = 午後, 夜
+convert-after = に
+unit-before.°C = 摂氏
+unit-before.°F = 華氏
+unit-before.tablespoon = 大さじ
+unit-before.teaspoon = 小さじ
+local = 現地時間, 現地時刻, 現地, ローカル時間, ローカル
+noon = 正午
+midnight = 真夜中
+
+# Document references
+prev = 前の結果, 前の値, 直前の結果, 直前
+sum = 合計, 総計, 総額, 小計
+average = 平均, 平均値
+
+# Functions and formats
+function.sqrt = 平方根, ルート
+function.cbrt = 立方根
+function.round = 四捨五入
+function.ceil = 切り上げ
+function.floor = 切り捨て
+function.abs = 絶対値
+function.fact = 階乗
+function.ln = 自然対数
+function.log = 対数
+function.sin = サイン, 正弦
+function.cos = コサイン, 余弦
+function.tan = タンジェント, 正接
+format.hex = 十六進数, 十六進法
+format.bin = 二進数, 二進法
+format.oct = 八進数, 八進法
+format.dec = 十進数, 十進法
+format.sci = 指数表記, 科学的表記
+
+# Currencies
+currency.JPY = 円, 日本円
+currency.USD = ドル, 米ドル, アメリカドル
+currency.EUR = ユーロ
+currency.GBP = ポンド, 英ポンド, イギリスポンド
+currency.CNY = 人民元, 元
+currency.HKD = 香港ドル
+currency.TWD = 台湾ドル, 新台湾ドル, 台湾元
+currency.KRW = ウォン, 韓国ウォン
+currency.CHF = スイスフラン, フラン
+currency.CAD = カナダドル
+currency.AUD = オーストラリアドル, 豪ドル
+currency.NZD = ニュージーランドドル, NZドル
+currency.SGD = シンガポールドル
+currency.RUB = ルーブル, ロシアルーブル
+currency.INR = ルピー, インドルピー
+currency.THB = バーツ, タイバーツ
+currency.VND = ベトナムドン
+currency.PHP = フィリピンペソ
+currency.MXN = ペソ, メキシコペソ
+currency.BRL = レアル, ブラジルレアル
+currency.TRY = トルコリラ, リラ
+currency.ZAR = 南アフリカランド, ランド
+currency.IDR = ルピア, インドネシアルピア
+currency.MYR = リンギット, マレーシアリンギット
+currency.AED = ディルハム, UAEディルハム
+currency.SAR = リヤル, サウジアラビアリヤル
+currency.ILS = シェケル, イスラエルシェケル
+currency.SEK = スウェーデンクローナ
+currency.NOK = ノルウェークローネ
+currency.DKK = デンマーククローネ
+currency.PLN = ズウォティ, ポーランドズウォティ
+currency.CZK = チェココルナ
+currency.HUF = フォリント, ハンガリーフォリント
+currency.BTC = ビットコイン
+currency.ETH = イーサリアム
+
+# Time zones: Japanese names of cities and countries
+zone.Asia/Tokyo = 東京, 大阪, 京都, 名古屋, 横浜, 札幌, 福岡, 沖縄, 日本
+zone.Asia/Seoul = ソウル, 釜山, 韓国
+zone.Asia/Shanghai = 北京, 上海, 中国
+zone.Asia/Hong_Kong = 香港
+zone.Asia/Taipei = 台北, 台湾
+zone.Asia/Singapore = シンガポール
+zone.Asia/Bangkok = バンコク, タイ
+zone.Asia/Ho_Chi_Minh = ホーチミン, ハノイ, ベトナム
+zone.Asia/Jakarta = ジャカルタ
+zone.Asia/Manila = マニラ, フィリピン
+zone.Asia/Kuala_Lumpur = クアラルンプール
+zone.Asia/Kolkata = ニューデリー, デリー, ムンバイ, インド
+zone.Asia/Dubai = ドバイ
+zone.Europe/London = ロンドン, イギリス
+zone.Europe/Paris = パリ, フランス
+zone.Europe/Berlin = ベルリン, ミュンヘン, フランクフルト, ハンブルク, ドイツ
+zone.Europe/Rome = ローマ, ミラノ, イタリア
+zone.Europe/Madrid = マドリード, バルセロナ, スペイン
+zone.Europe/Amsterdam = アムステルダム, オランダ
+zone.Europe/Zurich = チューリッヒ, ジュネーブ, スイス
+zone.Europe/Vienna = ウィーン, オーストリア
+zone.Europe/Moscow = モスクワ, ロシア
+zone.Europe/Istanbul = イスタンブール, トルコ
+zone.Africa/Cairo = カイロ, エジプト
+zone.America/New_York = ニューヨーク, ワシントン, ボストン
+zone.America/Chicago = シカゴ, ヒューストン, ダラス
+zone.America/Denver = デンバー
+zone.America/Los_Angeles = ロサンゼルス, ロス, サンフランシスコ, シアトル
+zone.America/Toronto = トロント, モントリオール
+zone.America/Vancouver = バンクーバー
+zone.America/Mexico_City = メキシコシティ
+zone.America/Sao_Paulo = サンパウロ, リオデジャネイロ, ブラジル
+zone.Pacific/Honolulu = ホノルル, ハワイ
+zone.Australia/Sydney = シドニー
+zone.Australia/Melbourne = メルボルン
+zone.Pacific/Auckland = オークランド, ニュージーランド
+
+# Display: `2026年10月28日(水)`
+weekdays = 月, 火, 水, 木, 金, 土, 日
+months = 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月
+date = %Y年%-m月%-d日(%a)

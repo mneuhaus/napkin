@@ -137,6 +137,7 @@ pub(crate) fn starts_operand(tok: &Tok) -> bool {
             | Tok::Time(_)
             | Tok::Date(_)
             | Tok::PrefixCurrency(_)
+            | Tok::PercentBefore
     )
 }
 
@@ -304,6 +305,7 @@ impl<'a> Parser<'a> {
                 Expr::BareUnit(self.unit_factor()?)
             }
             Tok::Func(func) => self.call(func)?,
+            Tok::PercentBefore => Expr::Percent(boxed(self.prefix()?)),
             Tok::Var(name) => Expr::Var(name),
             Tok::Doc(doc) => Expr::Doc(doc),
             Tok::Now => Expr::Now,

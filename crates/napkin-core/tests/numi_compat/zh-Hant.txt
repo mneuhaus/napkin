@@ -1,0 +1,10 @@
+# Phrases of Numi's traditional Chinese vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+hour.variants	時	`下午3時` is three o'clock; hours are 小時
+hour.variants	點	`3點` is three o'clock, and Numi lists 點 under point too; hours are 小時
+point.variants	點	`3點` is three o'clock, and Numi lists 點 under hour too; typographic points are `pt`
+kelvin.variants	蘭氏	蘭氏 is the Rankine scale, not kelvin; kelvins are 克耳文/開爾文
+BYN.variants	盧布	a bare 盧布 is the Russian ruble, like English `ruble`; the Belarusian one is 白俄羅斯盧布
+BYR.variants	白俄羅斯盧布	BYR is the Belarusian ruble before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+VEF.variants	委內瑞拉玻利瓦爾	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+month.variants	月	`3月` is March, not three months; months are 個月

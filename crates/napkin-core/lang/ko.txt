@@ -1,1 +1,276 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Korean (한국어). Format: see crates/napkin-core/src/vocab.rs.
+#
+# Korean words are separated by spaces and break at digits (`5센티미터`, `3억 원`). Particles
+# written onto a word are part of it, so the topic forms of common units and currencies are
+# listed (`5인치는 몇 센티미터`, `9달러는 몇 유로`), and the possessive forms of money
+# (`30000원의 15%`). Object and direction particles (`달러를`, `유로로`) are left out: without
+# a conversion word between them, two units would multiply.
+#
+# Units come before `now`: `시간` is hours after a number and the current time alone.
+
+# Arithmetic. `의` puts the base first (`50의 20%` is 20% of 50, so it multiplies). There is no
+# `per` word: `당` and `마다` follow the unit they divide by (`km당 100원`).
+plus = 더하기, 플러스, 더한
+minus = 빼기, 마이너스, 뺀
+times = 곱하기, 곱, 곱한, 의
+divide = 나누기, 나눈
+convert = 몇, 을, 를
+convert-after = 으로, 로
+assign = 은, 는
+
+# Percentages
+percent = 퍼센트, 프로
+percent.of = 의
+
+# Scales. 만 is 10^4, 억 10^8 and 조 10^12 (`3억 원`, `5만`).
+scale.1e2 = 백
+scale.1e3 = 천
+scale.1e4 = 만
+scale.1e5 = 십만
+scale.1e6 = 백만
+scale.1e7 = 천만
+scale.1e8 = 억
+scale.1e9 = 십억
+scale.1e12 = 조
+
+# Time (one form for every count). `시` after an hour is the time of day (`3시`).
+show.s = 초
+unit.s = 초는
+show.min = 분
+unit.min = 분은, 분간
+show.h = 시간
+unit.h = 시간은
+show.day = 일
+unit.day = 일은, 일간
+show.week = 주
+unit.week = 주는, 주간, 주일
+show.month = 개월
+unit.month = 개월은, 달, 달은
+show.year = 년
+unit.year = 년은, 년간
+show.century = 세기
+
+# SI prefixes (`킬로미터`, `센티미터`, `밀리리터`, `기가바이트`)
+prefix.Y = 요타
+prefix.Z = 제타
+prefix.E = 엑사
+prefix.P = 페타
+prefix.T = 테라
+prefix.G = 기가
+prefix.M = 메가
+prefix.k = 킬로, 키로
+prefix.h = 헥토
+prefix.da = 데카
+prefix.d = 데시
+prefix.c = 센티, 센치
+prefix.m = 밀리, 미리
+prefix.µ = 마이크로
+prefix.n = 나노
+prefix.p = 피코
+prefix.f = 펨토
+prefix.a = 아토
+prefix.z = 젭토
+prefix.y = 욕토
+
+# Length
+unit.m = 미터, 미터{는,의}
+unit.km = ㎞
+unit.cm = ㎝
+unit.mm = ㎜
+show.inch = 인치
+unit.inch = 인치{는,의}
+show.foot = 피트
+unit.foot = 피트는, 푸트
+show.yard = 야드
+unit.yard = 야드는
+show.mile = 마일
+unit.mile = 마일은
+show.nautical mile = 해리
+show.league = 리그
+show.furlong = 펄롱
+show.chain = 체인
+show.cable = 케이블
+show.light year = 광년
+unit.pt = 포인트
+unit.px = 픽셀
+unit.em = 엠
+
+# Area. `평` is the pyeong (3.3 m²).
+square = 제곱*, 제곱 *, 평방*, 평방 *
+show.square = 제곱*
+unit.m2 = ㎡
+unit.km2 = ㎢
+unit.cm2 = ㎠
+unit.ha = 헥타르
+show.are = 아르
+show.acre = 에이커
+show.ping = 평
+unit.ping = 평은
+
+# Volume
+cubic = 세제곱*, 세제곱 *, 입방*, 입방 *
+show.cubic = 세제곱*
+unit.l = 리터, 리터{는,의}
+unit.ml = ㎖
+unit.cm3 = 시시, ㎤
+unit.m3 = ㎥
+show.cup = 컵
+show.tablespoon = 큰술
+unit.tablespoon = 테이블스푼, 큰스푼
+show.teaspoon = 작은술
+unit.teaspoon = 티스푼, 작은스푼
+show.quart = 쿼트
+show.pint = 파인트
+show.gallon = 갤런
+unit.gallon = 갤런은
+show.fluid ounce = 액량 온스
+unit.fluid ounce = 액량온스
+
+# Weight. `파운드` is the pound on lines without money and sterling on money lines.
+unit.g = 그램, 그램{은,의}
+unit.kg = ㎏
+unit.mg = ㎎
+unit.t = 톤, 톤{은,의}
+show.stone = 스톤
+show.carat = 캐럿
+unit.carat = 캐롯
+show.pound = 파운드
+unit.pound = 파운드는
+show.centner = 첸트너
+unit.centner = 챈트너
+show.ounce = 온스
+unit.ounce = 온즈, 온스는
+
+# Temperature, angles, data, frequency, speed
+unit.°C = 섭씨, 섭씨온도, 섭씨도
+unit.°F = 화씨, 화씨온도, 화씨도
+unit.K = 켈빈
+unit.° = 도
+unit.rad = 라디안, 호도
+unit.b = 비트
+unit.B = 바이트, 바이트는
+unit.Hz = 헤르츠
+show.knot = 노트
+
+# Dates and times. `시` alone is the current time.
+today = 오늘, 금일
+tomorrow = 내일, 명일
+yesterday = 어제, 작일
+day.2 = 모레
+day.-2 = 그저께, 그제
+day.3 = 글피
+now = 지금, 현재, 시간, 지금 시간, 지금시간, 현재 시간, 현재시간, 현재 시각
+oclock = 시
+half-hour = 반
+am = 오전, 새벽
+pm = 오후, 저녁, 밤
+unit-before.°C = 섭씨
+unit-before.°F = 화씨
+local = 현지 시간대, 현지 시간, 현지시간, 현지
+noon = 정오
+midnight = 자정
+
+# Document references
+prev = 이전, 앞줄, 이전 결과, 직전
+sum = 합, 합계, 총계, 총합, 총액
+average = 평균, 평균값
+
+# Functions and formats
+function.sqrt = 제곱근, 루트
+function.cbrt = 세제곱근
+function.round = 반올림
+function.ceil = 올림
+function.floor = 내림, 버림
+function.abs = 절댓값, 절대값
+function.fact = 팩토리얼, 계승
+function.ln = 자연로그
+function.log = 로그
+function.sin = 사인
+function.cos = 코사인
+function.tan = 탄젠트
+format.hex = 십육진수
+format.bin = 이진수
+format.oct = 팔진수
+format.dec = 십진수
+format.sci = 과학적 표기법, 지수 표기법
+
+# Currencies. `불` is the everyday word for dollars (`100불`).
+currency.KRW = 원, 원{은,의}, 원화, 한국 원
+currency.USD = 달러, 달러{는,의}, 불, 미국 달러, 미 달러, 미화
+currency.EUR = 유로, 유로{는,의}, 유로화
+currency.JPY = 엔, 엔{은,의}, 엔화, 일본 엔
+currency.CNY = 위안, 위안{은,의}, 위안화, 인민폐, 元
+currency.GBP = 파운드, 파운드{는,의}, 영국 파운드
+currency.CHF = 스위스 프랑, 스위스프랑, 프랑
+currency.CAD = 캐나다 달러, 캐나다달러
+currency.AUD = 호주 달러, 호주달러, 오스트레일리아 달러
+currency.NZD = 뉴질랜드 달러, 뉴질랜드달러
+currency.HKD = 홍콩 달러, 홍콩달러
+currency.TWD = 대만 달러, 대만달러, 신대만 달러
+currency.SGD = 싱가포르 달러, 싱가포르달러
+currency.KPW = 북한 원, 조선 원
+currency.RUB = 루블, 러시아 루블
+currency.INR = 루피, 인도 루피
+currency.THB = 바트, 태국 바트
+currency.VND = 베트남 동
+currency.PHP = 필리핀 페소
+currency.MXN = 페소, 멕시코 페소
+currency.BRL = 헤알, 브라질 헤알
+currency.TRY = 리라, 터키 리라, 튀르키예 리라
+currency.SEK = 스웨덴 크로나
+currency.NOK = 노르웨이 크로네
+currency.DKK = 덴마크 크로네
+currency.PLN = 즈워티, 폴란드 즈워티
+currency.CZK = 체코 코루나
+currency.HUF = 포린트, 헝가리 포린트
+currency.IDR = 루피아, 인도네시아 루피아
+currency.MYR = 링깃, 말레이시아 링깃
+currency.AED = 디르함, 아랍에미리트 디르함
+currency.SAR = 리얄, 사우디 리얄
+currency.ILS = 셰켈, 이스라엘 셰켈
+currency.ZAR = 랜드, 남아공 랜드
+currency.BTC = 비트코인, B⃦
+currency.ETH = 이더리움
+
+# Time zones: Korean names of cities and countries
+zone.Asia/Seoul = 서울, 부산, 인천, 대구, 대전, 광주, 제주, 한국, 대한민국
+zone.Asia/Pyongyang = 평양, 북한
+zone.Asia/Tokyo = 도쿄, 오사카, 교토, 일본
+zone.Asia/Shanghai = 베이징, 상하이, 중국
+zone.Asia/Hong_Kong = 홍콩
+zone.Asia/Taipei = 타이베이, 대만
+zone.Asia/Singapore = 싱가포르
+zone.Asia/Bangkok = 방콕, 태국
+zone.Asia/Ho_Chi_Minh = 호찌민, 호치민, 하노이, 베트남
+zone.Asia/Manila = 마닐라, 필리핀
+zone.Asia/Jakarta = 자카르타
+zone.Asia/Kuala_Lumpur = 쿠알라룸푸르
+zone.Asia/Kolkata = 뉴델리, 뭄바이, 인도
+zone.Asia/Dubai = 두바이
+zone.Europe/London = 런던, 영국
+zone.Europe/Paris = 파리, 프랑스
+zone.Europe/Berlin = 베를린, 뮌헨, 프랑크푸르트, 함부르크, 독일
+zone.Europe/Rome = 로마, 밀라노, 이탈리아
+zone.Europe/Madrid = 마드리드, 바르셀로나, 스페인
+zone.Europe/Amsterdam = 암스테르담, 네덜란드
+zone.Europe/Zurich = 취리히, 제네바, 스위스
+zone.Europe/Vienna = 비엔나, 오스트리아
+zone.Europe/Moscow = 모스크바, 러시아
+zone.Europe/Istanbul = 이스탄불, 터키, 튀르키예
+zone.Africa/Cairo = 카이로, 이집트
+zone.America/New_York = 뉴욕, 워싱턴, 보스턴
+zone.America/Chicago = 시카고, 휴스턴, 댈러스
+zone.America/Denver = 덴버
+zone.America/Los_Angeles = 로스앤젤레스, 샌프란시스코, 시애틀
+zone.America/Toronto = 토론토, 몬트리올
+zone.America/Vancouver = 밴쿠버
+zone.America/Sao_Paulo = 상파울루, 브라질
+zone.Pacific/Honolulu = 호놀룰루, 하와이
+zone.Australia/Sydney = 시드니
+zone.Australia/Melbourne = 멜버른
+zone.Pacific/Auckland = 오클랜드, 뉴질랜드
+
+# Display: `2026년 10월 28일 (수)`
+weekdays = 월, 화, 수, 목, 금, 토, 일
+months = 1월, 2월, 3월, 4월, 5월, 6월, 7월, 8월, 9월, 10월, 11월, 12월
+date = %Y년 %-m월 %-d일 (%a)

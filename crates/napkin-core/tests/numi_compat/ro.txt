@@ -1,0 +1,18 @@
+# Phrases of Numi's Romanian vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+BYR.variants	Rubla Belarusă	Numi's code BYR was retired in 2016; Napkin reads the Belarusian rouble as today's BYN
+BYR.variants	Ruble Belaruse	Numi's code BYR was retired in 2016; Napkin reads the Belarusian rouble as today's BYN
+BYR.variants	Rubla Bielorusă	Numi's code BYR was retired in 2016; Napkin reads the Belarusian rouble as today's BYN
+BYR.variants	Ruble Bieloruse	Numi's code BYR was retired in 2016; Napkin reads the Belarusian rouble as today's BYN
+inch.variants	'	`'` is the foot mark and the Swiss thousands separator, not inches
+cable.variants	câblă	mistranslation: câblă and vadră are old Romanian measures of capacity, not the nautical cable (a length); the cable is `cablu`
+cable.variants	cîblă	mistranslation: câblă and vadră are old Romanian measures of capacity, not the nautical cable (a length); the cable is `cablu`
+cable.variants	vadră	mistranslation: câblă and vadră are old Romanian measures of capacity, not the nautical cable (a length); the cable is `cablu`
+multiply.variants	mări	mistranslation: `mărit` means "increased" (`100 mărit cu 10 %` adds, and Napkin reads `mărit cu` as plus); multiplying is `ori`/`înmulțit cu`
+multiply.variants	mărit	mistranslation: `mărit` means "increased" (`100 mărit cu 10 %` adds, and Napkin reads `mărit cu` as plus); multiplying is `ori`/`înmulțit cu`
+percent.variants	pct.pc	two phrases run together in Numi's list (a missing comma); `pct.` and `pc.` each work
+percent_off.variants	din	listed under both "of" and "off"; `din` means "of" (`20 % din 50` = 10), a discount is `reducere din`
+percent_off_what_is.variants	din cât este	`din cât este` is "of what is" (`20 % din cât este 10` = 50); "off what is" is `reducere din cât este`
+million.variants	m	`m` stays the metre (`2 m` is two metres); millions are `mil.`/`milioane`
+week.variants	s	`s` stays the second; weeks are `săpt.`/`săptămâni`
+gram.variants	dram	mistranslation: a dram is a different weight (1.77 g, the old Romanian dram about 3.2 g), not a gram

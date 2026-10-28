@@ -569,6 +569,16 @@ fn specs() -> Vec<Spec> {
             &["nautical mile", "nautical miles"],
             &["nmi"],
         ),
+        // The Scandinavian mile (Swedish and Norwegian `mil`), 10 km; only those languages name it.
+        word(
+            "scandinavian mile",
+            "mil",
+            ("Scandinavian mile", "Scandinavian miles"),
+            LENGTH,
+            10_000.0,
+            &[],
+            &[],
+        ),
         word(
             "league",
             "lea",

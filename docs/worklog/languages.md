@@ -12,9 +12,9 @@ reference only, never committed).
 - [x] core: data format + loader (`src/vocab.rs`, `lang/<tag>.txt`), classifier layering,
       CJK segmentation, word assignments, o'clock, local zone, localized units and dates
 - [x] German (de, de-AT, de-CH) and English extras, except currency names
-- [ ] currency names for every language, other languages (delegated, see below)
+- [x] currency names for every language, all other languages (delegated, see below)
 - [x] test harness: `tests/languages/` (tables + sample notes), `tests/numi_compat.rs`
-- [ ] app picker, CLI `--language`, spec "Languages" section
+- [x] app picker, CLI `--language` (+ `--number-style`), spec "Languages" section, README
 - [ ] gate, screenshots, final commit
 
 ## Layout
@@ -81,9 +81,51 @@ reference only, never committed).
 
 ## Delegation (2026-10-28)
 
-Vocabulary authoring runs in parallel subagents that only touch their own files
+Vocabulary authoring ran in six parallel subagents that only touched their own files
 (`lang/<tag>.txt`, `lang/<tag>.numi`, `tests/languages/<module>.rs`,
-`tests/numi_compat/<tag>.txt`) and report engine gaps instead of editing `src/`.
+`tests/numi_compat/<tag>.txt`) and reported engine gaps (`ENGINE:` misses) instead of editing
+`src/`: a = en/de currencies, b = fr/it/es, c = pt-BR/pt-PT/ro, d = nl/nl-BE/af/da/no/sv/fi,
+e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `tmp/lang-work/`.
+
+## Engine features added from the agents' gap reports
+
+- Uppercase currency codes beat a language's unit word (`5 SEK` vs Norwegian `sek` seconds,
+  `3 CUP` vs German `Cup`, `TON` vs Dutch `ton`).
+- `percent.before` (`百分之20`, the number after it counts as a share: `百分之20的50` = 10).
+- Chained scales (`2 mille miliardi`, `2 thousand million`, `5千万`).
+- `per.<id>`: a unit in the denominator (`100 рублей в час`, `all'ora`, `de l'heure`).
+- `filler`: a word between a number and its unit (Romanian `25 de kilograme`, French
+  `3 millions de dollars`); `date-word`: joining words in date literals (`12 de março de 2026`).
+- Plural forms in `show.square`/`show.cubic` (`2 pieds carrés`).
+- A contested operator that is also a unit yields when the next operand carries a unit of the
+  same dimension (Dutch `5 min 30 sec` = 330 s, `10 min 3` = 7).
+- `scandinavian mile` built-in unit (10 km) for Swedish/Norwegian `mil`, which otherwise would
+  silently become the English mil (thou).
+- Danish plural rule (`1,5 time`); Romanian `few` is n % 100 in 1..19 (`101 de ore`).
+- East Asian time forms: `am`/`pm` before the hour (`下午3点`, `午後3時`, `오후 3시`),
+  `half-hour` and minutes after o'clock (`3点半`, `3点20分`, `3시 30분`), `unit-before.<id>`
+  (`摄氏100度`, `大さじ3`), `convert-after` (Korean `유로로`, Japanese `に`), `號` as a day marker.
+  A lone o'clock word is prose unless also listed under `now` (German `Uhr` is).
+- Korean words the vocabulary does not know are split into known words when they consist of
+  them entirely (`인치를` → `인치` + `를`, `5만원`), so particles and attached units separate;
+  other words (`초과`) stay whole.
+- A now-word that is also a unit is not an operand after an operator (`60 km por hora` with
+  Spanish `hora` = now alone).
+- Conversion words of one or two letters (`à`, `a`, `zu`, `в`, `w`) convert only when a unit,
+  currency, zone or format follows.
+
+## Known gaps (not done)
+
+- Finnish case endings as conversion (`20 dollaria euroiksi`); works after `muunnettuna`.
+- Grammatical gender in squared/cubed display (Spanish `millas cuadradas` vs `pies cuadrados`):
+  es/it/pt/ro show symbols (`2 mi²`) instead.
+- French `14h30`, `1er mai`; Dutch dashed dates `24-12-2026`; Italian `3 giorni fa`.
+- Japanese `1000円の20%引き` (postfix discount), reversed percent questions (`10是多少的20%`),
+  rate words before the number (`时速60公里`), format words starting with digits (`16进制`),
+  Chinese numerals (`二十`), full-width digits (`５`).
+- Korean topic particles on variable names (`가격은 5000원`).
+- A hyphen inside a word is minus (`Rendez-vous à 14:00`), as in English (`x-y`).
+- Numbers in phrases like `3 Viertel` (German for 3/4) read as quarts (Numi's choice kept).
 
 ## Coverage
 

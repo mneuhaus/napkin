@@ -1,1 +1,204 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Danish (Dansk). Format: see crates/napkin-core/src/vocab.rs.
+
+# Arithmetic
+plus = og, med, lagt til, lægges til, adderet med
+minus = fratrukket, trukket fra, minus, uden
+times = gange, ganget med, gange med, multipliceret med
+divide = divideret med, delt med, divideret, delt
+per = pr{,.}
+modulo = modulo
+convert = i, til, som, omregnet til
+assign = er lig med, er lig, lig med, er, giver
+
+# Percentages
+percent = procent, pct{,.}
+percent.of = af
+percent.on = oven i, på, tillagt
+percent.off = rabat på, fratrukket, trukket fra
+as-percent.of = {som,i} {%,procent} af
+as-percent.on = som {%,procent} oven i, som {%,procent} på
+as-percent.off = som {%,procent} fratrukket, som {%,procent} rabat på
+what-is.of = af hvad er
+what-is.on = oven i hvad er, på hvad er
+what-is.off = fratrukket hvad er, rabat på hvad er
+
+# Scales (long scale: milliard = 10^9, billion = 10^12)
+scale.1e3 = tusind{,e}
+scale.1e6 = million{,er}, mio{,.}
+scale.1e9 = milliard{,er}, mia{,.}, mdr{,.}
+scale.1e12 = billion{,er}
+scale.1e15 = billiard{,er}
+
+# Dates and times. Danish `middag` is also dinner, so there is no noon word.
+today = i dag, idag
+tomorrow = i morgen, imorgen
+yesterday = i går, igår
+day.2 = i overmorgen, overmorgen
+day.-2 = i forgårs, forgårs
+now = nu, tid, klokken
+local = lokal, lokal tid, lokaltid, lokal tidszone
+midnight = midnat
+
+# Document references
+prev = forrige, foregående
+sum = total, i alt, samlet
+average = gennemsnit, gns{,.}, middelværdi, middel
+
+# Functions and formats
+function.sqrt = kvadratrod
+function.cbrt = kubikrod, tredjerod
+function.round = afrund, afrundet
+function.abs = numerisk værdi, absolut værdi
+function.fact = fakultet
+function.sin = sinus
+function.cos = cosinus
+function.tan = tangens
+format.bin = binær, binært, binærtal
+format.oct = oktal
+format.sci = videnskabelig, videnskabelig notation
+
+# Time. `sek` would also swallow the code `SEK`, so seconds are `s`, `sek.` or `sekund`.
+show.s = sekund | sekunder
+unit.s = sek.
+show.min = minut | minutter
+show.h = time | timer
+show.day = dag | dage
+unit.day = døgn
+show.week = uge | uger
+show.month = måned | måneder
+unit.month = monthes, md{,.}, mdr{,.}
+show.year = år | år
+show.decade = årti | årtier
+show.century = århundrede | århundreder
+
+# SI prefixes that Danish spells differently from English
+prefix.h = hekto
+prefix.µ = mikro
+
+# Length. A Danish `mil` is not the English mile (and `mil` stays the English thousandth of an
+# inch), so miles are `engelsk mil`.
+unit.m = meter
+show.inch = tomme | tommer
+show.foot = fod | fod
+show.yard = yard | yard
+unit.yard = yards
+show.mile = engelsk mil | engelske mil
+unit.mile = mile, miles
+show.nautical mile = sømil | sømil
+show.light year = lysår | lysår
+unit.pt = point{,s}, punkt{,er}
+unit.px = pixel{,s}
+
+# Area
+square = kvadrat*, kvadrat *
+show.square = kvadrat*
+unit.m2 = kvm
+unit.ha = hektar
+show.are = ar | ar
+show.acre = acre | acre
+unit.acre = acres
+show.ping = ping | ping
+
+# Volume
+cubic = kubik*, kubik *
+show.cubic = kubik*
+unit.l = liter
+show.cup = kop | kopper
+show.tablespoon = spiseske | spiseskeer
+unit.tablespoon = spsk{,.}, table spoon{,s}
+show.teaspoon = teske | teskeer
+unit.teaspoon = tsk{,.}, tea spoon{,s}
+show.pint = pint | pints
+show.gallon = gallon | gallons
+show.quart = quart | quarts
+
+# Weight
+unit.kg = kilo
+show.pound = pund | pund
+show.ounce = ounce | ounces
+unit.ounce = unse{,r}
+show.centner = centner | centner
+unit.centner = centners, quintals, hkg
+show.carat = karat | karat
+show.stone = stone | stone
+
+# Temperature, angles, speed
+unit.°C = grader celsius, grad celsius
+unit.°F = grader fahrenheit, grad fahrenheit
+unit.° = grad, grader
+unit.rad = radianer
+unit.km/h = km/t, kilometer i timen
+show.knot = knob | knob
+
+# Currencies
+currency.DKK = krone{,r}, kr{,.}, dansk{,e} krone{,r}
+currency.SEK = svensk{,e} krone{,r}
+currency.NOK = norsk{,e} krone{,r}
+currency.ISK = islandsk{,e} krone{,r}
+currency.EUR = euro{,s}
+currency.USD = dollar{,s}, amerikansk{,e} dollar{,s}, US-dollar{,s}
+currency.GBP = pund, britisk{,e} pund, pund sterling
+currency.CHF = schweizerfranc{,s}, schweizisk{,e} franc{,s}
+currency.JPY = japansk{,e} yen
+currency.CNY = kinesisk{,e} yuan
+currency.CAD = canadisk{,e} dollar{,s}
+currency.AUD = australsk{,e} dollar{,s}
+currency.PLN = polsk{,e} zloty
+currency.CZK = tjekkisk{,e} koruna, tjekkisk{,e} kron{e,er}
+currency.HUF = ungarsk{,e} forint
+currency.RUB = rubel, rubler, russisk{,e} rub{e,}l{,er}
+currency.UAH = ukrainsk{,e} hryvnia
+currency.TRY = tyrkisk{,e} lira
+currency.INR = indisk{,e} rupee{,s}
+currency.BYN = hviderussisk{,e} rub{e,}l{,er}
+currency.AED = UAE-dirham
+currency.AFN = afghani
+currency.ALL = lek, albansk{,e} lek
+currency.AMD = armensk{,e} dram
+
+# Time zones: Danish names of cities and countries
+zone.Europe/Copenhagen = København, Aarhus, Odense, Aalborg, Esbjerg, Danmark
+zone.America/Nuuk = Grønland
+zone.Atlantic/Faroe = Færøerne, Tórshavn
+zone.Atlantic/Reykjavik = Island
+zone.Europe/Stockholm = Sverige
+zone.Europe/Oslo = Norge
+zone.Europe/Helsinki = Helsingfors
+zone.Europe/Berlin = Tyskland, Hamborg
+zone.Europe/Amsterdam = Holland, Nederlandene
+zone.Europe/Brussels = Bruxelles, Belgien
+zone.Europe/Paris = Frankrig
+zone.Europe/London = Storbritannien
+zone.Europe/Madrid = Spanien
+zone.Europe/Rome = Rom, Italien
+zone.Europe/Lisbon = Lissabon
+zone.Europe/Zurich = Genève, Schweiz
+zone.Europe/Vienna = Wien, Østrig
+zone.Europe/Warsaw = Warszawa, Polen
+zone.Europe/Prague = Prag, Tjekkiet
+zone.Europe/Athens = Athen, Grækenland
+zone.Europe/Moscow = Moskva, Sankt Petersborg, Rusland
+zone.Europe/Kyiv = Kiev
+zone.Europe/Istanbul = Tyrkiet
+zone.Asia/Shanghai = Kina
+zone.Asia/Kolkata = Indien
+zone.Africa/Cairo = Kairo, Egypten
+
+# Month names in dates (`12. marts 2026`)
+month.1 = januar, jan{,.}
+month.2 = februar, feb{,.}
+month.3 = marts, mar{,.}
+month.4 = april, apr{,.}
+month.5 = maj
+month.6 = juni, jun{,.}
+month.7 = juli, jul{,.}
+month.8 = august, aug{,.}
+month.9 = september, sep{,.}, sept{,.}
+month.10 = oktober, okt{,.}
+month.11 = november, nov{,.}
+month.12 = december, dec{,.}
+
+# Display
+weekdays = man., tirs., ons., tors., fre., lør., søn.
+months = jan., feb., mar., apr., maj, jun., jul., aug., sep., okt., nov., dec.
+date = %a %-d. %b %Y

@@ -1,0 +1,41 @@
+# Phrases of Numi's simplified Chinese vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+today.variants	今	a single character inside common words (今年, 今后, 如今); a bare 今 would turn prose into dates; 今天/今日 work
+tomorrow.variants	明	a single character inside common words (明白, 说明, 明显); a bare 明 would turn prose into dates; 明天/明日 work
+point.variants	点	`3点` is three o'clock; typographic points are `pt`
+tablespoon.variants	茶勺	茶勺 is a tea spoon, the teaspoon (Numi shows teaspoons as 茶勺 too); tablespoons are 汤匙/大匙
+are.variants	公顷	Numi lists 公顷 under hectare too; 公顷 is the hectare, ares are 公亩
+QAR.variants	里亚尔	a bare 里亚尔 is the Saudi riyal, like English `riyal`; the Qatari one is 卡塔尔里亚尔
+LRD.variants	利比亚第纳尔	利比亚第纳尔 is the Libyan dinar (LYD); the Liberian dollar is 利比里亚元
+BYR.variants	白俄罗斯卢布	BYR is the Belarusian ruble before 2016 (10000 BYR = 1 BYN), a code Napkin does not know; the name reads as today's BYN
+BTN.variants	Nu.	`nu` (now) ends many Dutch and Swedish sentences and is Romanian for no; `ngultrum` works
+CRC.variants	Colon	an everyday English word (punctuation, anatomy); `Costa Rican colon` and `colones` work
+CVE.variants	Escudo	Spanish and Portuguese for shield, and the escudo was Portugal's own currency; `Cape Verdean escudo` works
+CVE.variants	Escudos	Spanish and Portuguese for shield, and the escudo was Portugal's own currency; `Cape Verdean escudo` works
+HTG.variants	Gourde	French for a water bottle; `Haitian gourde` works
+HTG.variants	Gourdes	French for a water bottle; `Haitian gourde` works
+KGS.variants	Som	`som` is an everyday word in Swedish, Norwegian and Danish (as, who) and Portuguese (sound), `soms` Dutch (sometimes); `Kyrgyzstani som` works
+KGS.variants	Soms	`som` is an everyday word in Swedish, Norwegian and Danish (as, who) and Portuguese (sound), `soms` Dutch (sometimes); `Kyrgyzstani som` works
+UZS.variants	som	an everyday word in Swedish, Norwegian, Danish and Portuguese, and Numi lists it under KGS too; `Uzbekistani som` works
+LAK.variants	Kip	the kip is the engineering unit of force (1000 lbf) and Dutch for chicken; `Lao kip` works
+LAK.variants	Kips	the kip is the engineering unit of force (1000 lbf) and Dutch for chicken; `Lao kip` works
+SLL.variants	Leones	Spanish for lions (`3 leones`); `leone` and `Sierra Leonean leones` work
+KMF.variants	FC	Numi lists `FC` under CDF too; Napkin reads it as CDF; `Comorian franc` works
+TMT.variants	Manat	Numi lists `Manat` under AZN too; Napkin reads it as AZN; `Turkmenistan manat` works
+ZMW.variants	Kwacha	Numi lists `Kwacha` under MWK too; Napkin reads it as MWK; `Zambian kwacha` works
+ZMW.variants	ZMK	ZMK is the kwacha before 2013 (1000 ZMK = 1 ZMW), a code Napkin does not know
+SAR.variants	﷼‎	Numi's phrase is the rial sign plus an invisible left-to-right mark; the plain sign ﷼ is YER, as in Numi's list
+MRO.variants	Mauritanian ouguiya	MRO is the ouguiya before 2018 (10 MRO = 1 MRU), a code Napkin does not know; the name reads as today's MRU
+MRO.variants	ouguiya	MRO is the ouguiya before 2018 (10 MRO = 1 MRU), a code Napkin does not know; the name reads as today's MRU
+STD.variants	São Tomé and Príncipe Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know; the name reads as today's STN
+STD.variants	São Tomé and Príncipe Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know; the name reads as today's STN
+STD.variants	Dobra	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know; the name reads as today's STN
+STD.variants	Dobras	STD is the dobra before 2018 (1000 STD = 1 STN), a code Napkin does not know; the name reads as today's STN
+VEF.variants	Venezuelan Bolívar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Venezuelan Bolivar	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Venezuelan Bolívares	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Venezuelan Bolivares	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; the name reads as today's VES
+VEF.variants	Bs.F.	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know (`Bs` alone is the boliviano)
+SVC.variants	El Salvador Colon	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
+MDL.variants	Leu	the bare leu reads as the Romanian leu (RON), the one most people mean; `Moldovan leu` works
+month.variants	月	`3月` is March (and `今年3月` this March), not three months; months are 个月

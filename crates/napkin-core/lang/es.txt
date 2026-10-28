@@ -1,1 +1,421 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Spanish (español). Format: see crates/napkin-core/src/vocab.rs.
+
+# Arithmetic. `y` adds and `sin` subtracts only between two operands (`sin 30` stays the sine).
+# `por` multiplies between two operands (`3 por 4`) and is per-division before a bare unit
+# (`60 km por hora`): it is listed under `times` first and under `per`. `entre` divides
+# (`6 entre 3`). `a` is the preposition and converts (`5 km a millas`), it is not the are.
+plus = más, mas, y, con, sumado a
+minus = menos, sin, extraer, restado
+times = por, veces, multiplicado por, multiplicados por, multiplicar, multiplicar por
+divide = entre, dividido por, dividido entre, divididos por, divididos entre, dividir, dividir por,
+    dividir entre, divide por, divide entre, dividido
+per = por
+modulo = módulo, modulo
+# One of a unit after a price or speed (`100 km a la hora`, `3 € el kilo`, `10 € al día`)
+per.h = a la hora
+per.kg = el kilo, al kilo
+per.l = el litro, al litro
+per.day = al día, al dia
+per.week = a la semana
+per.month = al mes
+per.year = al año
+# `3 millones de dólares`, `2 kilos de tomates`
+filler = de
+convert = en, a, como, para, dentro, convertido a, convertido en, pasado a
+assign = es igual a, son iguales a, es igual, son iguales, igual a, igual, iguales, equivale a,
+    equivalen a, vale, valen, es, son
+
+# Percentages. `de` is a share of a base (`20 % de 50`), `en` the conversion; a share on top of a
+# base is `sobre`. `como %` alone converts (`0,25 como %`), so a share of a base needs `de`.
+percent = por ciento, porciento, pct{,.}
+percent.of = de, del
+percent.on = sobre, de {aumento,incremento,recargo} {sobre,de,en}, más sobre
+percent.off = de descuento {sobre,de,en}, de rebaja {sobre,de,en}, de reducción {sobre,de},
+    menos sobre
+as-percent.of = como {%,porcentaje} {de,del}, como un {%,porcentaje} {de,del},
+    en {%,porcentaje} {de,del}
+as-percent.off = como una disminución {del % de,porcentual de}, como una reducción {del % de,porcentual de},
+    como un {%,porcentaje} de {descuento,disminución,reducción} {de,sobre}
+as-percent.on = como porcentaje en, como % incremento de, como {incremento,aumento} porcentual de,
+    como un {incremento,aumento} {del % de,porcentual de},
+    como un {%,porcentaje} de {aumento,incremento} {de,sobre}
+what-is.of = de qué es, de que es, de cuánto es, de cuanto es
+what-is.off = de descuento sobre qué es, de descuento de qué es
+what-is.on = sobre lo que es, sobre qué es, de aumento sobre qué es
+
+# Scales (Spanish uses the long scale: mil millones = millardo = 10^9, billón = 10^12; scales
+# chain, so `3 mil millones` is 3 * 10^9).
+# `miles` is not a scale after a number: `5 miles` stays the English mile.
+scale.1e3 = mil
+scale.1e6 = millón, millon, millones
+scale.1e9 = millardo{,s}
+scale.1e12 = billón, billon, billones
+scale.1e18 = trillón, trillon, trillones
+
+# Dates
+today = hoy
+tomorrow = mañana
+yesterday = ayer
+day.2 = pasado mañana
+day.-2 = anteayer, antes de ayer, antier
+noon = mediodía, mediodia
+midnight = medianoche
+
+# Document references
+prev = previo, anterior, resultado anterior
+sum = suma, total
+average = promedio, prom{,.}, media
+
+# Functions and formats
+function.sqrt = raíz cuadrada, raiz cuadrada, raíz, raiz
+function.cbrt = raíz cúbica, raiz cubica
+function.round = redondear, redondeo, redondeado
+function.ceil = redondear hacia arriba
+function.floor = redondear hacia abajo, parte entera
+function.abs = valor absoluto
+function.fact = factorial
+function.sin = seno
+function.cos = coseno
+function.tan = tangente
+format.hex = hexadecimal
+format.bin = binario
+format.oct = octal
+format.dec = decimal
+format.sci = científico, científica, cientifico, notación científica, exponencial
+
+# Time (`hora` is only the hour: as `now` it would turn `60 km por hora` into a product)
+show.s = segundo | segundos
+unit.s = seg{,.}
+show.min = minuto | minutos
+show.h = hora | horas
+unit.h = hr{,s}
+show.day = día | días
+unit.day = dia{,s}
+show.week = semana | semanas
+unit.week = sem{,.}
+show.month = mes | meses
+show.year = año | años
+show.decade = década | décadas
+unit.decade = decada{,s}
+show.century = siglo | siglos
+show.fortnight = quincena | quincenas
+
+# The current time: `qué hora es en Tokio`, `la hora en Madrid`
+now = ahora, la hora, hora actual, qué hora es, que hora es
+local = local, hora local, zona horaria local, huso horario local, zona horaria
+
+# Length. Spanish stresses the prefix (`kilómetro`, `centímetro`), so prefixed metres are listed.
+prefix.m = mili
+unit.m = metro{,s}
+unit.km = kilómetro{,s}
+unit.hm = hectómetro{,s}
+unit.dam = decámetro{,s}
+unit.dm = decímetro{,s}
+unit.cm = centímetro{,s}
+unit.mm = milímetro{,s}
+unit.µm = micrómetro{,s}
+unit.nm = nanómetro{,s}
+show.inch = pulgada | pulgadas
+unit.inch = pulg{,.}
+show.foot = pie | pies
+show.yard = yarda | yardas
+show.mile = milla | millas
+show.nautical mile = milla náutica | millas náuticas
+unit.nautical mile = milla{,s} nautica{,s}
+show.league = legua | leguas
+show.furlong = furlong | furlongs
+unit.furlong = estadio{,s}
+show.chain = cadena | cadenas
+show.cable = cable | cables
+show.light year = año luz | años luz
+unit.pt = punto{,s}
+unit.px = píxel{,es}, pixel{,es}
+
+# Area (`metro cuadrado`). Word units squared or cubed show as symbols (`2 mi²`): the adjective
+# agrees in gender (`pies cuadrados` but `millas cuadradas`), which one template cannot do.
+square = * cuadrado{,s}, * cuadrada{,s}
+unit.ha = hectárea{,s}, hectarea{,s}
+show.are = área | áreas
+unit.are = area{,s}
+show.acre = acre | acres
+show.ping = ping | ping
+
+# Volume (`centímetro cúbico`)
+cubic = * cúbico{,s}, * cubico{,s}, * cúbica{,s}, * cubica{,s}
+unit.l = litro{,s}
+show.cup = taza | tazas
+show.tablespoon = cucharada | cucharadas
+unit.tablespoon = cucharada{,s} sopera{,s}, cda{,.}, cdas{,.}
+show.teaspoon = cucharadita | cucharaditas
+unit.teaspoon = cucharadita{,s} de {té,te,café}, cdta{,.}, cdtas{,.}
+show.quart = cuarto | cuartos
+show.pint = pinta | pintas
+show.gallon = galón | galones
+unit.gallon = galon
+show.fluid ounce = onza líquida | onzas líquidas
+
+# Weight (`libra` is the pound, and the pound sterling on lines with money; the quintal is the
+# metric one, 100 kg)
+unit.g = gramo{,s}
+unit.kg = kilo{,s}
+unit.t = tonelada{,s}, tonelada{,s} métrica{,s}
+show.stone = stone | stones
+show.carat = quilate | quilates
+show.pound = libra | libras
+show.centner = quintal | quintales
+show.ounce = onza | onzas
+
+# Temperature, angles, data, speed
+unit.°C = grado{,s} Celsius, grado{,s} centígrado{,s}, centígrado{,s}
+unit.°F = grado{,s} Fahrenheit
+unit.° = grado{,s}, grado{,s} de arco
+unit.rad = radián, radianes, radian
+unit.B = octeto{,s}
+show.knot = nudo | nudos
+
+# Currencies
+currency.EUR = euro{,s}
+currency.USD = dólar{,es}, dolar{,es}, dólar{,es} {estadounidense,estadounidenses,americano,americanos},
+    dólar{,es} {USA,EEUU,EE.UU.,US}, dólar{,es} de {los ,}Estados Unidos
+currency.GBP = libra{,s}, libra{,s} esterlina{,s}, libra{,s} británica{,s}
+currency.CHF = franco{,s} suizo{,s}
+currency.CAD = dólar{,es} canadiense{,s}, dólar{,es} de Canadá
+currency.AUD = dólar{,es} australiano{,s}
+currency.JPY = yen{,es}, yen{,es} japonés, yenes japoneses
+currency.CNY = yuan{,es}, renminbi, {yuan,yuanes} {chino,chinos}
+currency.RUB = rublo{,s}, rublo{,s} ruso{,s}
+currency.BYN = rublo{,s} bielorruso{,s}, rublo{,s} de {Bielorrusia,Bielorussia}
+currency.AED = dírham{,s}, {dirham,dirhams} de {los ,}Emiratos Árabes Unidos, {EAU,UAE} {dirham,dirhams}
+currency.AFN = afganí{,s}, afgani{,s}, afganí afgán
+currency.ALL = lek{,s}, lek albanés, leks albaneses
+currency.AMD = dram{,s}, dram{,s} armenio{,s}
+currency.ANG = florín antillano holandés, florines antillanos holandeses
+currency.AOA = kwanza{,s}, kwanza{,s} angoleño{,s}
+currency.ARS = peso{,s} argentino{,s}
+currency.AWG = florín, florines, florín arubeño, florines arubeños
+currency.AZN = manat{,s}, manat azerí, manats azeríes
+currency.BAM = marco{,s}, marco{,s} bosnioherzegovino{,s}, marco{,s} convertible{,s}
+currency.BBD = dólar{,es} de Barbados, dólar{,es} barbadense{,s}
+currency.BDT = taka{,s}, taka bangladesí, takas bangladesíes
+currency.BGN = lev{,s,a}, lev búlgaro, levs búlgaros, leva búlgara{,s}
+currency.BHD = dinar bareiní, dinares bareiníes
+currency.BIF = franco{,s} de Burundi, franco burundés, francos burundeses
+currency.BMD = dólar{,es} bermudeño{,s}
+currency.BND = {dólar,dolar,dólares} de Brunéi
+currency.BOB = boliviano{,s}, peso{,s} boliviano{,s}
+currency.BRL = real brasileño, reales brasileños
+currency.BSD = dólar{,es} bahameño{,s}
+currency.BTC = bitcoin{,s,es}
+currency.BTN = Nu., ngultrum{,es}, ngultrum butanés, ngultrumes butaneses
+currency.BWP = pula{,s}, pula botsuano
+currency.BZD = dólar{,es} beliceño{,s}
+currency.CDF = franco{,s} congoleño{,s}
+currency.CLP = peso{,s} chileno{,s}
+currency.COP = peso{,s} colombiano{,s}
+currency.CRC = colón, colones, colón costarricense, colones costarricenses
+currency.CUP = peso{,s} cubano{,s}
+currency.CVE = escudo{,s}, escudo{,s} caboverdiano{,s}
+currency.CZK = corona{,s} checa{,s}
+currency.DJF = franco{,s} de Yibuti, franco{,s} yibutiano{,s}
+currency.DKK = corona{,s} danesa{,s}
+currency.DOP = peso{,s} dominicano{,s}
+currency.DZD = dinar argelino, dinares argelinos
+currency.EGP = libra{,s} egipcia{,s}
+currency.ERN = nakfa{,s}, nakfa eritreo
+currency.ETB = birr{,s}, birr etíope
+currency.FJD = dólar{,es} de Fiyi, dólar{,es} fiyiano{,s}
+currency.FKP = libra{,s} de las Islas Malvinas, libra{,s} malvinense{,s}
+currency.GEL = lari{,s}, lari georgiano
+currency.GHS = cedi{,s}, cedi ghanés
+currency.GIP = libra{,s} gibraltareña{,s}
+currency.GMD = dalasi{,s}, dalasi{,s} gambiano{,s}
+currency.GNF = franco{,s} guineano{,s}
+currency.GTQ = quetzal{,es}, quetzal guatemalteco, quetzales guatemaltecos
+currency.GYD = dólar guyanés, dólares guyaneses
+currency.HKD = dólar{,es} de Hong Kong
+currency.HNL = lempira{,s}, lempira{,s} hondureña{,s}
+currency.HRK = kuna{,s}, kuna croata
+currency.HTG = gourde{,s}, gourde{,s} haitiano{,s}
+currency.HUF = florín húngaro, florines húngaros, forinto{,s}
+currency.IDR = rupia{,s} indonesia{,s}
+currency.ILS = séquel{,es}, nuevo séquel, nuevos séqueles, nuevo séquel israelí, nuevos séqueles israelíes
+currency.INR = rupia{,s}, rupia{,s} india{,s}
+currency.IQD = dinar iraquí, dinares iraquíes
+currency.IRR = rial iraní, riales iraníes
+currency.ISK = corona{,s} islandesa{,s}, corona{,s} de Islandia
+currency.JMD = dólar{,es} de Jamaica, dólar{,es} jamaicano{,s}
+currency.JOD = dinar jordano, dinares jordanos
+currency.KES = chelín keniano, chelines kenianos
+currency.KGS = som{,s}, som kirguís, soms kirguises, soms kuirguisos
+currency.KHR = riel{,es}, riel camboyano, rieles camboyanos
+currency.KMF = franco{,s} comorano{,s}
+currency.KPW = won norcoreano, wones norcoreanos
+currency.KRW = won{,es}, won surcoreano, wones surcoreanos
+currency.KWD = dinar kuwaití, dinares kuwaitíes
+currency.KYD = dólar{,es} de las Islas Caimán
+currency.KZT = tenge{,s}, tenge kazajo
+currency.LAK = kip{,s}, kip{,s} laosiano{,s}
+currency.LBP = libra{,s} libanesa{,s}
+currency.LKR = rupia{,s} de Sri Lanka, rupia{,s} esrilanquesa{,s}
+currency.LRD = dólar{,es} liberiano{,s}
+currency.LSL = loti, maloti, loti lesotense, maloti lesotenses
+currency.LYD = dinar libio, dinares libios
+currency.MAD = {dírham,dirham}{,s} marroquí{,es}, dírhams marroquíes
+currency.MDL = leu moldavo, leus moldavos
+currency.MGA = ariary, ariary malgache
+currency.MKD = denar{,es} macedonio{,s}
+currency.MMK = kyat{,s}, kyat{,s} de Myanmar, kyat{,s} birmano{,s}
+currency.MNT = tugrik, tögrög, tugrik mongol
+currency.MOP = pataca{,s}, pataca{,s} macaense{,s}, pataca{,s} de {Macao,Macau}
+currency.MRU = uguiya{,s}, uguiya mauritana
+currency.MUR = rupia{,s} mauriciana{,s}, rupia{,s} de Mauricio
+currency.MVR = rufiyaa, rupia{,s} maldiva{,s}
+currency.MWK = kwacha malauí, kwachas malauíes
+currency.MXN = peso{,s} mexicano{,s}
+currency.MYR = ringgit{,s}, ringgit malayo, ringgits malayos
+currency.MZN = metical, meticales, metical mozambiqueño, meticales mozambiqueños
+currency.NAD = dólar{,es} de Namibia, dólar{,es} namibio{,s}
+currency.NGN = naira{,s}, naira de Nigeria, naira nigeriana
+currency.NIO = córdoba{,s}, córdoba nicaragüense, córdobas nicaragüenses, córdoba{,s} de Nicaragua
+currency.NOK = corona{,s} noruega{,s}
+currency.NPR = rupia nepalí, rupias nepalíes
+currency.NZD = dólar neozelandés, dólares neozelandeses
+currency.OMR = rial omaní, riales omaníes
+currency.PAB = balboa{,s}, balboa{,s} panameña{,s}, balboa panameño
+currency.PEN = sol{,es}, sol{,es} peruano{,s}, nuevo sol, nuevos soles
+currency.PGK = kina{,s}, kina de Papúa Nueva Guinea
+currency.PHP = peso{,s} filipino{,s}
+currency.PKR = rupia pakistaní, rupias pakistaníes
+currency.PLN = esloti{,s}, esloti polaco, eslotis polacos
+currency.PYG = guaraní{,es,s}, guaraní paraguayo, guaraníes paraguayos
+currency.QAR = rial catarí, riales cataríes, riyal catarí
+currency.RON = leu rumano, leu rumanos, lei rumanos
+currency.RSD = dinar serbio, dinares serbios
+currency.RWF = franco ruandés, francos ruandeses
+currency.SAR = riyal saudí, riyales saudíes, rial saudí
+currency.SBD = dólar{,es} de las Islas Salomón
+currency.SCR = rupia{,s} de Seychelles, rupia{,s} seychelense{,s}
+currency.SDG = libra{,s} sudanesa{,s}
+currency.SEK = corona{,s} sueca{,s}
+currency.SGD = dólar{,es} de Singapur, dólar{,es} singapurense{,s}
+currency.SHP = libra{,s} de Santa Elena
+currency.SLL = leone{,s}, leone sierraleonés, leones sierraleoneses
+currency.SOS = chelín somalí, chelines somalíes
+currency.SRD = dólar surinamés, dólares surinameses
+currency.SSP = libra{,s} sursudanesa{,s}
+currency.STN = dobra{,s}, dobra santotomense, dobras santotomenses
+currency.SYP = libra{,s} siria{,s}
+currency.SZL = lilangeni, lilangeni suazi, emalangeni, emalengeni, emalangeni suazis, emelengeni suazis
+currency.THB = baht, baht tailandés, baht tailandeses
+currency.TJS = somoni, somoni tayiko
+currency.TMT = manat turkmeno, manats turkmenos
+currency.TND = dinar tunecino, dinares tunecinos
+currency.TOP = pa'anga, pa'anga tongano
+currency.TRY = lira{,s} turca{,s}
+currency.TTD = dólar{,es} trinitense{,s}
+currency.TWD = dólar NT, nuevo dólar taiwanés, nuevos dólares taiwaneses, dólar taiwanés,
+    dólares taiwaneses
+currency.TZS = chelín tanzano, chelines tanzanos
+currency.UAH = grivna{,s}, grivna{,s} ucraniana{,s}
+currency.UGX = chelín ugandés, chelines ugandeses
+currency.UYU = U$, peso{,s} uruguayo{,s}
+currency.UZS = so'm, som uzbeko, som{,s} uzbekos
+currency.VES = bolívar{,es} venezolano{,s}, bolívar{,es} soberano{,s}, bolívar{,es} digital{,es}
+currency.VND = dong, dong vietnamita, dong vietnamitas
+currency.VUV = vatu, vatu vanuatunense{,s}
+currency.WST = tala{,s}, tala samoano{,s}
+currency.XAF = franco{,s} CFA, franco CFA (Beac), franco CFA BEAC, franco{,s} CFA de África Central
+currency.XCD = dólar{,es} del Caribe Oriental
+currency.XOF = franco{,s} CFA de África Occidental, franco CFA BCEAO
+currency.XPF = franco{,s} CFP, franco{,s} del {pacífico,Pacífico}
+currency.YER = rial yemení, riales yemeníes
+currency.ZAR = rand{,s}, rand sudafricano, rands sudafricanos
+currency.ZMW = kwacha zambiano, kwachas zambianos
+
+# Time zones: Spanish names of cities and countries
+zone.Europe/London = Londres, Edimburgo, Reino Unido, Inglaterra, Gran Bretaña, Escocia
+zone.Europe/Dublin = Dublín, Irlanda
+zone.Europe/Moscow = Moscú, San Petersburgo, Rusia
+zone.Asia/Shanghai = Pekín, Shanghái, Cantón, China
+zone.Europe/Vienna = Viena
+zone.Europe/Berlin = Múnich, Berlín, Fráncfort, Hamburgo, Colonia, Alemania
+zone.Europe/Paris = París, Lyon, Marsella, Francia
+zone.Europe/Zurich = Zúrich, Ginebra, Basilea, Berna, Suiza
+zone.Europe/Rome = Roma, Milán, Florencia, Venecia, Nápoles, Turín, Italia
+zone.Europe/Madrid = Sevilla, Zaragoza, Bilbao, Málaga, España
+zone.Atlantic/Canary = Canarias, Islas Canarias, Las Palmas, Tenerife
+zone.Europe/Lisbon = Lisboa, Oporto
+zone.Europe/Prague = Praga, República Checa, Chequia
+zone.Europe/Warsaw = Varsovia, Cracovia, Polonia
+zone.Europe/Brussels = Bruselas, Amberes, Bélgica
+zone.Europe/Amsterdam = Ámsterdam, La Haya, Países Bajos, Holanda
+zone.Europe/Copenhagen = Copenhague, Dinamarca
+zone.Europe/Stockholm = Estocolmo, Suecia
+zone.Europe/Oslo = Noruega
+zone.Europe/Helsinki = Finlandia
+zone.Atlantic/Reykjavik = Reikiavik, Islandia
+zone.Europe/Athens = Atenas, Grecia
+zone.Europe/Bucharest = Bucarest, Rumanía, Rumania
+zone.Europe/Budapest = Hungría
+zone.Europe/Belgrade = Belgrado
+zone.Europe/Kyiv = Kiev, Ucrania
+zone.Europe/Istanbul = Estambul, Turquía
+zone.Africa/Cairo = El Cairo, Egipto
+zone.Africa/Algiers = Argel, Argelia
+zone.Africa/Tunis = Túnez
+zone.Africa/Casablanca = Marruecos, Rabat
+zone.Africa/Johannesburg = Ciudad del Cabo, Johannesburgo, Sudáfrica
+zone.Asia/Tokyo = Tokio, Japón
+zone.Asia/Seoul = Seúl, Corea del Sur
+zone.Asia/Singapore = Singapur
+zone.Asia/Kolkata = Nueva Delhi, Bombay, India
+zone.Asia/Tehran = Teherán, Irán
+zone.Asia/Riyadh = Riad, Arabia Saudita, Arabia Saudí
+zone.Asia/Baghdad = Bagdad
+zone.Asia/Jerusalem = Jerusalén, Israel
+zone.Asia/Dubai = Dubái, Emiratos Árabes Unidos
+zone.Asia/Bangkok = Bangkok, Tailandia
+zone.Asia/Jakarta = Yakarta
+zone.Asia/Manila = Filipinas
+zone.America/New_York = Nueva York, Washington, Filadelfia
+zone.America/Chicago = Nueva Orleans
+zone.America/Los_Angeles = California
+zone.America/Mexico_City = Ciudad de México, México, Guadalajara, Monterrey
+zone.America/Havana = La Habana, Cuba
+zone.America/Sao_Paulo = San Pablo, Río de Janeiro, Brasil
+zone.America/Argentina/Buenos_Aires = Argentina
+zone.America/Santiago = Chile
+zone.America/Lima = Perú
+zone.America/Bogota = Colombia, Medellín
+zone.America/Caracas = Venezuela
+zone.America/Montevideo = Uruguay
+zone.America/Asuncion = Paraguay
+zone.America/La_Paz = Bolivia
+zone.America/Guayaquil = Quito, Ecuador
+zone.America/Panama = Panamá
+zone.America/Costa_Rica = San José de Costa Rica
+zone.America/Santo_Domingo = República Dominicana
+zone.Pacific/Auckland = Nueva Zelanda
+
+# Month names in dates (`12 de marzo de 2026`, `12 marzo 2026`, `1 de mayo`)
+date-word = de, del
+month.1 = enero, ene{,.}
+month.2 = febrero, feb{,.}
+month.3 = marzo, mar{,.}
+month.4 = abril, abr{,.}
+month.5 = mayo, may{,.}
+month.6 = junio, jun{,.}
+month.7 = julio, jul{,.}
+month.8 = agosto, ago{,.}
+month.9 = septiembre, setiembre, sep{,.}, sept{,.}
+month.10 = octubre, oct{,.}
+month.11 = noviembre, nov{,.}
+month.12 = diciembre, dic{,.}
+
+# Display
+weekdays = lun, mar, mié, jue, vie, sáb, dom
+months = ene, feb, mar, abr, may, jun, jul, ago, sept, oct, nov, dic
+date = %a, %-d %b %Y
+
+# `hora` alone is the current time; after a number it stays the hour (listed after the units).
+now = hora

@@ -1,1 +1,282 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Romanian (română). Format: see crates/napkin-core/src/vocab.rs.
+# Romanian puts `de` between a number from 20 on and the noun (`20 de ore`, `100 de lei`): the
+# `other` display forms carry it, and the common unit and currency words accept it. Many people
+# type without diacritics or with the older cedilla letters (ş, ţ), so the everyday words accept
+# those spellings too.
+
+# Arithmetic. `e` is "is" and also Euler's number: it assigns only after a variable name.
+plus = {și,şi,si}, cu, adunat{, cu}, adăugat{, la}, adaugat{, la}, {mărit,marit} cu
+# (`mai puțin` is left out: `10 mai` is the 10th of May)
+minus = fără, fara, scăzut{, cu}, scazut{, cu}, substras, redus cu, {micșorat,micşorat,micsorat} cu
+times = ori, {înmulțit,înmulţit,inmultit} {cu,la}, multiplicat {cu,la}
+divide = {împărțit,împărţit,impartit}{, la, cu}, divizat{, la, cu}
+per = pe, per
+modulo = modulo, mod
+convert = în, ca, la, intro, intrun, {într,intr}-{o,un}, transformat în, convertit în
+assign = egal{, cu}, {e,este} egal cu, egală cu, e, este, sunt
+
+# Percentages
+percent = procent{,e}, de procente, la {sută,suta}, pct{,.}, pc{,.}
+percent.of = din
+percent.on = pe, la, peste, în plus {la,față de,fata de}, adaos {la,pe}, creștere la, majorare la
+percent.off = {reducere,discount,rabat} {din,la,de la}, scădere {din,la}, scăzut din, scazut din
+as-percent.of = ca{, și} {%,procent} din, în {%,procent,procente} din, ca procentaj din
+as-percent.on = ca{, și} {%,procent} la, ca{, și} {%,procent} {creștere,crestere} {din,la},
+    ca creștere procentuală {din,la}
+as-percent.off = ca{, și} {%,procent} {scădere,scadere,reducere} {din,la},
+    ca {reducere,scădere} procentuală {din,la}
+what-is.of = {de,din} {cât,cat} {este,e}
+what-is.on = {pe,peste} {cât,cat} {este,e}
+what-is.off = {reducere,scădere} {din,la} {cât,cat} {este,e}
+
+# Scales. Romanian uses the long scale: miliard = 10^9, bilion = 10^12, trilion = 10^18.
+scale.1e3 = mie, {,de }mii{, de}, miile, miilor
+scale.1e6 = milion{, de}, {,de }milioane{, de}, mil{,.}, mln{,.}
+scale.1e9 = miliard{, de}, {,de }miliarde{, de}, mld{,.}, mlrd{,.}
+scale.1e12 = bilion{, de}, {,de }bilioane{, de}
+scale.1e18 = trilion{, de}, {,de }trilioane{, de}
+
+# Dates and times
+today = azi, astăzi, astazi
+tomorrow = mâine, maine, mîine
+yesterday = ieri
+day.2 = poimâine, poimaine, poimîine
+day.-2 = alaltăieri, alaltaieri
+now = acum, ora {actuală,actuala,curentă,curenta,exactă,exacta}, timpul
+local = ora {locală,locala}, {fus,fusul} orar{, local}
+noon = amiază, amiaza, prânz, pranz, miezul zilei
+midnight = miezul {nopții,nopţii,noptii}, miez de noapte
+
+# Document references
+prev = anterior, ant{,.}, precedent, rezultatul anterior
+sum = {sumă,suma}{, totală, totala}, totalul, în total
+average = medie, media, mediu, med{,.}, valoarea medie, în medie
+
+# Functions and formats
+function.sqrt = {rădăcina,rădăcină,radacina} {pătrată,patrata}{, din}, {rădăcina,radacina}{, din},
+    radical{, din}, radical de ordin 2
+function.cbrt = {rădăcina,rădăcină,radacina} {cubică,cubica}{, din}, rădăcină cub, radical de ordin 3
+function.round = rotunjit, rotunjește, rotunjire
+function.ceil = rotunjit în sus
+function.floor = rotunjit în jos
+function.abs = {valoare,valoarea} {absolută,absoluta}, modul
+function.fact = factorial
+function.sin = sinus
+function.cos = cosinus
+function.tan = tangentă, tangenta, tg
+format.hex = hexazecimal
+format.bin = binar
+format.oct = octal
+format.dec = zecimal
+format.sci = științific, ştiinţific, stiintific, notație științifică, notatie stiintifica
+
+# SI prefixes that Romanian spells differently from English (`mililitri`, `milimetri`)
+prefix.m = mili
+
+# Time (forms: one | few | other, the `other` one with `de`)
+show.s = secundă | secunde | de secunde
+unit.s = secunda, sec{,.}
+show.min = minut | minute | de minute
+show.h = oră | ore | de ore
+unit.h = ora
+show.day = zi | zile | de zile
+unit.day = z, ziua
+show.week = săptămână | săptămâni | de săptămâni
+unit.week = {săptămâna,saptamana,saptamani,de saptamani}, {săpt,sapt}{,.}
+show.month = lună | luni | de luni
+unit.month = luna, lun{,.}
+show.year = an | ani | de ani
+show.decade = deceniu | decenii | de decenii
+show.century = secol | secole | de secole
+# `ora` alone is the time of day (`ora în Londra`); after a number it stays the hour
+now = ora
+
+# Length
+unit.m = metru, metri, metrii, de metri
+unit.km = de kilometri
+unit.cm = de centimetri
+unit.mm = de milimetri
+show.inch = țol | țoli | de țoli
+unit.inch = ţol, ţoli, tol, toli, de toli, inch, inchi, inci, de inci
+show.foot = picior | picioare | de picioare
+show.yard = iard | iarzi | de iarzi
+unit.yard = irazi
+show.mile = milă | mile | de mile
+unit.mile = mila
+show.nautical mile = milă marină | mile marine | de mile marine
+unit.nautical mile = {milă,mila} {nautică,nautica,maritimă}, mile nautice, de mile nautice, mn{,.}
+show.league = leghe | leghe | de leghe
+show.furlong = furlong | furlongi | de furlongi
+show.chain = lanț | lanțuri | de lanțuri
+unit.chain = lant, lanturi
+show.cable = cablu | cabluri | de cabluri
+show.light year = an-lumină | ani-lumină | de ani-lumină
+unit.light year = an lumină, ani lumină
+unit.pt = punct{,e}
+unit.px = pixeli, de pixeli
+
+# Area. The adjective agrees (`metru pătrat`, `metri pătrați`, `mile pătrate`), so results show
+# symbols for squared and cubed word units.
+square = * {pătrat,pătrați,pătraţi,pătrate,patrat,patrati,patrate}, * la pătrat
+unit.ha = hectar{,e}, de hectare
+show.are = ar | ari | de ari
+unit.are = arie, arii
+show.acre = acru | acri | de acri
+
+# Volume
+cubic = * {cub,cubi,cube,cubic,cubici,cubice}
+unit.l = litru, litri, litrii, de litri
+unit.ml = de mililitri
+unit.cm3 = cmc
+show.cup = cană | căni | de căni
+unit.cup = cupă, cupe, cana, cani
+show.tablespoon = lingură | linguri | de linguri
+unit.tablespoon = lingura, lingură de supă, linguri de supă, măsură lingură, măsuri linguri
+show.teaspoon = linguriță | lingurițe | de lingurițe
+unit.teaspoon = lingurita, lingurite, lingură de ceai, linguri de ceai, măsură lingură de ceai,
+    măsuri linguri de ceai
+unit.quart = sfert{,uri}
+show.pint = pintă | pinte | de pinte
+show.gallon = galon | galoane | de galoane
+show.fluid ounce = uncie lichidă | uncii lichide | de uncii lichide
+
+# Weight
+unit.g = gram, grame, de grame, gr{,.}
+unit.kg = kil, kile, de kile, kilogram, kilograme, de kilograme, kilo
+unit.mg = de miligrame
+unit.t = tonă, tona, tone, de tone
+show.carat = carat | carate | de carate
+show.pound = livră | livre | de livre
+unit.pound = livra, pounzi
+show.ounce = uncie | uncii | de uncii
+show.centner = chintal | chintale | de chintale
+
+# Temperature, angles, data, speed
+unit.°C = {grad,grade,de grade} Celsius
+unit.°F = {grad,grade,de grade} Fahrenheit
+unit.K = kelvini, de kelvini
+unit.° = grad, grade, de grade, grad sexagesimal, grade sexagesimale
+unit.rad = radian{,i}, de radiani
+unit.b = biți, biţi, biti, de biți
+unit.B = octet, octeți, octeţi, octeti, de octeți, bait, baiți
+unit.km/h = kilometri pe oră, km pe oră
+show.knot = nod | noduri | de noduri
+
+# Currencies. A bare `liră` is the pound sterling, `franc` the Swiss franc, `florin` the
+# forint, `rial` the Qatari riyal (as in Numi).
+currency.RON = leu, lei, de lei, ron, leu românesc, lei românești, lei romanesti
+currency.EUR = euro{,i}, de euro
+currency.USD = dolar{,i}, de dolari, dolar american, dolari americani, de dolari americani
+currency.GBP = liră, lire, de lire, liră sterlină, lire sterline, de lire sterline, lira sterlina,
+    liră britanică, lire britanice
+currency.CHF = franc{,i}, de franci, franc elvețian, franci elvețieni, franc elveţian, franci elveţieni
+currency.JPY = yen{,i}, de yeni, yen japonez, yeni japonezi
+currency.CNY = yuan{,i}, renminbi, yuan chinezesc
+currency.CAD = dolar canadian, dolari canadieni
+currency.AUD = dolar australian, dolari australieni
+currency.MDL = leu moldovenesc, lei moldovenești
+currency.HUF = forint{,i}, florin{,i}, {forint,florin} maghiar, {forinți,florini} maghiari
+currency.PLN = zlot{,i}, zloți, de zloți
+currency.CZK = coroană cehă, coroane cehe
+currency.SEK = coroană suedeză, coroane suedeze
+currency.NOK = coroană norvegiană, coroane norvegiene
+currency.DKK = coroană daneză, coroane daneze
+currency.ISK = coroană islandeză, coroane islandeze
+currency.BGN = leva, leva bulgărească
+currency.RUB = {rublă,rubla}, ruble, {rublă,rubla} rusească, ruble rusești
+currency.BYN = {rublă,rubla} {belarusă,bielorusă}, ruble {belaruse,bieloruse}
+currency.UAH = {hrivnă,grivnă}, {hrivne,grivne}, {hrivnă,crivnă} ucraineană, hrivne ucrainene,
+    hivre ucrainiene, crvine ucrainiene, грн{,.}
+currency.TRY = liră turcească, lire turcești
+currency.INR = rupie indiană, rupii indiene
+currency.LKR = rupie srilankeză, rupii srilankeze
+currency.AMD = drame, dram armean, drame armene
+currency.AFN = afghani
+currency.AOA = kwanza, kwanze
+currency.BHD = {dinar,dinari} din Bahrain
+currency.BIF = franc burundez, franci {burundezi,burunezi}
+currency.CDF = franc congolez, franci congolezi
+currency.GTQ = quetzal{,i}
+currency.GYD = dolar guyanez, dolari guyanezi
+currency.HRK = kuna croată, kune croate
+currency.ILS = shekel{,i}, {shekel-nou,shekel nou}{, israelean}, noul shekel
+currency.LRD = dolar liberian, dolari liberieni
+currency.MMK = kyat{,} birmanez, kiat
+currency.NGN = naira, naira {nigeriană,nigereană}
+currency.NIO = córdoba{, oro}, cordoba
+currency.PEN = sol nou peruvian, soli noi peruvieni
+currency.PGK = kina, kina papua noua guineeză
+currency.QAR = rial{,i}, rial qatarez, riali qatarezi
+currency.SDG = liră sudaneză, lire sudaneze
+currency.SGD = dolar singaporez, dolari singaporezi
+currency.SYP = liră siriană, lire siriene
+currency.SZL = lilangeni, lilangen
+currency.THB = baht{,i}, bahți, baht thailandez, bahți thailandezi
+currency.MXN = peso mexican, pesos mexicani
+currency.BRL = real brazilian, reali brazilieni
+currency.EGP = liră egipteană, lire egiptene
+currency.RSD = dinar sârbesc, dinari sârbești
+currency.SAR = rial saudit, riali saudiți
+
+# Time zones: Romanian names of cities and countries
+zone.Europe/Bucharest = București, Bucuresti, Cluj, Cluj-Napoca, Iași, Iasi, Timișoara, Timisoara,
+    Constanța, Constanta, Brașov, Brasov, Craiova, Galați, Galati, Oradea, Sibiu, România, Romania
+zone.Europe/Chisinau = Chișinău, Republica Moldova
+zone.Europe/London = Londra, Anglia, Marea Britanie, Regatul Unit
+zone.Europe/Moscow = Moscova, Rusia
+zone.Asia/Shanghai = Pekin, China
+zone.Europe/Vienna = Viena, Austria
+zone.Europe/Berlin = Germania
+zone.Europe/Lisbon = Lisabona, Portugalia
+zone.Europe/Warsaw = Varșovia, Varsovia, Cracovia, Polonia
+zone.Europe/Brussels = Bruxelles, Belgia
+zone.Europe/Copenhagen = Copenhaga, Danemarca
+zone.Europe/Zurich = Berna, Elveția, Elvetia
+zone.Europe/Paris = Franța, Franta
+zone.Europe/Rome = Roma, Milano, Napoli, Florența, Veneția, Torino, Italia
+zone.Europe/Madrid = Spania
+zone.Europe/Athens = Atena, Grecia
+zone.Europe/Prague = Praga, Cehia
+zone.Europe/Budapest = Budapesta, Ungaria
+zone.Europe/Sofia = Bulgaria
+zone.Europe/Belgrade = Belgrad, Serbia
+zone.Europe/Kyiv = Kiev, Ucraina
+zone.Europe/Istanbul = Ankara, Turcia
+zone.Europe/Amsterdam = Haga, Olanda, Țările de Jos
+zone.Europe/Stockholm = Suedia
+zone.Europe/Oslo = Norvegia
+zone.Europe/Helsinki = Finlanda
+zone.Europe/Dublin = Irlanda
+zone.Asia/Jerusalem = Ierusalim, Israel
+zone.Asia/Tehran = Teheran, Iran
+zone.Asia/Baghdad = Bagdad
+zone.Asia/Damascus = Damasc
+zone.Asia/Riyadh = Riad
+zone.Asia/Kolkata = India
+zone.Asia/Seoul = Seul, Coreea de Sud
+zone.Asia/Pyongyang = Phenian
+zone.Asia/Tokyo = Japonia
+zone.Africa/Cairo = Egipt
+zone.Africa/Algiers = Alger
+zone.Africa/Johannesburg = Africa de Sud
+zone.America/Mexico_City = Ciudad de Mexico, Mexic
+zone.America/Sao_Paulo = Brazilia
+
+# Month names in dates (`12 martie 2026`)
+month.1 = ianuarie, ian{,.}
+month.2 = februarie, feb{,.}
+month.3 = martie, mar{,.}
+month.4 = aprilie, apr{,.}
+month.5 = mai
+month.6 = iunie, iun{,.}
+month.7 = iulie, iul{,.}
+month.8 = august, aug{,.}
+month.9 = septembrie, sep{,.}, sept{,.}
+month.10 = octombrie, oct{,.}
+month.11 = noiembrie, nov{,.}
+month.12 = decembrie, dec{,.}
+
+# Display: `mie., 28 oct. 2026`
+weekdays = lun., mar., mie., joi, vin., sâm., dum.
+months = ian., feb., mar., apr., mai, iun., iul., aug., sept., oct., nov., dec.
+date = %a, %-d %b %Y

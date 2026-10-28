@@ -1,1 +1,11 @@
-# Placeholder: vocabulary not written yet. Format: see crates/napkin-core/src/vocab.rs.
+# Dutch as written in Belgium (Flemish). Format: see crates/napkin-core/src/vocab.rs.
+
+base = nl
+
+# `u` is the Flemish hour (`2 u`, `14u30` for times); `vorg` is a common slip for `vorige`.
+unit.h = u
+prev = vorg
+
+# Flemish names of Belgian and French cities
+zone.Europe/Brussels = Bergen, Namen, Doornik, Kortrijk, Mechelen, Hasselt, Oostende
+zone.Europe/Paris = Duinkerke

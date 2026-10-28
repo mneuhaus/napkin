@@ -1,0 +1,10 @@
+# Phrases of Numi's Swedish vocabulary that Napkin reads differently on purpose.
+# key<TAB>phrase<TAB>reason
+percent_off.variants	av	`av` means of: `20 % av 50` is 10; discounts are `rabatt på`
+thousand.variants	kilo	a Swedish `kilo` is a kilogram (`2 kilo äpplen`); thousands are `tusen`/`k`
+thousand.variants	kilo.	a Swedish `kilo` is a kilogram; thousands are `tusen`/`k`
+acre.variants	tunnland	a Swedish tunnland is 4,936 m², an acre 4,047 m²; acres are `acre`
+acre.variants	tunnlanden	a Swedish tunnland is 4,936 m², an acre 4,047 m²; acres are `acre`
+AMD.variants	Dram	a dram is a shot of spirits in Swedish; `armenisk dram` works
+GBP.variants	Pund	`pund` is the weight on lines without money, like `pound`; `brittiska pund`, `£` work
+inch.variants	"	`"` opens quoted text, which Napkin skips as a comment; inches are `″`, `in` or the word
