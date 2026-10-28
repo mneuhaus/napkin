@@ -26,7 +26,7 @@ const MAX_PRECISION: u8 = 10;
 type Choice = Entity<SelectState<SearchableVec<SharedString>>>;
 
 /// Opens the settings window.
-pub(crate) fn open(cx: &mut App) -> anyhow::Result<AnyWindowHandle> {
+pub(crate) fn open(focus: bool, cx: &mut App) -> anyhow::Result<AnyWindowHandle> {
     let bounds = gpui_kit::Bounds::centered(None, size(px(520.), px(640.)), cx);
     let options = WindowOptions {
         window_bounds: Some(WindowBounds::Windowed(bounds)),
@@ -36,6 +36,7 @@ pub(crate) fn open(cx: &mut App) -> anyhow::Result<AnyWindowHandle> {
         }),
         window_min_size: Some(size(px(440.), px(420.))),
         is_minimizable: false,
+        focus,
         ..Default::default()
     };
     let (handle, _) = gpui_kit::open_window(options, cx, |window, cx| {

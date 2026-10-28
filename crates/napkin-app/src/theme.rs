@@ -182,6 +182,11 @@ impl Palette {
             theme.colors.list_active = palette.result_hover;
             theme.colors.list_hover = palette.result_hover.opacity(0.6);
             theme.colors.ring = palette.accent;
+            theme.colors.primary = palette.accent;
+            theme.colors.primary_hover = palette.accent.opacity(0.88);
+            theme.colors.primary_active = palette.accent;
+            theme.colors.primary_foreground = palette.background;
+            theme.colors.switch = palette.border;
         });
     }
 }

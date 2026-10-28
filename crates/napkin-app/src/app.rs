@@ -166,7 +166,27 @@ pub(crate) fn start(
     open_main_window(launch.open_file, cx)?;
     import_opened_files(opened_files, cx);
     refresh_rates_when_stale(cx);
+    run_test_actions(cx);
     Ok(())
+}
+
+/// Testing hook: `NAPKIN_TEST_ACTIONS=napkin::ToggleNotesList,napkin::ShowSettings` dispatches
+/// these actions once the window is up. With `NAPKIN_BACKGROUND=1` this captures UI states
+/// without taking the keyboard focus from whoever uses the Mac.
+fn run_test_actions(cx: &mut App) {
+    let Ok(names) = std::env::var("NAPKIN_TEST_ACTIONS") else {
+        return;
+    };
+    cx.spawn(async move |cx: &mut AsyncApp| {
+        for name in names.split(',').map(str::trim).filter(|name| !name.is_empty()) {
+            cx.background_executor().timer(Duration::from_millis(400)).await;
+            let _ = cx.update(|cx| match cx.build_action(name, None) {
+                Ok(action) => cx.dispatch_action(action.as_ref()),
+                Err(error) => eprintln!("unknown test action {name}: {error}"),
+            });
+        }
+    })
+    .detach();
 }
 
 /// Imports files opened from Finder (`file://` URLs) as new notes.
@@ -369,17 +389,22 @@ fn close_key_window(cx: &mut App) {
 
 fn show_settings(cx: &mut App) {
     cx.defer(|cx| {
+        let background = cx.global::<Napkin>().background;
         if let Some(handle) = cx.global::<Napkin>().settings_window
             && handle.update(cx, |_, window, _| window.activate_window()).is_ok()
         {
-            cx.activate(true);
+            if !background {
+                cx.activate(true);
+            }
             return;
         }
-        match crate::settings_window::open(cx) {
+        match crate::settings_window::open(!background, cx) {
             Ok(handle) => cx.global_mut::<Napkin>().settings_window = Some(handle),
             Err(error) => eprintln!("could not open settings: {error:#}"),
         }
-        cx.activate(true);
+        if !background {
+            cx.activate(true);
+        }
     });
 }
 
