@@ -586,11 +586,16 @@ impl Classifier<'_> {
     }
 
     /// How many raws after `i` a language phrase starting at `i` can reach.
+    /// How many raws a language phrase starting at raw `i` may span; 0 past the end of the line.
     fn language_window(&self, i: usize) -> usize {
+        if i >= self.raws.len() {
+            return 0;
+        }
         self.ctx.lexicon.window(self.text(i))
     }
 
-    /// The longest language phrase starting at raw `i`: its meanings and last raw.
+    /// The longest language phrase starting at raw `i`: its meanings and last raw. Callers look
+    /// ahead (`i + 1`), so `i` may be past the end of the line; that is simply no phrase.
     fn language_phrase_at(&self, i: usize) -> Option<(Cow<'static, [Meaning]>, usize)> {
         let window = self.language_window(i);
         if window == 0 {

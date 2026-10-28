@@ -3,6 +3,7 @@
 
 use std::cell::RefCell;
 use std::ops::Range;
+use std::panic::{self, AssertUnwindSafe};
 use std::rc::Rc;
 use std::sync::{Arc, RwLock};
 
@@ -51,13 +52,20 @@ impl Sheet {
     }
 
     /// Evaluates the current text again (after a settings, rates or extension change).
+    ///
+    /// An engine bug must not take the app (and the user's typing) down: if evaluation panics,
+    /// the note shows no results until the next edit.
     pub(crate) fn reevaluate(&mut self) {
-        let lines = self
-            .engine
-            .read()
-            .expect("engine lock poisoned")
-            .evaluate(&self.text);
-        self.lines = lines;
+        let engine = self.engine.read().expect("engine lock poisoned");
+        let evaluated = panic::catch_unwind(AssertUnwindSafe(|| engine.evaluate(&self.text)));
+        drop(engine);
+        self.lines = evaluated.unwrap_or_else(|_| {
+            let blank = LineOutput {
+                spans: Vec::new(),
+                result: LineResult::None,
+            };
+            vec![blank; self.text.split('\n').count()]
+        });
         self.line_starts = line_starts(&self.text);
     }
 
