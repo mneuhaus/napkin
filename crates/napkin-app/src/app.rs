@@ -25,7 +25,7 @@ use crate::note_window::NoteWindow;
 use crate::notes::NoteStore;
 use crate::paths::AppPaths;
 use crate::settings::{
-    AppSettings, DEFAULT_FONT_SIZE, FONT_SIZE_RANGE, WindowFrame, WindowState, load_json, save_json,
+    AppSettings, DEFAULT_FONT_SIZE, FONT_SIZE_RANGE, Switch, WindowFrame, WindowState, load_json, save_json,
 };
 
 use crate::sheet::SharedEngine;
@@ -157,11 +157,11 @@ pub(crate) fn start(
     apply_palette(cx);
 
     let settings = cx.global::<Napkin>().settings.clone();
-    platform::set_dock_icon_visible(settings.desktop.dock_icon);
-    install_menu_bar_icon(settings.desktop.menu_bar_icon, cx);
+    platform::set_dock_icon(settings.desktop.dock_icon.into());
+    install_menu_bar_icon(settings.desktop.menu_bar_icon.into(), cx);
     install_hotkey(settings.hotkey.as_deref(), cx);
-    set_alfred_endpoint(settings.alfred_http, cx);
-    apply_login_item(settings.desktop.launch_at_login, cx);
+    set_alfred_endpoint(settings.alfred_http.into(), cx);
+    apply_login_item(settings.desktop.launch_at_login.into(), cx);
 
     open_main_window(launch.open_file, cx)?;
     import_opened_files(opened_files, cx);
@@ -180,7 +180,7 @@ fn run_test_actions(cx: &mut App) {
     cx.spawn(async move |cx: &mut AsyncApp| {
         for name in names.split(',').map(str::trim).filter(|name| !name.is_empty()) {
             cx.background_executor().timer(Duration::from_millis(400)).await;
-            let _ = cx.update(|cx| match cx.build_action(name, None) {
+            cx.update(|cx| match cx.build_action(name, None) {
                 Ok(action) => cx.dispatch_action(action.as_ref()),
                 Err(error) => eprintln!("unknown test action {name}: {error}"),
             });
@@ -194,7 +194,7 @@ fn import_opened_files(opened_files: async_channel::Receiver<Vec<String>>, cx: &
     cx.spawn(async move |cx: &mut AsyncApp| {
         while let Ok(urls) = opened_files.recv().await {
             for path in urls.iter().filter_map(|url| file_url_path(url)) {
-                let _ = cx.update(|cx| {
+                cx.update(|cx| {
                     with_main_window(cx, move |view, window, cx| view.import_file(&path, window, cx));
                 });
             }
@@ -253,13 +253,13 @@ fn register_actions(cx: &mut App) {
     cx.on_action(|_: &ToggleNotesList, cx| with_main_window(cx, NoteWindow::toggle_notes_list));
     cx.on_action(|_: &NextNote, cx| with_main_window(cx, |this, window, cx| this.step_note(1, window, cx)));
     cx.on_action(|_: &PreviousNote, cx| {
-        with_main_window(cx, |this, window, cx| this.step_note(-1, window, cx))
+        with_main_window(cx, |this, window, cx| this.step_note(-1, window, cx));
     });
     cx.on_action(|_: &Import, cx| with_main_window(cx, NoteWindow::import));
     cx.on_action(|_: &Export, cx| with_main_window(cx, NoteWindow::export));
     cx.on_action(|_: &Print, cx| with_main_window(cx, NoteWindow::print));
     cx.on_action(|_: &SurroundWithParentheses, cx| {
-        with_main_window(cx, NoteWindow::surround_with_parentheses)
+        with_main_window(cx, NoteWindow::surround_with_parentheses);
     });
     cx.on_action(|_: &CopyLineResult, cx| with_main_window(cx, NoteWindow::copy_current_line_result));
     cx.on_action(|_: &DeleteAll, cx| with_main_window(cx, NoteWindow::delete_all));
@@ -398,7 +398,7 @@ fn show_settings(cx: &mut App) {
             }
             return;
         }
-        match crate::settings_window::open(!background, cx) {
+        match crate::settings_window::open(cx) {
             Ok(handle) => cx.global_mut::<Napkin>().settings_window = Some(handle),
             Err(error) => eprintln!("could not open settings: {error:#}"),
         }
@@ -435,25 +435,28 @@ pub(crate) fn update_settings(cx: &mut App, change: impl FnOnce(&mut AppSettings
             .set_settings(after.engine.clone());
         reevaluate(cx);
     }
-    if after.theme != before.theme || after.font != before.font || after.font_size != before.font_size {
+    if after.theme != before.theme
+        || after.font != before.font
+        || after.font_size.to_bits() != before.font_size.to_bits()
+    {
         apply_palette(cx);
     }
     if after.hotkey != before.hotkey {
         install_hotkey(after.hotkey.as_deref(), cx);
     }
     if after.desktop.menu_bar_icon != before.desktop.menu_bar_icon {
-        install_menu_bar_icon(after.desktop.menu_bar_icon, cx);
+        install_menu_bar_icon(after.desktop.menu_bar_icon.into(), cx);
     }
     if after.desktop.dock_icon != before.desktop.dock_icon {
-        platform::set_dock_icon_visible(after.desktop.dock_icon);
+        platform::set_dock_icon(after.desktop.dock_icon.into());
         // Switching the activation policy can send the app to the back.
         cx.activate(true);
     }
     if after.desktop.launch_at_login != before.desktop.launch_at_login {
-        apply_login_item(after.desktop.launch_at_login, cx);
+        apply_login_item(after.desktop.launch_at_login.into(), cx);
     }
     if after.alfred_http != before.alfred_http {
-        set_alfred_endpoint(after.alfred_http, cx);
+        set_alfred_endpoint(after.alfred_http.into(), cx);
     }
     if after.notes_dir != before.notes_dir {
         with_main_window(cx, NoteWindow::reload_notes);
@@ -520,12 +523,12 @@ pub(crate) fn open_extensions_folder(cx: &mut App) {
 }
 
 /// Installs the menu bar icon once, then only toggles its visibility.
-fn install_menu_bar_icon(visible: bool, cx: &mut App) {
+fn install_menu_bar_icon(shown: Switch, cx: &mut App) {
     if let Some(tray) = &cx.global::<Napkin>().tray {
-        tray.set_visible(visible);
+        tray.set_visible(shown);
         return;
     }
-    if !visible {
+    if !shown.is_on() {
         return;
     }
     let (sender, receiver) = async_channel::unbounded();
@@ -538,7 +541,7 @@ fn install_menu_bar_icon(visible: bool, cx: &mut App) {
     }
     cx.spawn(async move |cx: &mut AsyncApp| {
         while let Ok(command) = receiver.recv().await {
-            let _ = cx.update(|cx| match command {
+            cx.update(|cx| match command {
                 TrayCommand::ToggleWindow => toggle_main_window(cx),
                 TrayCommand::NewNote => with_main_window(cx, NoteWindow::new_note),
                 TrayCommand::ShowSettings => show_settings(cx),
@@ -568,7 +571,7 @@ fn install_hotkey(shortcut: Option<&str>, cx: &mut App) {
         }
         cx.spawn(async move |cx: &mut AsyncApp| {
             while receiver.recv().await.is_ok() {
-                let _ = cx.update(toggle_main_window);
+                cx.update(toggle_main_window);
             }
         })
         .detach();
@@ -583,11 +586,11 @@ fn install_hotkey(shortcut: Option<&str>, cx: &mut App) {
     }
 }
 
-fn set_alfred_endpoint(enabled: bool, cx: &mut App) {
+fn set_alfred_endpoint(enabled: Switch, cx: &mut App) {
     cx.global_mut::<Napkin>()
         .problems
         .retain(|problem| !problem.starts_with("Alfred"));
-    if !enabled {
+    if !enabled.is_on() {
         cx.global_mut::<Napkin>().alfred = None;
         return;
     }
@@ -601,7 +604,7 @@ fn set_alfred_endpoint(enabled: bool, cx: &mut App) {
     }
 }
 
-fn apply_login_item(enabled: bool, cx: &mut App) {
+fn apply_login_item(enabled: Switch, cx: &mut App) {
     cx.global_mut::<Napkin>()
         .problems
         .retain(|problem| !problem.starts_with("Launch at login"));
@@ -630,7 +633,7 @@ fn refresh_rates_when_stale(cx: &mut App) {
                     .await;
                 match refreshed {
                     Ok(rates) => {
-                        let _ = cx.update(|cx| {
+                        cx.update(|cx| {
                             cx.global::<Napkin>()
                                 .engine
                                 .write()

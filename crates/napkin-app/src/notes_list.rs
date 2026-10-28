@@ -8,9 +8,9 @@ use gpui_kit::component::input::Input;
 use gpui_kit::component::{Icon, Sizable as _};
 use gpui_kit::prelude::FluentBuilder as _;
 use gpui_kit::{
-    AppContext as _, BoxShadow, ClickEvent, Context, Entity, EventEmitter, FocusHandle, FontWeight,
+    AppContext as _, BoxShadow, ClickEvent, Context, Div, Entity, EventEmitter, FocusHandle, FontWeight,
     InteractiveElement as _, IntoElement, KeyBinding, MouseButton, ParentElement as _, PromptLevel, Render,
-    ScrollHandle, SharedString, StatefulInteractiveElement as _, Styled as _, Subscription, Window, div,
+    ScrollHandle, SharedString, Stateful, StatefulInteractiveElement as _, Styled, Subscription, Window, div,
     hsla, point, px,
 };
 
@@ -243,77 +243,27 @@ impl NotesList {
         note: &Note,
         palette: &Palette,
         cx: &mut Context<'_, Self>,
-    ) -> impl IntoElement {
+    ) -> Stateful<Div> {
         let selected = position == self.selected;
-        let is_current = note.file_name == self.current;
         let file_name = note.file_name.clone();
         let renaming = self
             .renaming
             .as_ref()
             .filter(|renaming| renaming.file_name == note.file_name);
-        let preview = preview(note);
         let group = SharedString::from(format!("note-row-{position}"));
-        let title_row = div()
-            .flex()
-            .items_center()
-            .gap(px(6.))
-            .child(
-                div()
-                    .flex_1()
-                    .min_w_0()
-                    .truncate()
-                    .text_size(px(13.5))
-                    .font_weight(if is_current {
-                        FontWeight::SEMIBOLD
-                    } else {
-                        FontWeight::NORMAL
-                    })
-                    .text_color(palette.text)
-                    .child(SharedString::from(note.title.clone())),
-            )
-            .child(
-                div()
-                    .flex_none()
-                    .text_size(px(11.5))
-                    .text_color(palette.muted)
-                    .child(SharedString::from(relative_date(note.modified))),
-            );
-        let actions = div()
-            .flex_none()
-            .flex()
-            .gap(px(2.))
-            .invisible()
-            .group_hover(group.clone(), |style| style.visible())
-            .when(selected, |actions| actions.visible())
-            .child(
-                Button::new(SharedString::from(format!("rename-{position}")))
-                    .ghost()
-                    .xsmall()
-                    .icon(Icon::new(ExtraIcon::Pencil).text_color(palette.muted))
-                    .tooltip("Rename (⌘R)")
-                    .on_click(cx.listener({
-                        let file_name = file_name.clone();
-                        move |this, _: &ClickEvent, window, cx| {
-                            this.start_rename(file_name.clone(), window, cx)
-                        }
-                    })),
-            )
-            .child(
-                Button::new(SharedString::from(format!("delete-{position}")))
-                    .ghost()
-                    .xsmall()
-                    .icon(Icon::new(ExtraIcon::Trash).text_color(palette.muted))
-                    .tooltip("Delete")
-                    .on_click(cx.listener({
-                        let file_name = file_name.clone();
-                        move |this, _: &ClickEvent, window, cx| {
-                            this.confirm_delete(file_name.clone(), window, cx)
-                        }
-                    })),
-            );
+        let weight = if note.file_name == self.current {
+            FontWeight::SEMIBOLD
+        } else {
+            FontWeight::NORMAL
+        };
+        let body = if let Some(renaming) = renaming {
+            div().child(Input::new(&renaming.input).small())
+        } else {
+            row_text(note, weight, palette)
+        };
         div()
             .id(SharedString::from(format!("note-{position}")))
-            .group(group)
+            .group(group.clone())
             .mx(px(6.))
             .px(px(10.))
             .py(px(7.))
@@ -324,34 +274,142 @@ impl NotesList {
             .cursor_pointer()
             .when(selected, |row| row.bg(palette.result_hover))
             .hover(|row| row.bg(palette.result_hover.opacity(0.6)))
-            .on_click(cx.listener(move |this, _: &ClickEvent, _, cx| {
-                this.selected = position;
-                cx.emit(NotesListEvent::Open(file_name.clone()));
+            .on_click(cx.listener({
+                let file_name = file_name.clone();
+                move |this, _: &ClickEvent, _, cx| {
+                    this.selected = position;
+                    cx.emit(NotesListEvent::Open(file_name.clone()));
+                }
             }))
-            .child(
-                div()
-                    .flex_1()
-                    .min_w_0()
-                    .flex()
-                    .flex_col()
-                    .gap(px(2.))
-                    .map(|column| match renaming {
-                        Some(renaming) => column.child(Input::new(&renaming.input).small()),
-                        None => column.child(title_row).child(
-                            div()
-                                .truncate()
-                                .text_size(px(12.))
-                                .text_color(palette.muted)
-                                .child(SharedString::from(if preview.is_empty() {
-                                    " ".to_owned()
-                                } else {
-                                    preview
-                                })),
-                        ),
-                    }),
-            )
-            .child(actions)
+            .child(body.flex_1().min_w_0())
+            .child(self.row_actions(position, file_name, group, palette, cx))
     }
+
+    /// Rename and delete buttons, shown on hover and for the selected row.
+    fn row_actions(
+        &self,
+        position: usize,
+        file_name: String,
+        group: SharedString,
+        palette: &Palette,
+        cx: &mut Context<'_, Self>,
+    ) -> Div {
+        let rename = {
+            let file_name = file_name.clone();
+            cx.listener(move |this, _: &ClickEvent, window, cx| {
+                this.start_rename(file_name.clone(), window, cx);
+            })
+        };
+        let delete = cx.listener(move |this, _: &ClickEvent, window, cx| {
+            this.confirm_delete(file_name.clone(), window, cx);
+        });
+        div()
+            .flex_none()
+            .flex()
+            .gap(px(2.))
+            .invisible()
+            .group_hover(group, Styled::visible)
+            .when(position == self.selected, Styled::visible)
+            .child(
+                Button::new(SharedString::from(format!("rename-{position}")))
+                    .ghost()
+                    .xsmall()
+                    .icon(Icon::new(ExtraIcon::Pencil).text_color(palette.muted))
+                    .tooltip("Rename (⌘R)")
+                    .on_click(rename),
+            )
+            .child(
+                Button::new(SharedString::from(format!("delete-{position}")))
+                    .ghost()
+                    .xsmall()
+                    .icon(Icon::new(ExtraIcon::Trash).text_color(palette.muted))
+                    .tooltip("Delete")
+                    .on_click(delete),
+            )
+    }
+
+    fn search_bar(&self, palette: &Palette, cx: &mut Context<'_, Self>) -> Div {
+        div()
+            .flex()
+            .items_center()
+            .gap(px(6.))
+            .p(px(10.))
+            .border_b_1()
+            .border_color(palette.border)
+            .child(
+                div().flex_1().child(
+                    Input::new(&self.query)
+                        .prefix(Icon::new(ExtraIcon::Search).text_color(palette.muted))
+                        .cleanable(true),
+                ),
+            )
+            .child(
+                Button::new("new-note")
+                    .ghost()
+                    .small()
+                    .icon(Icon::new(ExtraIcon::Plus).text_color(palette.muted))
+                    .tooltip("New note (⌘N)")
+                    .on_click(cx.listener(|_, _: &ClickEvent, _, cx| cx.emit(NotesListEvent::New))),
+            )
+    }
+}
+
+/// Title, date and preview of a note.
+fn row_text(note: &Note, weight: FontWeight, palette: &Palette) -> Div {
+    let preview = preview(note);
+    let title = div()
+        .flex()
+        .items_center()
+        .gap(px(6.))
+        .child(
+            div()
+                .flex_1()
+                .min_w_0()
+                .truncate()
+                .text_size(px(13.5))
+                .font_weight(weight)
+                .text_color(palette.text)
+                .child(SharedString::from(note.title.clone())),
+        )
+        .child(
+            div()
+                .flex_none()
+                .text_size(px(11.5))
+                .text_color(palette.muted)
+                .child(SharedString::from(relative_date(note.modified))),
+        );
+    div().flex().flex_col().gap(px(2.)).child(title).child(
+        div()
+            .truncate()
+            .text_size(px(12.))
+            .text_color(palette.muted)
+            .child(SharedString::from(if preview.is_empty() {
+                " ".to_owned()
+            } else {
+                preview
+            })),
+    )
+}
+
+fn footer(palette: &Palette) -> Div {
+    div()
+        .px(px(14.))
+        .py(px(7.))
+        .border_t_1()
+        .border_color(palette.border)
+        .text_size(px(11.))
+        .text_color(palette.muted)
+        .child("↑↓ select   ↵ open   ⌘R rename   esc close")
+}
+
+fn panel_shadow(palette: &Palette) -> Vec<BoxShadow> {
+    vec![BoxShadow {
+        color: hsla(0., 0., 0., if palette.dark { 0.45 } else { 0.16 }),
+        offset: point(px(0.), px(10.)),
+        blur_radius: px(28.),
+        spread_radius: px(0.),
+        inset: false,
+    }]
 }
 
 impl Render for NotesList {
@@ -363,15 +421,50 @@ impl Render for NotesList {
             .enumerate()
             .map(|(position, &index)| {
                 let note = self.notes[index].clone();
-                self.render_row(position, &note, &palette, cx).into_any_element()
+                self.render_row(position, &note, &palette, cx)
             })
             .collect();
+        let empty = rows.is_empty().then(|| {
+            div()
+                .px(px(16.))
+                .py(px(14.))
+                .text_size(px(12.5))
+                .text_color(palette.muted)
+                .child("No matching notes")
+        });
         let width = px(PANEL_WIDTH).min(window.bounds().size.width - px(32.));
         let backdrop = if palette.dark {
             hsla(0., 0., 0., 0.35)
         } else {
             hsla(0., 0., 0., 0.12)
         };
+        let panel = div()
+            .id("notes-panel")
+            .w(width)
+            .max_h_full()
+            .flex()
+            .flex_col()
+            .bg(palette.panel)
+            .border_1()
+            .border_color(palette.border)
+            .rounded(px(12.))
+            .shadow(panel_shadow(&palette))
+            .overflow_hidden()
+            // Clicks inside the panel must not reach the backdrop.
+            .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+            .child(self.search_bar(&palette, cx))
+            .child(
+                div()
+                    .id("notes-rows")
+                    .flex_1()
+                    .min_h_0()
+                    .overflow_y_scroll()
+                    .track_scroll(&self.scroll)
+                    .py(px(6.))
+                    .children(empty)
+                    .children(rows),
+            )
+            .child(footer(&palette));
         div()
             .id("notes-backdrop")
             .key_context(CONTEXT)
@@ -395,84 +488,7 @@ impl Render for NotesList {
                 MouseButton::Left,
                 cx.listener(|_, _, _, cx| cx.emit(NotesListEvent::Dismiss)),
             )
-            .child(
-                div()
-                    .id("notes-panel")
-                    .w(width)
-                    .max_h_full()
-                    .flex()
-                    .flex_col()
-                    .bg(palette.panel)
-                    .border_1()
-                    .border_color(palette.border)
-                    .rounded(px(12.))
-                    .shadow(vec![BoxShadow {
-                        color: hsla(0., 0., 0., if palette.dark { 0.45 } else { 0.16 }),
-                        offset: point(px(0.), px(10.)),
-                        blur_radius: px(28.),
-                        spread_radius: px(0.),
-                        inset: false,
-                    }])
-                    .overflow_hidden()
-                    // Clicks inside the panel must not reach the backdrop.
-                    .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
-                    .child(
-                        div()
-                            .flex()
-                            .items_center()
-                            .gap(px(6.))
-                            .p(px(10.))
-                            .border_b_1()
-                            .border_color(palette.border)
-                            .child(
-                                div().flex_1().child(
-                                    Input::new(&self.query)
-                                        .prefix(Icon::new(ExtraIcon::Search).text_color(palette.muted))
-                                        .cleanable(true),
-                                ),
-                            )
-                            .child(
-                                Button::new("new-note")
-                                    .ghost()
-                                    .small()
-                                    .icon(Icon::new(ExtraIcon::Plus).text_color(palette.muted))
-                                    .tooltip("New note (⌘N)")
-                                    .on_click(
-                                        cx.listener(|_, _: &ClickEvent, _, cx| cx.emit(NotesListEvent::New)),
-                                    ),
-                            ),
-                    )
-                    .child(
-                        div()
-                            .id("notes-rows")
-                            .flex_1()
-                            .min_h_0()
-                            .overflow_y_scroll()
-                            .track_scroll(&self.scroll)
-                            .py(px(6.))
-                            .when(rows.is_empty(), |list| {
-                                list.child(
-                                    div()
-                                        .px(px(16.))
-                                        .py(px(14.))
-                                        .text_size(px(12.5))
-                                        .text_color(palette.muted)
-                                        .child("No matching notes"),
-                                )
-                            })
-                            .children(rows),
-                    )
-                    .child(
-                        div()
-                            .px(px(14.))
-                            .py(px(7.))
-                            .border_t_1()
-                            .border_color(palette.border)
-                            .text_size(px(11.))
-                            .text_color(palette.muted)
-                            .child("↑↓ select   ↵ open   ⌘R rename   esc close"),
-                    ),
-            )
+            .child(panel)
     }
 }
 
@@ -482,10 +498,7 @@ fn preview(note: &Note) -> String {
     if !note.is_renamed() {
         lines.next();
     }
-    lines
-        .next()
-        .map(|line| notes::first_line_title(line))
-        .unwrap_or_default()
+    lines.next().map(notes::first_line_title).unwrap_or_default()
 }
 
 /// "13:05" for today, "Yesterday", "Mon" within a week, else "28 Oct 2026".

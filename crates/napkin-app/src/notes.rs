@@ -7,7 +7,7 @@
 
 use std::fs;
 use std::io;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::time::SystemTime;
 
 use anyhow::Context as _;
@@ -49,10 +49,6 @@ pub(crate) struct NoteStore {
 impl NoteStore {
     pub(crate) fn new(dir: impl Into<PathBuf>) -> Self {
         Self { dir: dir.into() }
-    }
-
-    pub(crate) fn dir(&self) -> &Path {
-        &self.dir
     }
 
     pub(crate) fn path(&self, file_name: &str) -> PathBuf {
@@ -291,6 +287,6 @@ mod tests {
 
     #[test]
     fn missing_folder_lists_nothing() {
-        assert!(store("missing").list().is_empty());
+        assert_eq!(store("missing").list(), Vec::<Note>::new());
     }
 }

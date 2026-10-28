@@ -202,138 +202,145 @@ impl HighlightStyleResolver for SpanStyles {
     }
 }
 
-fn color(hex: u32) -> Hsla {
-    rgb(hex).into()
+/// An opaque colour written like CSS: `"#26282d"`.
+fn color(hex: &str) -> Hsla {
+    rgb(parse_hex(hex)).into()
 }
 
-fn translucent(hex_rgba: u32) -> Hsla {
-    rgba(hex_rgba).into()
+/// A colour with alpha written like CSS: `"#2f7d681f"`.
+fn translucent(hex: &str) -> Hsla {
+    rgba(parse_hex(hex)).into()
+}
+
+fn parse_hex(hex: &str) -> u32 {
+    u32::from_str_radix(hex.trim_start_matches('#'), 16)
+        .expect("theme colours are valid hex (every theme is built in the tests)")
 }
 
 fn light() -> Palette {
-    let text = color(0x26282d);
+    let text = color("#26282d");
     Palette {
         dark: false,
-        background: color(0xfcfcfb),
+        background: color("#fcfcfb"),
         text,
-        muted: color(0x8c9098),
-        result: color(0x2f7d68),
-        result_hover: translucent(0x2f7d681f),
-        accent: color(0x2f6feb),
-        selection: translucent(0x8ab6ff59),
-        caret: color(0x2f6feb),
-        border: color(0xe6e6e3),
-        panel: color(0xffffff),
+        muted: color("#8c9098"),
+        result: color("#2f7d68"),
+        result_hover: translucent("#2f7d681f"),
+        accent: color("#2f6feb"),
+        selection: translucent("#8ab6ff59"),
+        caret: color("#2f6feb"),
+        border: color("#e6e6e3"),
+        panel: color("#ffffff"),
         spans: SpanColors {
             number: text,
-            unit: color(0x2b74c0),
-            currency: color(0x2b74c0),
-            operator: color(0x848992),
-            keyword: color(0x8a5cc2),
-            variable: color(0xb44f8c),
-            function: color(0xc06a1c),
-            constant: color(0xc06a1c),
-            date_time: color(0x238a8a),
-            comment: color(0xa2a6ad),
+            unit: color("#2b74c0"),
+            currency: color("#2b74c0"),
+            operator: color("#848992"),
+            keyword: color("#8a5cc2"),
+            variable: color("#b44f8c"),
+            function: color("#c06a1c"),
+            constant: color("#c06a1c"),
+            date_time: color("#238a8a"),
+            comment: color("#a2a6ad"),
             header: text,
-            label: color(0x9a9ea6),
+            label: color("#9a9ea6"),
             text: text.opacity(0.62),
         },
     }
 }
 
 fn dark() -> Palette {
-    let text = color(0xe3e4e6);
+    let text = color("#e3e4e6");
     Palette {
         dark: true,
-        background: color(0x1d1e21),
+        background: color("#1d1e21"),
         text,
-        muted: color(0x7d8189),
-        result: color(0x7ccfae),
-        result_hover: translucent(0x7ccfae24),
-        accent: color(0x8ab4ff),
-        selection: translucent(0x4d7cd666),
-        caret: color(0x8ab4ff),
-        border: color(0x303237),
-        panel: color(0x25272b),
+        muted: color("#7d8189"),
+        result: color("#7ccfae"),
+        result_hover: translucent("#7ccfae24"),
+        accent: color("#8ab4ff"),
+        selection: translucent("#4d7cd666"),
+        caret: color("#8ab4ff"),
+        border: color("#303237"),
+        panel: color("#25272b"),
         spans: SpanColors {
             number: text,
-            unit: color(0x7ab4f0),
-            currency: color(0x7ab4f0),
-            operator: color(0x8d929b),
-            keyword: color(0xb996ec),
-            variable: color(0xe48dc2),
-            function: color(0xe6a76a),
-            constant: color(0xe6a76a),
-            date_time: color(0x6ccbcb),
-            comment: color(0x6c7078),
-            header: color(0xf4f5f6),
-            label: color(0x80848c),
+            unit: color("#7ab4f0"),
+            currency: color("#7ab4f0"),
+            operator: color("#8d929b"),
+            keyword: color("#b996ec"),
+            variable: color("#e48dc2"),
+            function: color("#e6a76a"),
+            constant: color("#e6a76a"),
+            date_time: color("#6ccbcb"),
+            comment: color("#6c7078"),
+            header: color("#f4f5f6"),
+            label: color("#80848c"),
             text: text.opacity(0.6),
         },
     }
 }
 
 fn numi_classic() -> Palette {
-    let text = color(0xe8e6e1);
+    let text = color("#e8e6e1");
     Palette {
         dark: true,
-        background: color(0x2b2b2b),
+        background: color("#2b2b2b"),
         text,
-        muted: color(0x868480),
-        result: color(0xf5c451),
-        result_hover: translucent(0xf5c45126),
-        accent: color(0xf5c451),
-        selection: translucent(0x6b655799),
-        caret: color(0xf5c451),
-        border: color(0x3a3a3a),
-        panel: color(0x333333),
+        muted: color("#868480"),
+        result: color("#f5c451"),
+        result_hover: translucent("#f5c45126"),
+        accent: color("#f5c451"),
+        selection: translucent("#6b655799"),
+        caret: color("#f5c451"),
+        border: color("#3a3a3a"),
+        panel: color("#333333"),
         spans: SpanColors {
             number: text,
-            unit: color(0x8fc8e8),
-            currency: color(0x8fc8e8),
-            operator: color(0x9a9792),
-            keyword: color(0xc9a8e8),
-            variable: color(0xe8a080),
-            function: color(0xa8d88c),
-            constant: color(0xa8d88c),
-            date_time: color(0x8cd8c8),
-            comment: color(0x777570),
-            header: color(0xf4f2ee),
-            label: color(0x8a8883),
+            unit: color("#8fc8e8"),
+            currency: color("#8fc8e8"),
+            operator: color("#9a9792"),
+            keyword: color("#c9a8e8"),
+            variable: color("#e8a080"),
+            function: color("#a8d88c"),
+            constant: color("#a8d88c"),
+            date_time: color("#8cd8c8"),
+            comment: color("#777570"),
+            header: color("#f4f2ee"),
+            label: color("#8a8883"),
             text: text.opacity(0.6),
         },
     }
 }
 
 fn solarized_light() -> Palette {
-    let body = color(0x657b83); // base00
-    let emphasis = color(0x586e75); // base01
-    let subtle = color(0x93a1a1); // base1
+    let body = color("#657b83"); // base00
+    let emphasis = color("#586e75"); // base01
+    let subtle = color("#93a1a1"); // base1
     Palette {
         dark: false,
-        background: color(0xfdf6e3),
+        background: color("#fdf6e3"),
         text: body,
         muted: subtle,
-        result: color(0x859900),
-        result_hover: translucent(0x85990022),
-        accent: color(0x268bd2),
-        selection: translucent(0xd8cfb0cc),
-        caret: color(0x268bd2),
-        border: color(0xeee8d5),
-        panel: color(0xeee8d5),
+        result: color("#859900"),
+        result_hover: translucent("#85990022"),
+        accent: color("#268bd2"),
+        selection: translucent("#d8cfb0cc"),
+        caret: color("#268bd2"),
+        border: color("#eee8d5"),
+        panel: color("#eee8d5"),
         spans: SpanColors {
             number: emphasis,
-            unit: color(0x268bd2),
-            currency: color(0x268bd2),
+            unit: color("#268bd2"),
+            currency: color("#268bd2"),
             operator: subtle,
-            keyword: color(0x6c71c4),
-            variable: color(0xd33682),
-            function: color(0xcb4b16),
-            constant: color(0xcb4b16),
-            date_time: color(0x2aa198),
+            keyword: color("#6c71c4"),
+            variable: color("#d33682"),
+            function: color("#cb4b16"),
+            constant: color("#cb4b16"),
+            date_time: color("#2aa198"),
             comment: subtle,
-            header: color(0x073642),
+            header: color("#073642"),
             label: subtle,
             text: body.opacity(0.75),
         },
@@ -341,33 +348,33 @@ fn solarized_light() -> Palette {
 }
 
 fn solarized_dark() -> Palette {
-    let body = color(0x839496); // base0
-    let emphasis = color(0x93a1a1); // base1
-    let subtle = color(0x586e75); // base01
+    let body = color("#839496"); // base0
+    let emphasis = color("#93a1a1"); // base1
+    let subtle = color("#586e75"); // base01
     Palette {
         dark: true,
-        background: color(0x002b36),
+        background: color("#002b36"),
         text: body,
         muted: subtle,
-        result: color(0xb58900),
-        result_hover: translucent(0xb5890026),
-        accent: color(0x268bd2),
-        selection: translucent(0x0a4d5eff),
-        caret: color(0x268bd2),
-        border: color(0x073642),
-        panel: color(0x073642),
+        result: color("#b58900"),
+        result_hover: translucent("#b5890026"),
+        accent: color("#268bd2"),
+        selection: translucent("#0a4d5eff"),
+        caret: color("#268bd2"),
+        border: color("#073642"),
+        panel: color("#073642"),
         spans: SpanColors {
             number: emphasis,
-            unit: color(0x268bd2),
-            currency: color(0x268bd2),
+            unit: color("#268bd2"),
+            currency: color("#268bd2"),
             operator: subtle,
-            keyword: color(0x6c71c4),
-            variable: color(0xd33682),
-            function: color(0xcb4b16),
-            constant: color(0xcb4b16),
-            date_time: color(0x2aa198),
+            keyword: color("#6c71c4"),
+            variable: color("#d33682"),
+            function: color("#cb4b16"),
+            constant: color("#cb4b16"),
+            date_time: color("#2aa198"),
             comment: subtle,
-            header: color(0xeee8d5),
+            header: color("#eee8d5"),
             label: subtle,
             text: body.opacity(0.75),
         },

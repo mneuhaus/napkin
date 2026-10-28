@@ -225,7 +225,7 @@ impl ResultsLayer {
             } else {
                 self.style.color
             };
-            let shaped = shape_fitting(text, color, &self.style.font, self.style.column_width, window);
+            let shaped = shape_fitting(&text, color, &self.style.font, self.style.column_width, window);
             let origin = point(right - shaped.width, row.origin.y);
             let target = Bounds::new(
                 point(origin.x - HOVER_PAD_X, origin.y),
@@ -265,7 +265,7 @@ impl ResultFont {
 
 /// Shapes `text`, cut with an ellipsis when wider than `max_width`.
 fn shape_fitting(
-    text: SharedString,
+    text: &SharedString,
     color: Hsla,
     font: &ResultFont,
     max_width: Pixels,

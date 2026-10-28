@@ -1,16 +1,17 @@
-//! Launch at login through a per-user LaunchAgent (`~/Library/LaunchAgents/com.neuhaus.napkin.plist`).
+//! Launch at login through a per-user launch agent (`~/Library/LaunchAgents/com.neuhaus.napkin.plist`).
 //!
-//! A LaunchAgent works for the bundled app and for a bare development binary alike and needs no
+//! A launch agent works for the bundled app and for a bare development binary alike and needs no
 //! signing or entitlements. Inside a bundle the agent starts the app with `open`, so Launch
 //! Services launches it like a double click; the path is rewritten on every launch, so a moved
 //! app keeps starting.
 
+use std::fmt::Write as _;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::Context as _;
 
-use crate::settings::write_atomically;
+use crate::settings::{Switch, write_atomically};
 
 /// The agent's label and file name.
 pub(crate) const LABEL: &str = "com.neuhaus.napkin";
@@ -21,9 +22,9 @@ pub(crate) fn agent_path(launch_agents: &Path) -> PathBuf {
 }
 
 /// Installs or removes the agent so it matches `enabled`.
-pub(crate) fn apply(launch_agents: &Path, enabled: bool) -> anyhow::Result<()> {
+pub(crate) fn apply(launch_agents: &Path, enabled: Switch) -> anyhow::Result<()> {
     let path = agent_path(launch_agents);
-    if !enabled {
+    if !enabled.is_on() {
         return match fs::remove_file(&path) {
             Err(error) if error.kind() != std::io::ErrorKind::NotFound => {
                 Err(error).with_context(|| format!("removing {}", path.display()))
@@ -47,10 +48,10 @@ fn program_arguments(executable: &Path) -> Vec<String> {
 }
 
 fn agent_plist(arguments: &[String]) -> String {
-    let arguments: String = arguments
-        .iter()
-        .map(|argument| format!("        <string>{}</string>\n", xml_escape(argument)))
-        .collect();
+    let arguments = arguments.iter().fold(String::new(), |mut list, argument| {
+        let _ = writeln!(list, "        <string>{}</string>", xml_escape(argument));
+        list
+    });
     format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -93,13 +94,13 @@ mod tests {
     fn enabling_writes_and_disabling_removes_the_agent() {
         let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tmp/test-login-item");
         let _ = fs::remove_dir_all(&dir);
-        apply(&dir, true).expect("installed");
+        apply(&dir, Switch::On).expect("installed");
         let plist = fs::read_to_string(agent_path(&dir)).expect("written");
         assert!(plist.contains("<string>com.neuhaus.napkin</string>"), "{plist}");
         assert!(plist.contains("<key>RunAtLoad</key>\n    <true/>"), "{plist}");
-        apply(&dir, false).expect("removed");
+        apply(&dir, Switch::Off).expect("removed");
         assert!(!agent_path(&dir).exists());
-        apply(&dir, false).expect("removing twice is fine");
+        apply(&dir, Switch::Off).expect("removing twice is fine");
     }
 
     #[test]

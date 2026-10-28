@@ -33,8 +33,7 @@ impl AppPaths {
             .context("no application support folder")?
             .join("Napkin");
         let rates = RateCache::default_location()
-            .map(|cache| cache.path().to_path_buf())
-            .unwrap_or_else(|| support.join("rates.json"));
+            .map_or_else(|| support.join("rates.json"), |cache| cache.path().to_path_buf());
         let launch_agents = dirs::home_dir()
             .context("no home folder")?
             .join("Library")
@@ -55,11 +54,6 @@ impl AppPaths {
             launch_agents: home.join("LaunchAgents"),
             sandboxed: true,
         }
-    }
-
-    /// Whether `NAPKIN_HOME` keeps every file inside one folder.
-    pub(crate) fn is_sandboxed(&self) -> bool {
-        self.sandboxed
     }
 
     /// The default notes folder (settings can point elsewhere).

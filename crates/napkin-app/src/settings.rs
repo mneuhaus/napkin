@@ -16,6 +16,25 @@ pub(crate) const FONT_SIZE_RANGE: (f32, f32) = (10., 36.);
 /// Numi's default global hotkey, ⌥⌘N, in `global-hotkey` notation.
 pub(crate) const DEFAULT_HOTKEY: &str = "Alt+Cmd+N";
 
+/// The state of an on/off setting, so call sites read `Switch::On` instead of a bare `true`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Switch {
+    On,
+    Off,
+}
+
+impl Switch {
+    pub(crate) fn is_on(self) -> bool {
+        self == Self::On
+    }
+}
+
+impl From<bool> for Switch {
+    fn from(on: bool) -> Self {
+        if on { Self::On } else { Self::Off }
+    }
+}
+
 /// The editor typeface.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub(crate) enum FontChoice {

@@ -4,6 +4,8 @@ use anyhow::Context as _;
 use tray_icon::menu::{Menu, MenuEvent, MenuItem, PredefinedMenuItem};
 use tray_icon::{Icon, MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
 
+use crate::settings::Switch;
+
 /// Side of the generated template icon in pixels (drawn at 18 pt on a 2x display).
 const ICON_SIZE: u32 = 36;
 
@@ -94,8 +96,8 @@ impl MenuBarIcon {
         Ok(Self { tray })
     }
 
-    pub(crate) fn set_visible(&self, visible: bool) {
-        if let Err(error) = self.tray.set_visible(visible) {
+    pub(crate) fn set_visible(&self, shown: Switch) {
+        if let Err(error) = self.tray.set_visible(shown.is_on()) {
             eprintln!("could not change the menu bar icon: {error}");
         }
     }

@@ -1,8 +1,11 @@
 //! The few macOS calls GPUI does not wrap: the Trash, the Dock icon, and the print panel.
 
+use std::fmt::Write as _;
 use std::path::Path;
 
 use gpui_kit::Window;
+
+use crate::settings::Switch;
 
 /// One line of a printout: what was typed and what it computes.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17,8 +20,8 @@ pub(crate) fn move_to_trash(path: &Path) -> bool {
 }
 
 /// Shows or hides the Dock icon (and the app menu bar with it).
-pub(crate) fn set_dock_icon_visible(visible: bool) {
-    imp::set_dock_icon_visible(visible);
+pub(crate) fn set_dock_icon(shown: Switch) {
+    imp::set_dock_icon(shown);
 }
 
 /// Opens the native print panel as a sheet on `window`, printing `lines` with results on the right.
@@ -34,7 +37,7 @@ fn print_rtf(lines: &[PrintLine], width_points: f64) -> String {
          {\\colortbl;\\red40\\green40\\blue40;\\red96\\green96\\blue96;}\\f0\\fs22\n",
     );
     for line in lines {
-        rtf.push_str(&format!("\\pard\\sl320\\tqr\\tx{tab_twips}\\cf1 "));
+        let _ = write!(rtf, "\\pard\\sl320\\tqr\\tx{tab_twips}\\cf1 ");
         rtf.push_str(&rtf_escape(&line.input));
         if let Some(result) = &line.result {
             rtf.push_str("\\tab\\cf2 ");
@@ -66,7 +69,7 @@ fn rtf_escape(text: &str) -> String {
                 let mut units = [0_u16; 2];
                 for unit in character.encode_utf16(&mut units) {
                     // RTF wants the UTF-16 unit as a signed 16-bit number.
-                    escaped.push_str(&format!("\\u{}?", i16::from_ne_bytes(unit.to_ne_bytes())));
+                    let _ = write!(escaped, "\\u{}?", i16::from_ne_bytes(unit.to_ne_bytes()));
                 }
             }
         }
@@ -78,6 +81,8 @@ fn rtf_escape(text: &str) -> String {
 mod imp {
     use std::path::Path;
     use std::ptr;
+
+    use crate::settings::Switch;
 
     use anyhow::Context as _;
     use gpui_kit::Window;
@@ -98,11 +103,11 @@ mod imp {
             .is_ok()
     }
 
-    pub(super) fn set_dock_icon_visible(visible: bool) {
+    pub(super) fn set_dock_icon(shown: Switch) {
         let Some(main_thread) = MainThreadMarker::new() else {
             return;
         };
-        let policy = if visible {
+        let policy = if shown.is_on() {
             NSApplicationActivationPolicy::Regular
         } else {
             NSApplicationActivationPolicy::Accessory
@@ -158,13 +163,15 @@ mod imp {
 mod imp {
     use std::path::Path;
 
+    use crate::settings::Switch;
+
     use gpui_kit::Window;
 
     pub(super) fn move_to_trash(_path: &Path) -> bool {
         false
     }
 
-    pub(super) fn set_dock_icon_visible(_visible: bool) {}
+    pub(super) fn set_dock_icon(_shown: Switch) {}
 
     pub(super) fn printable_width_points() -> f64 {
         468.

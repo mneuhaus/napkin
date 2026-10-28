@@ -8,7 +8,6 @@ use std::time::Duration;
 use gpui_kit::base::input::{EditorState, InputEvent};
 use gpui_kit::component::button::{Button, ButtonVariants as _};
 use gpui_kit::component::{Icon, Selectable as _, Sizable as _};
-use gpui_kit::prelude::FluentBuilder as _;
 use gpui_kit::{
     AnyElement, AppContext as _, ClipboardItem, Context, Entity, FontWeight, InteractiveElement as _,
     IntoElement, ParentElement as _, PathPromptOptions, Render, SharedString, Styled as _, Subscription,
@@ -71,9 +70,9 @@ impl NoteWindow {
                     this.on_text_changed(window, cx);
                 }
             }),
-            cx.observe_window_bounds(window, |this, window, cx| this.schedule_frame_save(window, cx)),
+            cx.observe_window_bounds(window, Self::schedule_frame_save),
             cx.observe_window_appearance(window, |_, window, cx| {
-                app::set_appearance(window.appearance(), cx)
+                app::set_appearance(window.appearance(), cx);
             }),
             cx.observe_window_activation(window, |this, window, cx| {
                 if !window.is_window_active() {
@@ -120,7 +119,7 @@ impl NoteWindow {
         self.update_window_title(window);
         self.save_task = Some(cx.spawn(async move |this, cx| {
             cx.background_executor().timer(SAVE_DELAY).await;
-            let _ = this.update(cx, |this, cx| this.save_now(cx));
+            let _ = this.update(cx, Self::save_now);
         }));
         cx.notify();
     }
@@ -172,7 +171,7 @@ impl NoteWindow {
         };
         self.frame_task = Some(cx.spawn(async move |_, cx| {
             cx.background_executor().timer(FRAME_SAVE_DELAY).await;
-            let _ = cx.update(|cx| {
+            cx.update(|cx| {
                 let napkin = cx.global::<Napkin>();
                 let mut state = napkin.window_state();
                 state.frame = Some(frame);
@@ -212,10 +211,11 @@ impl NoteWindow {
 
     /// Removes the open note when it is empty and we are moving to `next`.
     fn discard_if_empty(&self, next: &str) {
-        if next != self.current && self.saved_text.trim().is_empty() {
-            if let Err(error) = self.store.delete(&self.current) {
-                eprintln!("could not remove the empty note: {error:#}");
-            }
+        if next != self.current
+            && self.saved_text.trim().is_empty()
+            && let Err(error) = self.store.delete(&self.current)
+        {
+            eprintln!("could not remove the empty note: {error:#}");
         }
     }
 
@@ -302,13 +302,13 @@ impl NoteWindow {
                 match self.store.rename(file_name, title) {
                     Ok(renamed) => {
                         if *file_name == self.current {
-                            self.current = renamed.clone();
+                            self.current.clone_from(&renamed);
                             self.remember_current_note(cx);
                             self.update_window_title(window);
                         }
                         let notes = self.store.list();
                         list.update(cx, |list, cx| {
-                            list.set_notes(notes, &self.current, Some(&renamed), cx)
+                            list.set_notes(notes, &self.current, Some(&renamed), cx);
                         });
                     }
                     Err(error) => eprintln!("could not rename the note: {error:#}"),
@@ -331,14 +331,15 @@ impl NoteWindow {
         }
     }
 
-    pub(crate) fn import(&mut self, _window: &mut Window, cx: &mut Context<'_, Self>) {
+    pub(crate) fn import(&mut self, window: &mut Window, cx: &mut Context<'_, Self>) {
+        self.save_now(cx);
         let paths = cx.prompt_for_paths(PathPromptOptions {
             files: true,
             directories: false,
             multiple: false,
             prompt: Some("Import".into()),
         });
-        cx.spawn_in(_window, async move |this, cx| {
+        cx.spawn_in(window, async move |this, cx| {
             let Ok(Ok(Some(paths))) = paths.await else {
                 return;
             };
@@ -564,7 +565,7 @@ impl Render for NoteWindow {
             .text_color(palette.text)
             .child(self.render_title(&palette, cx))
             .child(editor)
-            .when_some(overlay, |this, overlay| this.child(overlay))
+            .children(overlay)
     }
 }
 

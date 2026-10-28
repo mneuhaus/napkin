@@ -3,22 +3,22 @@
 use gpui_kit::component::button::{Button, ButtonVariants as _};
 use gpui_kit::component::searchable_list::SearchableVec;
 use gpui_kit::component::select::{Select, SelectEvent, SelectState};
-use gpui_kit::component::switch::Switch;
+use gpui_kit::component::switch::Switch as Toggle;
 use gpui_kit::component::{IndexPath, Selectable as _, Sizable as _};
 use gpui_kit::prelude::FluentBuilder as _;
 use gpui_kit::{
-    AnyElement, AnyWindowHandle, App, AppContext as _, ClickEvent, Context, Entity, FontWeight,
+    AnyWindowHandle, App, AppContext as _, ClickEvent, Context, Div, Entity, FontWeight,
     InteractiveElement as _, IntoElement, ParentElement as _, PathPromptOptions, Render, SharedString,
     StatefulInteractiveElement as _, Styled as _, Subscription, TitlebarOptions, Window, WindowBounds,
     WindowOptions, div, px, size,
 };
 use napkin_core::{AngleUnit, NumberStyle, TimeFormat};
 
-use crate::actions::{DecreaseFontSize, IncreaseFontSize};
+use crate::actions::{DecreaseFontSize, IncreaseFontSize, OpenNotesFolder};
 use crate::app::{self, Napkin};
 use crate::hotkey;
-use crate::settings::{AppSettings, DEFAULT_HOTKEY, FontChoice};
-use crate::theme::ThemeChoice;
+use crate::settings::{AppSettings, DEFAULT_HOTKEY, FontChoice, Switch};
+use crate::theme::{Palette, ThemeChoice};
 
 /// Highest precision the settings offer, as in Numi.
 const MAX_PRECISION: u8 = 10;
@@ -26,7 +26,8 @@ const MAX_PRECISION: u8 = 10;
 type Choice = Entity<SelectState<SearchableVec<SharedString>>>;
 
 /// Opens the settings window.
-pub(crate) fn open(focus: bool, cx: &mut App) -> anyhow::Result<AnyWindowHandle> {
+pub(crate) fn open(cx: &mut App) -> anyhow::Result<AnyWindowHandle> {
+    let focus = !cx.global::<Napkin>().background;
     let bounds = gpui_kit::Bounds::centered(None, size(px(520.), px(640.)), cx);
     let options = WindowOptions {
         window_bounds: Some(WindowBounds::Windowed(bounds)),
@@ -188,15 +189,18 @@ impl SettingsWindow {
         }));
         cx.notify();
     }
+}
 
-    fn choose_notes_folder(&mut self, window: &mut Window, cx: &mut Context<'_, Self>) {
-        let picked = cx.prompt_for_paths(PathPromptOptions {
-            files: false,
-            directories: true,
-            multiple: false,
-            prompt: Some("Use as Notes Folder".into()),
-        });
-        cx.spawn_in(window, async move |_, cx| {
+/// Lets the user pick a notes folder.
+fn choose_notes_folder(window: &mut Window, cx: &mut App) {
+    let picked = cx.prompt_for_paths(PathPromptOptions {
+        files: false,
+        directories: true,
+        multiple: false,
+        prompt: Some("Use as Notes Folder".into()),
+    });
+    window
+        .spawn(cx, async move |cx| {
             let Ok(Ok(Some(paths))) = picked.await else {
                 return;
             };
@@ -206,10 +210,284 @@ impl SettingsWindow {
             }
         })
         .detach();
+}
+
+/// A small upper-case heading above a group of settings.
+fn section(title: &'static str, palette: &Palette) -> Div {
+    div()
+        .pt(px(18.))
+        .pb(px(6.))
+        .text_size(px(11.))
+        .font_weight(FontWeight::SEMIBOLD)
+        .text_color(palette.muted)
+        .child(title.to_uppercase())
+}
+
+/// A labelled control, the label left and the control right.
+fn row(label: &'static str, control: impl IntoElement) -> Div {
+    div()
+        .flex()
+        .items_center()
+        .justify_between()
+        .gap(px(16.))
+        .py(px(6.))
+        .child(div().text_size(px(13.)).child(label))
+        .child(div().flex_none().w(px(230.)).flex().justify_end().child(control))
+}
+
+fn select(state: &Choice) -> impl IntoElement {
+    Select::new(state).small().w(px(230.))
+}
+
+/// A switch bound to one boolean setting.
+fn switch(id: &'static str, state: Switch, apply: fn(&mut AppSettings, bool)) -> impl IntoElement {
+    Toggle::new(id)
+        .checked(state.is_on())
+        .on_click(move |checked: &bool, _, cx| {
+            let checked = *checked;
+            app::update_settings(cx, |settings| apply(settings, checked));
+        })
+}
+
+fn font_size_control(settings: &AppSettings) -> impl IntoElement {
+    div()
+        .flex()
+        .items_center()
+        .gap(px(6.))
+        .child(
+            Button::new("font-smaller")
+                .small()
+                .label("−")
+                .on_click(|_: &ClickEvent, window, cx| {
+                    window.dispatch_action(Box::new(DecreaseFontSize), cx);
+                }),
+        )
+        .child(
+            div()
+                .w(px(44.))
+                .text_center()
+                .text_size(px(13.))
+                .child(format!("{} pt", settings.clamped_font_size())),
+        )
+        .child(
+            Button::new("font-larger")
+                .small()
+                .label("+")
+                .on_click(|_: &ClickEvent, window, cx| {
+                    window.dispatch_action(Box::new(IncreaseFontSize), cx);
+                }),
+        )
+}
+
+fn notes_folder_control(settings: &AppSettings, notes_dir: String, palette: &Palette) -> impl IntoElement {
+    div()
+        .flex()
+        .flex_col()
+        .gap(px(6.))
+        .py(px(6.))
+        .child(
+            div()
+                .text_size(px(12.))
+                .text_color(palette.muted)
+                .overflow_hidden()
+                .text_ellipsis()
+                .child(notes_dir),
+        )
+        .child(
+            div()
+                .flex()
+                .gap(px(6.))
+                .child(
+                    Button::new("notes-choose")
+                        .small()
+                        .label("Choose…")
+                        .on_click(|_: &ClickEvent, window, cx| choose_notes_folder(window, cx)),
+                )
+                .child(
+                    Button::new("notes-reveal")
+                        .small()
+                        .ghost()
+                        .label("Show in Finder")
+                        .on_click(|_: &ClickEvent, window, cx| {
+                            window.dispatch_action(Box::new(OpenNotesFolder), cx);
+                        }),
+                )
+                .when(settings.notes_dir.is_some(), |buttons| {
+                    buttons.child(
+                        Button::new("notes-default")
+                            .small()
+                            .ghost()
+                            .label("Use default")
+                            .on_click(|_: &ClickEvent, _, cx| {
+                                app::update_settings(cx, |settings| settings.notes_dir = None);
+                            }),
+                    )
+                }),
+        )
+}
+
+fn extensions_control(napkin: &Napkin, palette: &Palette) -> Div {
+    let report = &napkin.extensions;
+    let status = if report.loaded.is_empty() && report.failed.is_empty() {
+        "No extensions loaded".to_owned()
+    } else {
+        format!("{} loaded, {} failed", report.loaded.len(), report.failed.len())
+    };
+    let failures = report.failed.iter().map(|(file, reason)| {
+        let name = file
+            .file_name()
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or_default();
+        div()
+            .text_size(px(12.))
+            .text_color(palette.spans.function)
+            .child(format!("{name}: {reason}"))
+    });
+    div()
+        .flex()
+        .flex_col()
+        .gap(px(6.))
+        .py(px(6.))
+        .child(div().text_size(px(13.)).child(status))
+        .children(failures)
+        .child(
+            div()
+                .text_size(px(12.))
+                .text_color(palette.muted)
+                .child(napkin.paths.extension_dir().display().to_string()),
+        )
+        .child(
+            div()
+                .flex()
+                .gap(px(6.))
+                .child(
+                    Button::new("reload-extensions")
+                        .small()
+                        .label("Reload Extensions")
+                        .on_click(|_: &ClickEvent, _, cx| app::reload_extensions(cx)),
+                )
+                .child(
+                    Button::new("open-extensions")
+                        .small()
+                        .ghost()
+                        .label("Open Extensions Folder")
+                        .on_click(|_: &ClickEvent, _, cx| app::open_extensions_folder(cx)),
+                ),
+        )
+}
+
+impl SettingsWindow {
+    fn hotkey_control(&self, settings: &AppSettings, cx: &mut Context<'_, Self>) -> impl IntoElement {
+        let recording = self.recording_hotkey.is_some();
+        let label = if recording {
+            "Press keys…".to_owned()
+        } else {
+            settings
+                .hotkey
+                .as_deref()
+                .map_or_else(|| "Off".to_owned(), hotkey::display)
+        };
+        let enabled = settings.hotkey.is_some();
+        div()
+            .flex()
+            .items_center()
+            .gap(px(6.))
+            .child(
+                Button::new("hotkey")
+                    .small()
+                    .label(label)
+                    .selected(recording)
+                    .tooltip("Click, then press the new shortcut (esc cancels)")
+                    .on_click(cx.listener(|this, _: &ClickEvent, window, cx| this.record_hotkey(window, cx))),
+            )
+            .child(
+                Button::new("hotkey-off")
+                    .small()
+                    .ghost()
+                    .label(if enabled { "Turn off" } else { "Default" })
+                    .on_click(move |_: &ClickEvent, _, cx| {
+                        let hotkey = (!enabled).then(|| DEFAULT_HOTKEY.to_owned());
+                        app::update_settings(cx, |settings| settings.hotkey = hotkey);
+                    }),
+            )
     }
 }
 
-/// A select over fixed labels with `selected` chosen.
+impl Render for SettingsWindow {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<'_, Self>) -> impl IntoElement {
+        let napkin = cx.global::<Napkin>();
+        let palette = napkin.palette();
+        let settings = napkin.settings.clone();
+        let notes_dir = napkin.notes_dir().display().to_string();
+        let problems = napkin.problems.clone();
+        let extensions = extensions_control(napkin, &palette);
+        let hotkey = self.hotkey_control(&settings, cx);
+        let desktop = &settings.desktop;
+
+        div()
+            .id("settings")
+            .size_full()
+            .overflow_y_scroll()
+            .bg(palette.background)
+            .text_color(palette.text)
+            .px(px(28.))
+            .pb(px(28.))
+            .child(section("Appearance", &palette))
+            .child(row("Theme", select(&self.theme)))
+            .child(row("Font", select(&self.font)))
+            .child(row("Font size", font_size_control(&settings)))
+            .child(section("Calculation", &palette))
+            .child(row("Precision (decimal places)", select(&self.precision)))
+            .child(row("Number style", select(&self.number_style)))
+            .child(row("Angle unit", select(&self.angle_unit)))
+            .child(row("Time format", select(&self.time_format)))
+            .child(section("Notes", &palette))
+            .child(notes_folder_control(&settings, notes_dir, &palette))
+            .child(section("System", &palette))
+            .child(row("Show / hide hotkey", hotkey))
+            .child(row(
+                "Menu bar icon",
+                switch("menu-bar-icon", desktop.menu_bar_icon.into(), |settings, on| {
+                    settings.desktop.menu_bar_icon = on;
+                }),
+            ))
+            .child(row(
+                "Dock icon",
+                switch("dock-icon", desktop.dock_icon.into(), |settings, on| {
+                    settings.desktop.dock_icon = on;
+                }),
+            ))
+            .child(row(
+                "Launch at login",
+                switch(
+                    "launch-at-login",
+                    desktop.launch_at_login.into(),
+                    |settings, on| {
+                        settings.desktop.launch_at_login = on;
+                    },
+                ),
+            ))
+            .child(row(
+                "Alfred integration (port 15055)",
+                switch("alfred", settings.alfred_http.into(), |settings, on| {
+                    settings.alfred_http = on;
+                }),
+            ))
+            .child(section("Extensions", &palette))
+            .child(extensions)
+            .when(!problems.is_empty(), |page| {
+                page.child(section("Problems", &palette))
+                    .children(problems.into_iter().map(|problem| {
+                        div()
+                            .text_size(px(12.))
+                            .text_color(palette.spans.function)
+                            .py(px(2.))
+                            .child(problem)
+                    }))
+            })
+    }
+}
+
 fn choice(
     labels: &[&str],
     selected: &str,
@@ -259,267 +537,4 @@ fn value_of<T: Copy>(table: &[(T, &'static str)], label: &str) -> Option<T> {
         .iter()
         .find(|(_, candidate)| *candidate == label)
         .map(|(value, _)| *value)
-}
-
-impl Render for SettingsWindow {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<'_, Self>) -> impl IntoElement {
-        let napkin = cx.global::<Napkin>();
-        let palette = napkin.palette();
-        let settings = napkin.settings.clone();
-        let notes_dir = napkin.notes_dir().display().to_string();
-        let extensions = napkin.extensions.clone();
-        let problems = napkin.problems.clone();
-        let extension_dir = napkin.paths.extension_dir().display().to_string();
-        let recording = self.recording_hotkey.is_some();
-
-        let section = |title: &'static str| {
-            div()
-                .pt(px(18.))
-                .pb(px(6.))
-                .text_size(px(11.))
-                .font_weight(FontWeight::SEMIBOLD)
-                .text_color(palette.muted)
-                .child(title.to_uppercase())
-        };
-        let row = |label: &'static str, control: AnyElement| {
-            div()
-                .flex()
-                .items_center()
-                .justify_between()
-                .gap(px(16.))
-                .py(px(6.))
-                .child(div().text_size(px(13.)).child(label))
-                .child(div().flex_none().w(px(230.)).flex().justify_end().child(control))
-        };
-        let select = |state: &Choice| Select::new(state).small().w(px(230.)).into_any_element();
-        let switch = |id: &'static str, checked: bool, apply: fn(&mut AppSettings, bool)| {
-            Switch::new(id)
-                .checked(checked)
-                .on_click(move |checked: &bool, _, cx| {
-                    let checked = *checked;
-                    app::update_settings(cx, |settings| apply(settings, checked));
-                })
-                .into_any_element()
-        };
-
-        let font_size =
-            div()
-                .flex()
-                .items_center()
-                .gap(px(6.))
-                .child(Button::new("font-smaller").small().label("−").on_click(
-                    |_: &ClickEvent, window, cx| {
-                        window.dispatch_action(Box::new(DecreaseFontSize), cx);
-                    },
-                ))
-                .child(
-                    div()
-                        .w(px(44.))
-                        .text_center()
-                        .text_size(px(13.))
-                        .child(format!("{} pt", settings.clamped_font_size())),
-                )
-                .child(Button::new("font-larger").small().label("+").on_click(
-                    |_: &ClickEvent, window, cx| {
-                        window.dispatch_action(Box::new(IncreaseFontSize), cx);
-                    },
-                ))
-                .into_any_element();
-
-        let hotkey_label = if recording {
-            "Press keys…".to_owned()
-        } else {
-            settings
-                .hotkey
-                .as_deref()
-                .map_or_else(|| "Off".to_owned(), hotkey::display)
-        };
-        let hotkey_control = div()
-            .flex()
-            .items_center()
-            .gap(px(6.))
-            .child(
-                Button::new("hotkey")
-                    .small()
-                    .label(hotkey_label)
-                    .selected(recording)
-                    .tooltip("Click, then press the new shortcut (esc cancels)")
-                    .on_click(cx.listener(|this, _: &ClickEvent, window, cx| this.record_hotkey(window, cx))),
-            )
-            .child(
-                Button::new("hotkey-off")
-                    .small()
-                    .ghost()
-                    .label(if settings.hotkey.is_some() {
-                        "Turn off"
-                    } else {
-                        "Default"
-                    })
-                    .on_click(|_: &ClickEvent, _, cx| {
-                        app::update_settings(cx, |settings| {
-                            settings.hotkey = if settings.hotkey.is_some() {
-                                None
-                            } else {
-                                Some(DEFAULT_HOTKEY.to_owned())
-                            };
-                        });
-                    }),
-            )
-            .into_any_element();
-
-        let notes_folder = div()
-            .flex()
-            .flex_col()
-            .gap(px(6.))
-            .py(px(6.))
-            .child(
-                div()
-                    .text_size(px(12.))
-                    .text_color(palette.muted)
-                    .overflow_hidden()
-                    .text_ellipsis()
-                    .child(notes_dir),
-            )
-            .child(
-                div()
-                    .flex()
-                    .gap(px(6.))
-                    .child(Button::new("notes-choose").small().label("Choose…").on_click(
-                        cx.listener(|this, _: &ClickEvent, window, cx| this.choose_notes_folder(window, cx)),
-                    ))
-                    .child(
-                        Button::new("notes-reveal")
-                            .small()
-                            .ghost()
-                            .label("Show in Finder")
-                            .on_click(|_: &ClickEvent, window, cx| {
-                                window.dispatch_action(Box::new(crate::actions::OpenNotesFolder), cx);
-                            }),
-                    )
-                    .when(settings.notes_dir.is_some(), |buttons| {
-                        buttons.child(
-                            Button::new("notes-default")
-                                .small()
-                                .ghost()
-                                .label("Use default")
-                                .on_click(|_: &ClickEvent, _, cx| {
-                                    app::update_settings(cx, |settings| settings.notes_dir = None)
-                                }),
-                        )
-                    }),
-            );
-
-        let extension_status = if extensions.loaded.is_empty() && extensions.failed.is_empty() {
-            "No extensions loaded".to_owned()
-        } else {
-            format!(
-                "{} loaded, {} failed",
-                extensions.loaded.len(),
-                extensions.failed.len()
-            )
-        };
-
-        div()
-            .id("settings")
-            .size_full()
-            .overflow_y_scroll()
-            .bg(palette.background)
-            .text_color(palette.text)
-            .px(px(28.))
-            .pb(px(28.))
-            .child(section("Appearance"))
-            .child(row("Theme", select(&self.theme)))
-            .child(row("Font", select(&self.font)))
-            .child(row("Font size", font_size))
-            .child(section("Calculation"))
-            .child(row("Precision (decimal places)", select(&self.precision)))
-            .child(row("Number style", select(&self.number_style)))
-            .child(row("Angle unit", select(&self.angle_unit)))
-            .child(row("Time format", select(&self.time_format)))
-            .child(section("Notes"))
-            .child(notes_folder)
-            .child(section("System"))
-            .child(row("Show / hide hotkey", hotkey_control))
-            .child(row(
-                "Menu bar icon",
-                switch("menu-bar-icon", settings.desktop.menu_bar_icon, |settings, on| {
-                    settings.desktop.menu_bar_icon = on
-                }),
-            ))
-            .child(row(
-                "Dock icon",
-                switch("dock-icon", settings.desktop.dock_icon, |settings, on| {
-                    settings.desktop.dock_icon = on
-                }),
-            ))
-            .child(row(
-                "Launch at login",
-                switch(
-                    "launch-at-login",
-                    settings.desktop.launch_at_login,
-                    |settings, on| {
-                        settings.desktop.launch_at_login = on;
-                    },
-                ),
-            ))
-            .child(row(
-                "Alfred integration (port 15055)",
-                switch("alfred", settings.alfred_http, |settings, on| {
-                    settings.alfred_http = on
-                }),
-            ))
-            .child(section("Extensions"))
-            .child(
-                div()
-                    .flex()
-                    .flex_col()
-                    .gap(px(6.))
-                    .py(px(6.))
-                    .child(div().text_size(px(13.)).child(extension_status))
-                    .children(extensions.failed.iter().map(|(file, reason)| {
-                        let name = file
-                            .file_name()
-                            .map(|name| name.to_string_lossy().into_owned())
-                            .unwrap_or_default();
-                        div()
-                            .text_size(px(12.))
-                            .text_color(palette.spans.function)
-                            .child(format!("{name}: {reason}"))
-                    }))
-                    .child(
-                        div()
-                            .text_size(px(12.))
-                            .text_color(palette.muted)
-                            .child(extension_dir),
-                    )
-                    .child(
-                        div()
-                            .flex()
-                            .gap(px(6.))
-                            .child(
-                                Button::new("reload-extensions")
-                                    .small()
-                                    .label("Reload Extensions")
-                                    .on_click(|_: &ClickEvent, _, cx| app::reload_extensions(cx)),
-                            )
-                            .child(
-                                Button::new("open-extensions")
-                                    .small()
-                                    .ghost()
-                                    .label("Open Extensions Folder")
-                                    .on_click(|_: &ClickEvent, _, cx| app::open_extensions_folder(cx)),
-                            ),
-                    ),
-            )
-            .when(!problems.is_empty(), |page| {
-                page.child(section("Problems"))
-                    .children(problems.into_iter().map(|problem| {
-                        div()
-                            .text_size(px(12.))
-                            .text_color(palette.spans.function)
-                            .py(px(2.))
-                            .child(problem)
-                    }))
-            })
-    }
 }
