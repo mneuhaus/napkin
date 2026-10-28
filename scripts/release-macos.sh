@@ -23,8 +23,11 @@ staging="$(mktemp -d "$root/dist/.dmg.XXXXXX")"
 trap 'rm -rf "$staging"' EXIT
 cp -R "$root/dist/Napkin.app" "$staging/"
 ln -s /Applications "$staging/Applications"
-hdiutil create -quiet -volname "Napkin $version" -srcfolder "$staging" -ov -format UDZO \
-    "$out/Napkin-$version.dmg"
+# hdiutil's own size estimate for -srcfolder can come out too small ("no space left on device"),
+# so size the image explicitly with some headroom.
+size_mb=$(($(du -sm "$staging" | cut -f1) + 40))
+hdiutil create -quiet -volname "Napkin $version" -srcfolder "$staging" -size "${size_mb}m" -ov \
+    -format UDZO "$out/Napkin-$version.dmg"
 
 for triple in "${triples[@]}"; do
     echo "building napkin $version (release, $triple)"
