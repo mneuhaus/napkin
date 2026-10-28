@@ -218,6 +218,70 @@ const JAPANESE: Table = &[
         &["平方根 16", "立方根 27", "255を十六進数"],
         &[Text("4"), Text("3"), Text("0xFF")],
     ),
+    // Kanji numerals, also with units, currencies and times
+    (
+        &[
+            "三百五十",
+            "二千",
+            "一万五千",
+            "三億",
+            "十二",
+            "二十",
+            "百五十",
+            "五点五",
+        ],
+        &[
+            Text("350"),
+            Text("2,000"),
+            Text("15,000"),
+            Text("300,000,000"),
+            Text("12"),
+            Text("20"),
+            Text("150"),
+            Text("5.5"),
+        ],
+    ),
+    (
+        &[
+            "三百円",
+            "千円",
+            "二時間",
+            "三時",
+            "三時半",
+            "二〇二六年三月十二日",
+            "りんごを三個",
+        ],
+        &[
+            Text("¥300"),
+            Text("¥1,000"),
+            Text("2 時間"),
+            Text("03:00"),
+            Text("03:30"),
+            Text("2026年3月12日(木)"),
+            Text("3"),
+        ],
+    ),
+    // Full-width digits and operators; phrases with numerals keep their meaning
+    (
+        &[
+            "１２３",
+            "１２．５",
+            "３＋４",
+            "５０の２０％",
+            "一緒",
+            "一昨日",
+            "255を十六進数",
+        ],
+        &[
+            Text("123"),
+            Text("12.5"),
+            Text("7"),
+            Text("10"),
+            Nothing,
+            Text("2026年10月26日(月)"),
+            Text("0xFF"),
+        ],
+    ),
     // Prose stays prose
     (&["こんにちは", "りんごを3個"], &[Nothing, Text("3")]),
 ];

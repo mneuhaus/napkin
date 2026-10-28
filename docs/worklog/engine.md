@@ -23,6 +23,8 @@ Modules in `crates/napkin-core/src/`:
   avg, prose-tolerant parsing).
 - `custom.rs`: extension registry (units, functions) with validation.
 - `num.rs`: checked f64/integer conversions (the only `as` casts, behind `#[expect]`).
+- `numerals.rs`: numbers written without digits (Chinese, Japanese, Korean numerals), see
+  `docs/worklog/languages.md`.
 
 Tests: `tests/acceptance.rs` (spec table), `tests/semantics.rs` (lexer/parser/document edge
 cases), `tests/extensions.rs` (hooks with closures), `tests/performance.rs` (ignored; run
@@ -117,6 +119,18 @@ cases), `tests/extensions.rs` (hooks with closures), `tests/performance.rs` (ign
 ## Spec rows
 
 No spec row needed changing. All 63 checked lines of the acceptance table pass.
+
+## Input parsing (2026-10-28)
+
+- **Hyphens**: a `-` (also U+2010/U+2011) between two letters is part of the word in the lexer;
+  `classify::split_hyphens` splits it back into a subtraction only when every part is a value
+  (variable, constant, `prev`/`sum`/`now`/`today`…, or a language's value word). Otherwise the
+  word is prose unless known as a whole. `x-5`, `5km-3km`, `km2-m` keep the minus (a digit on
+  one side).
+- **Dashed dates** `D-M-YYYY` in the lexer (`DashedDates`): day first, month first only for
+  English style and English input; the other order when the first is no date.
+- **Full-width forms** fold to ASCII before a line is evaluated (`lexer::fold_width`), with a
+  byte map that moves the spans back onto the typed line.
 
 ## Known gaps / ideas
 

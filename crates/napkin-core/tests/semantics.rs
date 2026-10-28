@@ -498,6 +498,16 @@ const PIECES: &[&str] = &[
     "root",
     "fromunix",
     "fact",
+    "１２",
+    "＋",
+    "．５",
+    "　",
+    "Rendez-vous",
+    "pi-e",
+    "e-",
+    "24-12-2026",
+    "14h30",
+    "1st",
     "round",
     "today",
     "now",
@@ -748,5 +758,110 @@ fn an_unknown_unit_before_a_conversion_is_an_error() {
             ("convert 5 km to miles", "3.11 miles"),
             ("$275 for the \"Model 227\"", "$275"),
         ],
+    );
+}
+
+#[test]
+fn hyphenated_words_are_one_word() {
+    let engine = common::engine();
+    check(
+        &engine,
+        &[
+            ("Rendez-vous à 14:00", "14:00"),
+            ("e-mail: 5 + 3", "8"),
+            ("e-mail 5 + 3", "8"),
+            ("X-ray 5", "5"),
+            ("well-known 3 + 4", "7"),
+            ("Coca-Cola $2", "$2"),
+            ("Rendez-vous", "none"),
+            ("time in Port-au-Prince", "08:00"),
+        ],
+    );
+    // Subtraction between values keeps working.
+    check(
+        &engine,
+        &[
+            ("pi-e", "0.42"),
+            ("today-yesterday", "1 day"),
+            ("5km-3km", "2 km"),
+            ("10-5", "5"),
+            ("x-5", "-5"),
+            ("-5", "-5"),
+            ("5 - -3", "8"),
+        ],
+    );
+    assert_eq!(last(&engine, "x = 5\ny = 3\nx-y"), "2");
+    assert_eq!(last(&engine, "x = 5\nx-5"), "0");
+    assert_eq!(last(&engine, "price = 100\ntax = 19\nprice-tax"), "81");
+    assert_eq!(
+        last(&engine, "price = 100\nprice-discount"),
+        "none",
+        "a value joined to an unknown word is one prose word"
+    );
+}
+
+#[test]
+fn dashed_dates_and_ordinal_days() {
+    let mut engine = common::engine();
+    check(
+        &engine,
+        &[
+            ("24-12-2026", "Thu, 24 Dec 2026"),
+            ("3-12-2026", "Thu, 12 Mar 2026"),
+            ("3/12/2026", "Thu, 12 Mar 2026"),
+            ("1-5-2026", "Mon, 5 Jan 2026"),
+            ("24-12-2026 - today", "57 days"),
+            ("10-5-3", "2"),
+            ("24 - 12 - 2026", "-2,014"),
+            ("2026-12-24", "Thu, 24 Dec 2026"),
+            ("31-2-2026", "-1,997"),
+            ("1st March 2026", "Sun, 1 Mar 2026"),
+            ("March 1st", "Sun, 1 Mar 2026"),
+            ("March 2nd, 2026", "Mon, 2 Mar 2026"),
+            ("2h30", "2"),
+        ],
+    );
+    // Day first outside English number style.
+    engine.set_settings(Settings {
+        number_style: NumberStyle::German,
+        ..Settings::default()
+    });
+    check(
+        &engine,
+        &[
+            ("3-12-2026", "Thu, 3 Dec 2026"),
+            ("12-24-2026", "Thu, 24 Dec 2026"),
+        ],
+    );
+}
+
+#[test]
+fn full_width_forms_read_as_ascii() {
+    let engine = common::engine();
+    check(
+        &engine,
+        &[
+            ("１２３", "123"),
+            ("１２．５", "12.5"),
+            ("３＋４", "7"),
+            ("５ｋｍ　ｉｎ　ｍ", "5,000 m"),
+            ("１２：３０", "12:30"),
+            ("5，3", "5"),
+        ],
+    );
+    let spans: Vec<(std::ops::Range<usize>, SpanKind)> = engine.evaluate("３＋４ // ｎｏｔｅ")[0]
+        .spans
+        .iter()
+        .map(|span| (span.range.clone(), span.kind))
+        .collect();
+    assert_eq!(
+        spans,
+        [
+            (0..3, SpanKind::Number),
+            (3..6, SpanKind::Operator),
+            (6..9, SpanKind::Number),
+            (10..25, SpanKind::Comment),
+        ],
+        "spans point into the line as typed"
     );
 }

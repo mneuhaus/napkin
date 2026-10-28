@@ -2,7 +2,7 @@
 #
 # Chinese is written without spaces: every character is a token of its own and the longest
 # known phrase wins (`5千米` is 5 km, `5千` is 5000, `5千克` is 5 kg). Characters this file does
-# not know stay prose. Numbers are written in digits; Chinese numerals (`二十`) are prose.
+# not know stay prose. Numbers are written in digits or Chinese numerals (`二十`, `三百五十`).
 
 # Arithmetic. `和` is also the sum (an operator only between two operands); `的` and `里的` put
 # the base first (`50的20%` is 20% of 50, so they multiply).
@@ -35,6 +35,31 @@ scale.1e7 = 千万
 scale.1e8 = 亿
 scale.1e9 = 十亿
 scale.1e12 = 万亿
+
+# Chinese numerals (`三百五十`, `两千`, `一万五千`, `五点五`, `二〇二六`), also the financial forms.
+# A numeral takes the multipliers after it (`五千米` is 5000 m). A phrase starting at the same
+# character that is at least as long keeps its meaning (`一共`, `十六进制`, `四舍五入`); `十万`
+# alone is the numeral.
+numeral.0 = 〇, 零
+numeral.1 = 一, 壹
+numeral.2 = 二, 两, 贰
+numeral.3 = 三, 叁
+numeral.4 = 四, 肆
+numeral.5 = 五, 伍
+numeral.6 = 六, 陆
+numeral.7 = 七, 柒
+numeral.8 = 八, 捌
+numeral.9 = 九, 玖
+numeral.10 = 十, 拾
+numeral.100 = 百, 佰
+numeral.1000 = 千, 仟
+numeral.1e4 = 万
+numeral.1e8 = 亿
+numeral.point = 点
+# Common words with a numeral in them that are no numbers
+prose = 万一, 一半, 一些, 一起, 一样, 一下, 一直, 一定, 一般, 一切, 一边, 一点儿, 一点点, 统一, 唯一,
+    百度, 百货, 百姓,
+    星期{一,二,三,四,五,六}, 礼拜{一,二,三,四,五,六}, 周{一,二,三,四,五,六}
 
 # Time (one form for every count). `分` alone is minutes (`3分20秒`); before a unit it is the
 # deci prefix (`分米`). `3月` is March, so months are `个月`.

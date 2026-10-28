@@ -44,8 +44,9 @@ Everything in Numi's documentation, plus a little more:
 - **Notes as documents**: `# headers`, `// comments`, `"quoted comments"`, `Labels:`, variables,
   `prev`, `sum`/`total`, `avg`/`average`. Prose between the numbers is ignored.
 - **28 input languages**, Numi's set, on top of English: `5 Zoll in cm`, `20 Prozent von 50`,
-  `heute + 2 Wochen`, `3 fois 4`, `5厘米加3毫米`, `2 часа в минутах`. Word units and dates come
-  out in the chosen language (`2 Stunden`, `Mi., 28. Okt. 2026`).
+  `heute + 2 Wochen`, `3 fois 4`, `14h30 à New York`, `5厘米加3毫米`, `三百五十元`,
+  `2 часа в минутах`. Word units and dates come out in the chosen language (`2 Stunden`,
+  `Mi., 28. Okt. 2026`).
 
 ## The app
 

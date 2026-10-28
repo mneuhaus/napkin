@@ -157,6 +157,39 @@ const DUTCH: Table = &[
             Text("57 dagen"),
         ],
     ),
+    // Dates with dashes are day first; spaced or short ones stay subtractions
+    (
+        &[
+            "24-12-2026",
+            "1-5-2026",
+            "24-12-2026 - vandaag",
+            "10-5-3",
+            "24 - 12 - 2026",
+            "2026-12-24",
+            "31-2-2026",
+        ],
+        &[
+            Text("do 24 dec. 2026"),
+            Text("vr 1 mei 2026"),
+            Text("57 dagen"),
+            Text("2"),
+            Text("-2.014"),
+            Text("do 24 dec. 2026"),
+            Text("-1.997"),
+        ],
+    ),
+    // A hyphen between letters joins one word
+    (
+        &["e-mail: 5 + 3", "x = 7", "x-5", "-5", "5 - -3", "5km-3km"],
+        &[
+            Text("8"),
+            Text("7"),
+            Text("2"),
+            Text("-5"),
+            Text("8"),
+            Text("2 km"),
+        ],
+    ),
     // Document references
     (
         &["huur: 850 €", "stroom: 64 €", "som"],
@@ -299,22 +332,35 @@ const DUTCH: Table = &[
     ),
 ];
 
-const BELGIAN: Table = &[(
-    &[
-        "2 u",
-        "90 minuten in u",
-        "tijd in Bergen",
-        "vandaag",
-        "3 ons in gram",
-    ],
-    &[
-        Text("2 uur"),
-        Text("1,5 uur"),
-        Text("13:00"),
-        Text("wo 28 okt. 2026"),
-        Text("300 g"),
-    ],
-)];
+const BELGIAN: Table = &[
+    (
+        &[
+            "2 u",
+            "90 minuten in u",
+            "tijd in Bergen",
+            "vandaag",
+            "3 ons in gram",
+        ],
+        &[
+            Text("2 uur"),
+            Text("1,5 uur"),
+            Text("13:00"),
+            Text("wo 28 okt. 2026"),
+            Text("300 g"),
+        ],
+    ),
+    // `u` between hours and minutes is a time of day
+    (
+        &["14u30", "14u30 in Londen", "14 u 30", "14u", "2u"],
+        &[
+            Text("14:30"),
+            Text("13:30"),
+            Text("14:30"),
+            Text("14 uur"),
+            Text("2 uur"),
+        ],
+    ),
+];
 
 const AFRIKAANS: Table = &[
     (

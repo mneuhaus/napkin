@@ -225,6 +225,43 @@ const KOREAN: Table = &[
         &["제곱근 16", "세제곱근 27", "255 in 십육진수"],
         &[Text("4"), Text("3"), Text("0xFF")],
     ),
+    // Sino-Korean numerals need a multiplier, and two syllables when they stand alone
+    (
+        &[
+            "삼백",
+            "오천원",
+            "만원",
+            "삼백만원",
+            "이십분",
+            "삼십 분",
+            "십만",
+            "5십만",
+            "5만원",
+        ],
+        &[
+            Text("300"),
+            Text("5,000 KRW"),
+            Text("10,000 KRW"),
+            Text("3,000,000 KRW"),
+            Text("20 분"),
+            Text("30 분"),
+            Text("100,000"),
+            Text("500,000"),
+            Text("50,000 KRW"),
+        ],
+    ),
+    (
+        &["이사", "사이", "천사", "백조", "천만에요", "3월 12일", "１２３"],
+        &[
+            Nothing,
+            Nothing,
+            Nothing,
+            Nothing,
+            Nothing,
+            Text("2026년 3월 12일 (목)"),
+            Text("123"),
+        ],
+    ),
     // Prose stays prose
     (&["안녕하세요", "사과 3개"], &[Nothing, Text("3")]),
 ];

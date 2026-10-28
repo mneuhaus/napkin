@@ -63,9 +63,6 @@ VEF.variants	Bolivares Fuertes	VEF, the bolívar fuerte, gave way to VES in 2018
 VEF.variants	bolivares fuertes	VEF, the bolívar fuerte, gave way to VES in 2018 and is a code Napkin does not know; `Bolivar` reads as VES
 VEF.variants	Bs	VEF is a code Napkin does not know; `Bs` is the boliviano (BOB), as in Numi's English list
 VEF.variants	Bs.	VEF is a code Napkin does not know; `Bs` is the boliviano (BOB), as in Numi's English list
-SVC.variants	El-Slavador-Colón	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
-SVC.variants	El-Slavador-Colon	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
-SVC.variants	El-Slavador-Colones	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
 SVC.variants	El Salvador Colón	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
 SVC.variants	El Salvador Colones	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know
 SVC.variants	Colones El Salvadors	the Salvadoran colón (SVC) gave way to the US dollar in 2001 and is a code Napkin does not know

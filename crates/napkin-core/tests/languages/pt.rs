@@ -362,6 +362,17 @@ const BRAZILIAN: Table = &[
             Text("5"),
         ],
     ),
+    // `h` between hours and minutes, the ordinal day
+    (
+        &["14h30", "9h05", "14h", "1º de maio", "24-12-2026"],
+        &[
+            Text("14:30"),
+            Text("09:05"),
+            Text("14 h"),
+            Text("sex., 1 de mai. de 2026"),
+            Text("qui., 24 de dez. de 2026"),
+        ],
+    ),
     // Prose stays prose
     (
         &["Bom dia", "Isso custa 5 €", "Vou para casa às 14:00"],

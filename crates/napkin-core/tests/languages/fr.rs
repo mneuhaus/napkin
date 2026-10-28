@@ -171,6 +171,75 @@ const FRENCH: Table = &[
             Text("57 jours"),
         ],
     ),
+    // `h` between hours and minutes is a time of day; `14h` alone stays hours
+    (
+        &[
+            "14h30",
+            "14 h 30",
+            "9h05",
+            "14h30 à New York",
+            "14h30 + 2 heures",
+            "Rendez-vous à 14h30",
+        ],
+        &[
+            Text("14:30"),
+            Text("14:30"),
+            Text("09:05"),
+            Text("09:30"),
+            Text("16:30"),
+            Text("14:30"),
+        ],
+    ),
+    (
+        &["14h", "2 h", "2h", "2 h 30 min", "14h75"],
+        &[
+            Text("14 h"),
+            Text("2 h"),
+            Text("2 h"),
+            Text("150 min"),
+            Text("14"),
+        ],
+    ),
+    // The first of a month takes an ordinal; dates with dashes are day first
+    (
+        &[
+            "1er mai",
+            "1er mai 2026",
+            "1re mai 2026",
+            "1ère mai",
+            "24-12-2026",
+            "1-5-2026",
+            "10-5-3",
+        ],
+        &[
+            Text("ven. 1 mai 2026"),
+            Text("ven. 1 mai 2026"),
+            Text("ven. 1 mai 2026"),
+            Text("ven. 1 mai 2026"),
+            Text("jeu. 24 déc. 2026"),
+            Text("ven. 1 mai 2026"),
+            Text("2"),
+        ],
+    ),
+    // A hyphen between letters joins one word
+    (
+        &[
+            "Rendez-vous à 14:00",
+            "e-mail : 5 + 3",
+            "Coca-Cola 2 €",
+            "après-demain",
+            "pi-e",
+            "10-5",
+        ],
+        &[
+            Text("14:00"),
+            Text("8"),
+            Text("2 €"),
+            Text("ven. 30 oct. 2026"),
+            Text("0,42"),
+            Text("5"),
+        ],
+    ),
     // Document references
     (
         &["loyer : 850 €", "électricité : 64 €", "somme"],

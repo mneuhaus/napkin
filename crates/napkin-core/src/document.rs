@@ -8,13 +8,13 @@ use chrono::{DateTime, Datelike, Utc};
 use crate::classify::{self, Context, Item, Op, Tok};
 use crate::eval::Env;
 use crate::functions::Builtin;
-use crate::lexer::{self, Raw, RawKind, Sym};
+use crate::lexer::{self, DashedDates, Raw, RawKind, Sym};
 use crate::parser::{self, Expr};
 use crate::units::{BUILTINS, Form, Unit, UnitRef};
 use crate::value::{Units, Value};
 use crate::vocab::{Lexicon, Meaning};
 use crate::zones::Zone;
-use crate::{Clock, Engine, EvalError, LineOutput, LineResult, Span, SpanKind};
+use crate::{Clock, Engine, EvalError, InputLanguage, LineOutput, LineResult, NumberStyle, Span, SpanKind};
 
 /// CSS pixels per inch until the document assigns `ppi`.
 const DEFAULT_PPI: f64 = 96.0;
@@ -49,7 +49,7 @@ struct Assignment {
 
 /// Most raws a variable name can span: names in Chinese or Japanese characters are one raw per
 /// character.
-const MAX_NAME_RAWS: usize = 8;
+pub(crate) const MAX_NAME_RAWS: usize = 8;
 
 /// Where the label, comments and code of a line are.
 #[derive(Debug, Default)]
@@ -353,13 +353,25 @@ impl<'a> Document<'a> {
     /// Evaluates the next line of the document.
     pub(crate) fn line(&mut self, raw_line: &str) -> LineOutput {
         let line = raw_line.strip_suffix('\r').unwrap_or(raw_line);
+        let Some((folded, origin)) = lexer::fold_width(line) else {
+            return self.folded_line(line);
+        };
+        let mut output = self.folded_line(&folded);
+        for span in &mut output.spans {
+            span.range = origin[span.range.start]..origin[span.range.end];
+        }
+        output
+    }
+
+    /// Evaluates the next line of the document, its full-width forms folded to ASCII.
+    fn folded_line(&mut self, line: &str) -> LineOutput {
         let content = line.trim();
         let content_start = line.len() - line.trim_start().len();
         if content.is_empty() {
             self.block.clear();
             return none(Vec::new());
         }
-        if content.starts_with(['#', '＃']) {
+        if content.starts_with('#') {
             self.block.clear();
             let range = content_start..content_start + content.len();
             return none(vec![Span {
@@ -380,13 +392,21 @@ impl<'a> Document<'a> {
             range: r.clone(),
             kind: SpanKind::Comment,
         }));
-        let style = self.engine.settings.number_style;
+        let settings = &self.engine.settings;
+        let style = settings.number_style;
+        // `3-12-2026` is month first where `3/12/2026` is, but only for English input.
+        let dashed = if style == NumberStyle::English && settings.input_language == InputLanguage::English {
+            DashedDates::MonthFirst
+        } else {
+            DashedDates::DayFirst
+        };
         let raws: Vec<Raw> = layout
             .code
             .iter()
-            .flat_map(|r| lexer::lex(&line[r.clone()], r.start, style))
+            .flat_map(|r| lexer::lex(&line[r.clone()], r.start, style, dashed))
             .collect();
         let raws = classify::segment(line, raws, &self.lexicon);
+        let raws = classify::split_hyphens(line, raws, &self.lexicon, &|name| self.is_variable(name));
         let result = self.code(line, &raws, &mut spans);
         if let (LineResult::Value(_), Some(value)) = (&result.0, result.1) {
             self.block.push(value.clone());

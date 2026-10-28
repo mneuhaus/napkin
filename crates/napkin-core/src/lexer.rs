@@ -50,12 +50,22 @@ pub(crate) struct Raw {
     pub(crate) range: Range<usize>,
 }
 
+/// Which number comes first in a date written with dashes and the year last (`3-12-2026`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum DashedDates {
+    /// `3-12-2026` is 12 March (English style and language, like `3/12/2026`).
+    MonthFirst,
+    /// `3-12-2026` is 3 December.
+    DayFirst,
+}
+
 /// Lexes `text`, which starts at byte `offset` of its line.
-pub(crate) fn lex(text: &str, offset: usize, style: NumberStyle) -> Vec<Raw> {
+pub(crate) fn lex(text: &str, offset: usize, style: NumberStyle, dashed: DashedDates) -> Vec<Raw> {
     let mut lexer = Lexer {
         s: text,
         i: 0,
         style,
+        dashed,
         out: Vec::new(),
     };
     lexer.run();
@@ -65,15 +75,46 @@ pub(crate) fn lex(text: &str, offset: usize, style: NumberStyle) -> Vec<Raw> {
     lexer.out
 }
 
+/// Full-width forms read as their ASCII counterparts (`１２．５`, `３＋４`, `ｋｍ`) and the
+/// ideographic space as a space: the folded line and, for every byte of it plus its end, the
+/// byte of `line` it comes from. `None` when there is nothing to fold. The full-width comma `，`
+/// stays: in Chinese it separates clauses (`5，3` is not 5.3).
+pub(crate) fn fold_width(line: &str) -> Option<(String, Vec<usize>)> {
+    let fold = |c: char| match c {
+        '，' => None,
+        '\u{3000}' => Some(' '),
+        '\u{FF01}'..='\u{FF5E}' => char::from_u32(u32::from(c) - 0xFEE0),
+        _ => None,
+    };
+    if !line.chars().any(|c| fold(c).is_some()) {
+        return None;
+    }
+    let mut folded = String::with_capacity(line.len());
+    let mut origin = Vec::with_capacity(line.len() + 1);
+    for (at, c) in line.char_indices() {
+        let out = fold(c).unwrap_or(c);
+        origin.extend((0..out.len_utf8()).map(|k| at + k.min(c.len_utf8() - 1)));
+        folded.push(out);
+    }
+    origin.push(line.len());
+    Some((folded, origin))
+}
+
 struct Lexer<'src> {
     s: &'src str,
     i: usize,
     style: NumberStyle,
+    dashed: DashedDates,
     out: Vec<Raw>,
 }
 
 fn is_word_start(c: char) -> bool {
     c.is_alphabetic() || matches!(c, '_' | '°' | '℃' | '℉')
+}
+
+/// A hyphen that can join two words into one (`Rendez-vous`, `e-mail`).
+pub(crate) fn is_hyphen(c: char) -> bool {
+    matches!(c, '-' | '\u{2010}' | '\u{2011}')
 }
 
 /// Writing systems that decide where a word ends.
@@ -91,6 +132,11 @@ enum Script {
 /// Whether `c` is a Korean letter or syllable.
 pub(crate) fn is_hangul(c: char) -> bool {
     script(c) == Script::Hangul
+}
+
+/// Whether `c` is a Chinese character or Japanese kana, a token of its own.
+pub(crate) fn is_ideographic(c: char) -> bool {
+    script(c) == Script::Ideographic
 }
 
 fn script(c: char) -> Script {
@@ -181,6 +227,7 @@ impl Lexer<'_> {
     fn word(&mut self, start: usize) {
         let mut chars = self.s[start..].char_indices().peekable();
         let mut end = start;
+        let mut previous = None;
         let first = self.peek(start).map_or(Script::Alphabetic, script);
         while let Some((at, c)) = chars.next() {
             let continues = if at == 0 {
@@ -189,12 +236,19 @@ impl Lexer<'_> {
                 false
             } else if matches!(c, '\'' | '’') {
                 chars.peek().is_some_and(|(_, next)| next.is_alphabetic())
+            } else if is_hyphen(c) {
+                // `Rendez-vous`: a hyphen between two letters joins them (`x-5` stays a minus).
+                previous.is_some_and(char::is_alphabetic)
+                    && chars
+                        .peek()
+                        .is_some_and(|(_, next)| next.is_alphabetic() && script(*next) == Script::Alphabetic)
             } else {
                 c.is_alphabetic() || (first == Script::Alphabetic && (c.is_ascii_digit() || c == '_'))
             };
             if !continues {
                 break;
             }
+            previous = Some(c);
             end = start + at + c.len_utf8();
         }
         self.i = end;
@@ -284,7 +338,8 @@ impl Lexer<'_> {
         Some((RawKind::Number(value), start + 2 + len))
     }
 
-    /// `2026-03-12`, `12.03.2026`, `3/12/2026` (month first in English style).
+    /// `2026-03-12`, `12.03.2026`, `3/12/2026` (month first in English style), `24-12-2026`
+    /// (day first unless [`DashedDates::MonthFirst`]; the other order when that is no date).
     fn date(&self, start: usize) -> Option<(RawKind, usize)> {
         let first = self.digits_from(start);
         let sep_byte = self.byte(start + first)?;
@@ -307,13 +362,15 @@ impl Lexer<'_> {
             part(second_at, second)?,
             part(third_at, third)?,
         );
-        let year = |y: u32| i32::try_from(y).ok();
+        let ymd = |y: u32, m: u32, d: u32| NaiveDate::from_ymd_opt(i32::try_from(y).ok()?, m, d);
         let date = match (sep, first, second, third) {
-            ('-', 4, 1..=2, 1..=2) => NaiveDate::from_ymd_opt(year(a)?, b, c),
-            ('/', 1..=2, 1..=2, 4) if self.style == NumberStyle::English => {
-                NaiveDate::from_ymd_opt(year(c)?, a, b)
-            }
-            ('.' | '/', 1..=2, 1..=2, 4) => NaiveDate::from_ymd_opt(year(c)?, b, a),
+            ('-', 4, 1..=2, 1..=2) => ymd(a, b, c),
+            ('/', 1..=2, 1..=2, 4) if self.style == NumberStyle::English => ymd(c, a, b),
+            ('.' | '/', 1..=2, 1..=2, 4) => ymd(c, b, a),
+            ('-', 1..=2, 1..=2, 4) => match self.dashed {
+                DashedDates::MonthFirst => ymd(c, a, b).or_else(|| ymd(c, b, a)),
+                DashedDates::DayFirst => ymd(c, b, a).or_else(|| ymd(c, a, b)),
+            },
             _ => None,
         }?;
         Some((RawKind::Date(date), end))
@@ -481,7 +538,10 @@ mod tests {
     use super::*;
 
     fn kinds(text: &str, style: NumberStyle) -> Vec<RawKind> {
-        lex(text, 0, style).into_iter().map(|r| r.kind).collect()
+        lex(text, 0, style, DashedDates::DayFirst)
+            .into_iter()
+            .map(|r| r.kind)
+            .collect()
     }
 
     fn numbers(text: &str, style: NumberStyle) -> Vec<f64> {
@@ -534,12 +594,27 @@ mod tests {
             kinds("2026-03-12T14:30", NumberStyle::English),
             [d(2026, 3, 12), t(14, 30)]
         );
+        let dashed = |text, order| -> Vec<RawKind> {
+            lex(text, 0, NumberStyle::English, order)
+                .into_iter()
+                .map(|r| r.kind)
+                .collect()
+        };
+        assert_eq!(dashed("3-12-2026", DashedDates::DayFirst), [d(2026, 12, 3)]);
+        assert_eq!(dashed("3-12-2026", DashedDates::MonthFirst), [d(2026, 3, 12)]);
+        assert_eq!(
+            dashed("24-12-2026", DashedDates::MonthFirst),
+            [d(2026, 12, 24)],
+            "the other order when the first is no date"
+        );
+        assert_eq!(dashed("10-5-3", DashedDates::DayFirst).len(), 5);
+        assert_eq!(dashed("31-2-2026", DashedDates::DayFirst).len(), 5);
     }
 
     #[test]
     fn scripts_split_words() {
         let texts = |line: &'static str| -> Vec<&'static str> {
-            lex(line, 0, NumberStyle::English)
+            lex(line, 0, NumberStyle::English, DashedDates::DayFirst)
                 .into_iter()
                 .map(|r| &line[r.range])
                 .collect()
@@ -552,7 +627,7 @@ mod tests {
         assert_eq!(
             kinds("５＋３", NumberStyle::English).len(),
             3,
-            "full-width digits are prose, the plus an operator"
+            "full-width digits reach the lexer folded (`fold_width`), the plus is an operator"
         );
         assert_eq!(
             kinds("（1＋2）％", NumberStyle::English)[4],
@@ -562,12 +637,44 @@ mod tests {
 
     #[test]
     fn words_and_symbols() {
-        let raws = lex("20px °C don't 2**3", 0, NumberStyle::English);
+        let raws = lex(
+            "20px °C don't 2**3",
+            0,
+            NumberStyle::English,
+            DashedDates::DayFirst,
+        );
         let texts: Vec<_> = raws
             .iter()
             .map(|r| &"20px °C don't 2**3"[r.range.clone()])
             .collect();
         assert_eq!(texts, ["20", "px", "°C", "don't", "2", "**", "3"]);
         assert_eq!(raws[5].kind, RawKind::Sym(Sym::Caret));
+    }
+
+    #[test]
+    fn hyphens_join_letters_only() {
+        let texts = |line: &'static str| -> Vec<&'static str> {
+            lex(line, 0, NumberStyle::English, DashedDates::DayFirst)
+                .into_iter()
+                .map(|r| &line[r.range])
+                .collect()
+        };
+        assert_eq!(texts("Rendez-vous à 14:00"), ["Rendez-vous", "à", "14:00"]);
+        assert_eq!(texts("Port-au-Prince"), ["Port-au-Prince"]);
+        assert_eq!(texts("x-5"), ["x", "-", "5"]);
+        assert_eq!(texts("km2-m"), ["km2", "-", "m"]);
+        assert_eq!(texts("a - b"), ["a", "-", "b"]);
+        assert_eq!(texts("a--b"), ["a", "-", "-", "b"]);
+        assert_eq!(texts("e-"), ["e", "-"]);
+    }
+
+    #[test]
+    fn full_width_forms_fold() {
+        let (folded, origin) = fold_width("１２．５ｋｍ　＋３").expect("something to fold");
+        assert_eq!(folded, "12.5km +3");
+        assert_eq!(origin.len(), folded.len() + 1);
+        assert_eq!((origin[2], origin[7], origin[folded.len()]), (6, 21, 27));
+        assert_eq!(fold_width("5，3 km"), None, "the full-width comma stays");
+        assert_eq!(fold_width("plain"), None);
     }
 }

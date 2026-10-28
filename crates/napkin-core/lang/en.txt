@@ -9,6 +9,8 @@ as-percent.off = as a {%,percent} decrease of, as a {%,percent} decrease from
 as-percent.on = as a {%,percent} increase of, as a {%,percent} increase on
 scale.1e9 = milliard{,s}
 local = local, local time, local timezone, local time zone
+# Ordinal days in dates (`March 1st`, `2nd May 2026`)
+ordinal = st, nd, rd, th
 function.sqrt = square root
 function.cbrt = cubic root, cube root, cubed root
 format.sci = exp, exponent, exponential

@@ -397,6 +397,9 @@ zone.America/Costa_Rica = San José de Costa Rica
 zone.America/Santo_Domingo = República Dominicana
 zone.Pacific/Auckland = Nueva Zelanda
 
+# The ordinal indicator after the day (`1º de mayo`)
+ordinal = º, ª
+
 # Month names in dates (`12 de marzo de 2026`, `12 marzo 2026`, `1 de mayo`)
 date-word = de, del
 month.1 = enero, ene{,.}

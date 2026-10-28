@@ -40,6 +40,10 @@
 //! | `per.<id>` | one of a unit in the denominator: `per.h = в час` (`100 рублей в час` is RUB/h) |
 //! | `filler` | a word between a number and its unit that adds nothing (Romanian `25 de kilograme`) |
 //! | `date-word` | a word joining day, month and year in date literals (`12 de março de 2026`) |
+//! | `ordinal` | a suffix written onto the day of a date literal (`1er mai`, `March 1st`) |
+//! | `hour-mark` | a letter between hours and two-digit minutes in a time of day (`14h30`, `14 h 30`); alone after a number it stays the hour unit (`14h`) |
+//! | `prose` | a word that means nothing to the calculator, listed so the numerals inside it stay prose (`万一`, `一些`) |
+//! | `numeral.<value>` | the characters of a numeral system written without digits, each one character: digits (`numeral.3 = 三`), the multipliers 10, 100 and 1000 inside a group of four (`numeral.10 = 十`) and the group multipliers from 10^4 (`numeral.1e4 = 万`); `numeral.point` is the decimal point (`五点五`) |
 //! | `currency.<CODE>` | currency names |
 //! | `zone.<Area/City>` | city names for a time zone: `zone.Europe/Vienna = Wien` |
 //! | `month.<1-12>` | month names in date literals (`12. März 2026`) |
@@ -62,6 +66,7 @@ use chrono_tz::Tz;
 use crate::classify::PercentOp;
 use crate::format::Radix;
 use crate::functions::Builtin;
+use crate::numerals::Numeral;
 use crate::units::{self, BUILTINS, Style, is_length};
 use crate::{InputLanguage, NumberStyle, currency, lexer, zones};
 
@@ -104,6 +109,12 @@ pub(crate) enum Meaning {
     Filler,
     /// A word joining the parts of a date literal (`12 de março de 2026`).
     DateWord,
+    /// A suffix written onto the day of a date literal (`1er mai`, `March 1st`).
+    Ordinal,
+    /// A letter between hours and minutes in a time of day (`14h30`).
+    HourMark,
+    /// A word that is prose; listed so the numerals inside it stay prose (`万一`).
+    Prose,
     /// Before or after noon, written before the hour (`下午3点`, `오후 3시`).
     HalfDay(HalfDay),
     /// Half past, after an o'clock word (`3点半`).
@@ -270,6 +281,8 @@ pub(crate) struct Vocab {
     folded: HashMap<String, Vec<Meaning>>,
     /// The most raw tokens of a phrase starting with a given (lowercase) token.
     starts: HashMap<String, usize>,
+    /// Characters of the language's numerals written without digits (`三`, `百`, `万`).
+    numerals: HashMap<char, Numeral>,
     plural: Option<Plural>,
     /// Display forms of word units by unit index, in plural category order.
     shows: HashMap<usize, Vec<String>>,
@@ -333,6 +346,11 @@ impl Vocab {
     /// How many raw tokens the longest phrase starting with `first` has (0 when none does).
     pub(crate) fn window(&self, first: &str) -> usize {
         self.starts.get(lower(first).as_ref()).copied().unwrap_or(0)
+    }
+
+    /// What `c` is in the language's numerals written without digits.
+    pub(crate) fn numeral(&self, c: char) -> Option<Numeral> {
+        self.numerals.get(&c).copied()
     }
 
     /// The form for the formatted `number` among forms listed in plural category order.
@@ -458,6 +476,16 @@ impl Lexicon {
     pub(crate) fn window(&self, first: &str) -> usize {
         let english = self.english.map_or(0, |vocab| vocab.window(first));
         self.primary.window(first).max(english)
+    }
+
+    /// Whether the language writes numbers without digits too (`三百五十`).
+    pub(crate) fn has_numerals(&self) -> bool {
+        !self.primary.numerals.is_empty()
+    }
+
+    /// What `c` is in the language's numerals written without digits; English has none.
+    pub(crate) fn numeral(&self, c: char) -> Option<Numeral> {
+        self.primary.numeral(c)
     }
 }
 
@@ -728,6 +756,7 @@ struct Builder {
     months: Option<Vec<String>>,
     date: Option<String>,
     money: Option<String>,
+    numerals: HashMap<char, Numeral>,
 }
 
 /// The farthest day word from today (`day.2 = übermorgen`).
@@ -811,6 +840,9 @@ impl Builder {
             "am" => Some(Meaning::HalfDay(HalfDay::Am)),
             "pm" => Some(Meaning::HalfDay(HalfDay::Pm)),
             "half-hour" => Some(Meaning::HalfHour),
+            "ordinal" => Some(Meaning::Ordinal),
+            "hour-mark" => Some(Meaning::HourMark),
+            "prose" => Some(Meaning::Prose),
             _ => None,
         };
         if let Some(meaning) = simple {
@@ -887,6 +919,7 @@ impl Builder {
                 return Ok(());
             }
             "show" => return self.show(argument, value),
+            "numeral" => return self.numeral(argument, value),
             "unit-before" => Meaning::UnitBefore(BUILTINS.by_id(argument).ok_or("unknown unit id")?),
             "per" => {
                 let index = BUILTINS.by_id(argument).ok_or("unknown unit id")?;
@@ -904,6 +937,20 @@ impl Builder {
             _ => return Err("unknown key".to_owned()),
         };
         self.add(value, meaning)
+    }
+
+    /// `numeral.3 = 三`, `numeral.1e4 = 万`, `numeral.point = 点`.
+    fn numeral(&mut self, argument: &str, value: &str) -> Result<(), String> {
+        let numeral = Numeral::from_key(argument)
+            .ok_or("expected a digit, 10, 100, 1000, a power of ten from 1e4 or `point`")?;
+        for phrase in phrases(value)? {
+            let mut chars = phrase.chars();
+            let (Some(c), None) = (chars.next(), chars.next()) else {
+                return Err(format!("`{phrase}` is not one character"));
+            };
+            self.numerals.insert(c, numeral);
+        }
+        Ok(())
     }
 
     fn show(&mut self, id: &str, value: &str) -> Result<(), String> {
@@ -932,10 +979,11 @@ impl Builder {
             months: self.months,
             date: self.date,
             money: self.money,
+            numerals: self.numerals,
             ..Vocab::default()
         };
         for (phrase, meaning) in self.phrases {
-            let raws = lexer::lex(&phrase, 0, NumberStyle::English);
+            let raws = lexer::lex(&phrase, 0, NumberStyle::English, lexer::DashedDates::DayFirst);
             if let Some(first) = raws.first() {
                 let start = phrase[first.range.clone()].to_lowercase();
                 let count = vocab.starts.entry(start).or_insert(0);

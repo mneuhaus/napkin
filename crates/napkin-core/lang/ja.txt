@@ -2,7 +2,7 @@
 #
 # Japanese is written without spaces: every kanji and kana is a token of its own and the longest
 # known phrase wins (`5キロメートル`, `5インチをセンチ`). Characters this file does not know stay
-# prose. Numbers are written in digits; kanji numerals (`二十`) are prose.
+# prose. Numbers are written in digits or kanji numerals (`二十`, `三百五十`).
 
 # Arithmetic. `の` puts the base first (`50の20%` is 20% of 50, so it multiplies).
 plus = 足す, たす, 足して, プラス, 加算
@@ -30,6 +30,29 @@ scale.1e7 = 千万
 scale.1e8 = 億
 scale.1e9 = 十億
 scale.1e12 = 兆
+
+# Kanji numerals (`三百五十`, `二千`, `千円`, `一万五千`, `二〇二六`), also the formal forms. A
+# phrase starting at the same character that is at least as long keeps its meaning (`一昨日`,
+# `十六進数`, `四捨五入`).
+numeral.0 = 〇, 零
+numeral.1 = 一, 壱
+numeral.2 = 二, 弐
+numeral.3 = 三, 参
+numeral.4 = 四
+numeral.5 = 五
+numeral.6 = 六
+numeral.7 = 七
+numeral.8 = 八
+numeral.9 = 九
+numeral.10 = 十, 拾
+numeral.100 = 百
+numeral.1000 = 千
+numeral.1e4 = 万, 萬
+numeral.1e8 = 億
+numeral.1e12 = 兆
+numeral.point = 点
+# Common words with a numeral in them that are no numbers
+prose = 万一, 一緒, 一番, 一応, 一般, 一部, 一体, 一層, 唯一, 統一, 同一, 千葉, 八百屋
 
 # Time (one form for every count). `時` after an hour is the time of day (`3時`); hours are
 # `時間`. `3月` is March, so months are `か月`.

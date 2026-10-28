@@ -16,3 +16,4 @@ percent_off_what_is.variants	din cât este	`din cât este` is "of what is" (`20 
 million.variants	m	`m` stays the metre (`2 m` is two metres); millions are `mil.`/`milioane`
 week.variants	s	`s` stays the second; weeks are `săpt.`/`săptămâni`
 gram.variants	dram	mistranslation: a dram is a different weight (1.77 g, the old Romanian dram about 3.2 g), not a gram
+tonne.variants	tonă-kilometru	mistranslation: a tonne-kilometre is transport work (a tonne carried a kilometre), not a tonne; as a hyphenated word it is one word and stays prose; tonnes are `tonă`/`tone`

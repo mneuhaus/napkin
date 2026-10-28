@@ -286,10 +286,103 @@ const SIMPLIFIED: Table = &[
         &["平方根 16", "立方根 27", "255 换算成 十六进制", "5 换算成 二进制"],
         &[Text("4"), Text("3"), Text("0xFF"), Text("0b101")],
     ),
+    // Chinese numerals, also with units, currencies and times
+    (
+        &[
+            "三百五十",
+            "两千",
+            "一万五千",
+            "三亿",
+            "十二",
+            "二十",
+            "一百零五",
+            "五点五",
+        ],
+        &[
+            Text("350"),
+            Text("2,000"),
+            Text("15,000"),
+            Text("300,000,000"),
+            Text("12"),
+            Text("20"),
+            Text("105"),
+            Text("5.5"),
+        ],
+    ),
+    (
+        &[
+            "三百元",
+            "五千米",
+            "两小时",
+            "三百元 + 两百元",
+            "十万",
+            "三点半",
+            "下午三点",
+            "三点五分",
+            "二〇二六年三月十二日",
+        ],
+        &[
+            Text("300 CNY"),
+            Text("5,000 m"),
+            Text("2 小时"),
+            Text("500 CNY"),
+            Text("100,000"),
+            Text("03:30"),
+            Text("15:00"),
+            Text("03:05"),
+            Text("2026年3月12日 周四"),
+        ],
+    ),
+    // Full-width digits and operators
+    (
+        &["１２３", "１２．５", "３＋４", "５厘米", "（１＋２）×３"],
+        &[Text("123"), Text("12.5"), Text("7"), Text("5 cm"), Text("9")],
+    ),
+    // Phrases and variables with numerals in them keep their meaning
+    (
+        &[
+            "2",
+            "3",
+            "一共",
+            "一半",
+            "万一",
+            "255 换算成 十六进制",
+            "四舍五入 3.6",
+            "5十万",
+            "5千米",
+        ],
+        &[
+            Text("2"),
+            Text("3"),
+            Text("5"),
+            Nothing,
+            Nothing,
+            Text("0xFF"),
+            Text("4"),
+            Text("500,000"),
+            Text("5 km"),
+        ],
+    ),
+    (
+        &["三明治 = 5", "三明治 * 2", "上一个结果 + 1", "我们一起去"],
+        &[Text("5"), Text("10"), Text("11"), Nothing],
+    ),
     // Prose stays prose
     (
-        &["你好", "这个东西5元", "我们3点见面"],
-        &[Nothing, Text("5 CNY"), Text("03:00")],
+        &[
+            "你好",
+            "这个东西5元",
+            "我们3点见面",
+            "这个东西五元",
+            "我们三点见面",
+        ],
+        &[
+            Nothing,
+            Text("5 CNY"),
+            Text("03:00"),
+            Text("5 CNY"),
+            Text("03:00"),
+        ],
     ),
 ];
 
@@ -441,6 +534,33 @@ const TRADITIONAL: Table = &[
             Text("8 b"),
             Text("9 茶匙"),
         ],
+    ),
+    // Chinese numerals and full-width digits
+    (
+        &[
+            "三百五十",
+            "兩千",
+            "一萬五千",
+            "三億",
+            "五點五",
+            "三百元",
+            "兩小時",
+            "三兆",
+        ],
+        &[
+            Text("350"),
+            Text("2,000"),
+            Text("15,000"),
+            Text("300,000,000"),
+            Text("5.5"),
+            Text("300 TWD"),
+            Text("2 小時"),
+            Text("3,000,000,000,000"),
+        ],
+    ),
+    (
+        &["１２３", "３＋４", "萬一", "255 換算成 十六進位", "下午三點半"],
+        &[Text("123"), Text("7"), Nothing, Text("0xFF"), Text("15:30")],
     ),
     // Prose stays prose
     (&["你好", "我們3點見面"], &[Nothing, Text("03:00")]),

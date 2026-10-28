@@ -27,6 +27,7 @@ mod functions;
 mod language;
 mod lexer;
 mod num;
+mod numerals;
 mod parser;
 mod units;
 mod value;

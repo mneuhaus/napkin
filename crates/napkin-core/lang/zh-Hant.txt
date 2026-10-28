@@ -3,7 +3,7 @@
 #
 # Chinese is written without spaces: every character is a token of its own and the longest
 # known phrase wins (`5公里`, `5千克`, `5千` is 5000). Characters this file does not know stay
-# prose. Numbers are written in digits; Chinese numerals (`二十`) are prose. A bare `元` or `塊`
+# prose. Numbers are written in digits or Chinese numerals (`二十`, `三百五十`). A bare `元` or `塊`
 # is the New Taiwan dollar, as in Taiwan (Hong Kong writes 港元/港幣, Macau 澳門元).
 
 # Arithmetic. `和` is also the sum (an operator only between two operands); `的` and `裡的` put
@@ -38,6 +38,32 @@ scale.1e7 = 千萬, 仟萬
 scale.1e8 = 億
 scale.1e9 = 十億, 拾億
 scale.1e12 = 兆, 萬億
+
+# Chinese numerals (`三百五十`, `兩千`, `一萬五千`, `五點五`, `二〇二六`), also the financial forms.
+# A numeral takes the multipliers after it (`五千米` is 5000 m). A phrase starting at the same
+# character that is at least as long keeps its meaning (`一共`, `十六進位`, `四捨五入`); `十萬`
+# alone is the numeral.
+numeral.0 = 〇, 零
+numeral.1 = 一, 壹
+numeral.2 = 二, 兩, 貳
+numeral.3 = 三, 參
+numeral.4 = 四, 肆
+numeral.5 = 五, 伍
+numeral.6 = 六, 陸
+numeral.7 = 七, 柒
+numeral.8 = 八, 捌
+numeral.9 = 九, 玖
+numeral.10 = 十, 拾
+numeral.100 = 百, 佰
+numeral.1000 = 千, 仟
+numeral.1e4 = 萬
+numeral.1e8 = 億
+numeral.1e12 = 兆
+numeral.point = 點
+# Common words with a numeral in them that are no numbers
+prose = 萬一, 一半, 一些, 一起, 一樣, 一下, 一直, 一定, 一般, 一切, 一邊, 一點兒, 一點點, 統一, 唯一,
+    百度, 百貨, 百姓,
+    星期{一,二,三,四,五,六}, 禮拜{一,二,三,四,五,六}, 週{一,二,三,四,五,六}
 
 # Time (one form for every count). `分` alone is minutes (`3分20秒`); before a unit it is the
 # deci prefix (`分米`). `時` and `點` after an hour are the time of day (`3點`, `下午3時`); `3月` is

@@ -33,6 +33,26 @@ scale.1e8 = 억
 scale.1e9 = 십억
 scale.1e12 = 조
 
+# Sino-Korean numerals (`삼백`, `오천원`, `이십분`, `삼백만원`). Single syllables are particles and
+# words as often as numbers (`이`, `일`, `오`), so a numeral needs two syllables or more and a
+# multiplier (`이사`, `사이` stay words), and the rest of its word must be known words.
+numeral.0 = 영
+numeral.1 = 일
+numeral.2 = 이
+numeral.3 = 삼
+numeral.4 = 사
+numeral.5 = 오
+numeral.6 = 육, 륙
+numeral.7 = 칠
+numeral.8 = 팔
+numeral.9 = 구
+numeral.10 = 십
+numeral.100 = 백
+numeral.1000 = 천
+numeral.1e4 = 만
+numeral.1e8 = 억
+numeral.1e12 = 조
+
 # Time (one form for every count). `시` after an hour is the time of day (`3시`).
 show.s = 초
 unit.s = 초는

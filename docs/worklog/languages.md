@@ -125,13 +125,54 @@ e = ru/uk/pl/cs/bs-BA/tr/he, f = zh-Hans/zh-Hant/ja/ko. Their worklogs are in `t
 - Finnish case endings as conversion (`20 dollaria euroiksi`); works after `muunnettuna`.
 - Grammatical gender in squared/cubed display (Spanish `millas cuadradas` vs `pies cuadrados`):
   es/it/pt/ro show symbols (`2 mi²`) instead.
-- French `14h30`, `1er mai`; Dutch dashed dates `24-12-2026`; Italian `3 giorni fa`.
+- Italian `3 giorni fa`.
 - Japanese `1000円の20%引き` (postfix discount), reversed percent questions (`10是多少的20%`),
-  rate words before the number (`时速60公里`), format words starting with digits (`16进制`),
-  Chinese numerals (`二十`), full-width digits (`５`).
+  rate words before the number (`时速60公里`), format words starting with digits (`16进制`).
 - Korean topic particles on variable names (`가격은 5000원`).
-- A hyphen inside a word is minus (`Rendez-vous à 14:00`), as in English (`x-y`).
+- Numerals inside everyday words beyond the `prose` lists read as numbers (`十分` "very" is 10
+  minutes, `一点` "a little" is one o'clock); two Chinese digits in a row are a range (`三五个`,
+  three or five) but end up multiplied (15). A lone Korean `십` stays prose (single syllables
+  need a known word after them: `십분`).
 - Numbers in phrases like `3 Viertel` (German for 3/4) read as quarts (Numi's choice kept).
+
+## Input parsing fixes (2026-10-28)
+
+Four gaps from the list below, closed in the engine with data-file keys where the rule is
+per language:
+
+- **French times and ordinal dates**: `hour-mark = h` (fr, pt-BR/pt-PT) and `u` (nl-BE) read
+  `14h30`, `14 h 30`, `9h05`, `14u30` as times of day (two-digit minutes after the mark). The
+  lexer keeps `h30` as one word, so the classifier splits mark and minutes. `14h`, `2 h` stay
+  hours, and so does `2 h 30 min` (a unit after the minutes). `ordinal = er, re, ère` (fr),
+  `st, nd, rd, th` (en, always on), `º, ª` (es, pt, it) are suffixes on the day of a date
+  literal (`1er mai`, `March 1st`, `1º de mayo`); `30º` alone stays degrees. Flemish `14u30`
+  was claimed in `nl-BE.txt` but did not work before (`u30` was one word).
+- **Dashed dates**: `24-12-2026` (four-digit year last) is a date in the lexer, day first
+  except English number style with English input, which is month first like `3/12/2026`; the
+  other order is tried when the preferred one is no date. The slash rule is unchanged (style
+  only). `10-5-3`, spaced dashes and impossible dates stay subtractions.
+- **CJK numerals**: `numeral.<value>` keys (digits, 10/100/1000, group multipliers from 10^4,
+  `point`) in zh-Hans, zh-Hant, ja and ko; grammar and examples in `src/numerals.rs`. Chinese
+  and Japanese numerals are merged into number raws before classification (one raw per
+  character), longest phrase first: a phrase or variable from the same character at least as
+  long wins (`一共`, `十六进制`, `四舍五入`, `一昨日`), except a bare scale (`十万`). New `prose`
+  key for everyday words with numerals (`万一`, `一半`, `一起`, `百度`, weekday names, Japanese
+  `一緒`, `千葉`). A numeral takes its multipliers (`五千米` is 5,000 m, `5千米` stays 5 km).
+  Korean numerals are split off in `segment` and need a multiplier: with known words after
+  them (`오천원`, `만원`, `이십분`) or as a whole word of two syllables starting with a digit or
+  `십` (`삼백`); `천사` (angel), `백조` (swan), `이사`, `사이` stay words.
+- **Full-width forms** fold to ASCII per line in `Document::line` (spans mapped back), so they
+  work in every language; the full-width comma stays (Chinese clause separator).
+- **Hyphenated words**: the lexer joins letters around a hyphen into one word, so vocabulary
+  phrases with hyphens (`après-demain`, `US-dollar`, `Groot-Brittanje`) and IANA cities
+  (`Port-au-Prince`) match as one raw; `split_hyphens` turns it back into a subtraction only
+  when every part is a value. Decision for a value joined to an unknown word (`e-mail`,
+  `price-discount`): one prose word, never a subtraction of prose.
+
+Numi compatibility after the fixes: de, de-AT, de-CH accept `El-Slavador-Colón` (3 phrases
+each; the obsolete SVC code and the joined word both read as plain prose, so they match), ro
+lists `tonă-kilometru` (a tonne-kilometre is transport work; it passed before only because
+`- kilometru` was trimmed). Every other language is unchanged, the CJK ones included.
 
 ## Coverage
 
@@ -147,9 +188,9 @@ fails on any other miss and on listed misses that pass by now.
 | bs-BA | 161 | 165 | 97.6% | 4 |
 | cs | 114 | 119 | 95.8% | 5 |
 | da | 74 | 83 | 89.2% | 9 |
-| de | 1584 | 1653 | 95.8% | 69 |
-| de-AT | 1567 | 1630 | 96.1% | 63 |
-| de-CH | 1580 | 1652 | 95.6% | 72 |
+| de | 1587 | 1653 | 96.0% | 66 |
+| de-AT | 1570 | 1630 | 96.3% | 60 |
+| de-CH | 1583 | 1652 | 95.8% | 69 |
 | es | 683 | 724 | 94.3% | 41 |
 | fi | 96 | 97 | 99.0% | 1 |
 | fr | 1364 | 1394 | 97.8% | 30 |
@@ -163,16 +204,16 @@ fails on any other miss and on listed misses that pass by now.
 | pl | 424 | 438 | 96.8% | 14 |
 | pt-BR | 1616 | 1672 | 96.7% | 56 |
 | pt-PT | 1619 | 1674 | 96.7% | 55 |
-| ro | 234 | 250 | 93.6% | 16 |
+| ro | 233 | 250 | 93.2% | 17 |
 | ru | 981 | 1009 | 97.2% | 28 |
 | sv | 75 | 83 | 90.4% | 8 |
 | tr | 90 | 95 | 94.7% | 5 |
 | uk | 75 | 75 | 100.0% | 0 |
 | zh-Hans | 634 | 673 | 94.2% | 39 |
 | zh-Hant | 247 | 255 | 96.9% | 8 |
-| **all** | **19375** | **20115** | **96.3%** | **740** |
+| **all** | **19383** | **20115** | **96.4%** | **732** |
 
-Reasons for the 740 explained misses, roughly: ~45% obsolete currency codes Napkin does not
+Reasons for the 732 explained misses, roughly: ~45% obsolete currency codes Napkin does not
 know (BYR, VEF, MRO, STD, SVC, ZMK; their names map to today's codes); short English unit
 symbols and articles that keep their meaning (`m` as million or thousand, `t`, `kt`, `a`, `'`);
 phrases Numi lists under two meanings or two currencies (Spanish `de` of/off, bare `manat`,
@@ -182,4 +223,6 @@ common words that would turn prose into numbers (`Real`, `Dram`, `Kip`, Dutch `v
 entries (missing commas, `%@` templates, a URL, invisible characters).
 
 Performance (release, 500 lines): English 2.8 ms, German 3.0 ms, Chinese 1.9 ms, Russian 1.8 ms
-(`input_languages_stay_fast`, budget 10 ms).
+(`input_languages_stay_fast`, budget 10 ms). After the input parsing fixes, best of three runs
+on a busy machine: English 3.0 ms, German 3.2 ms, Chinese 1.9 ms, Russian 1.8 ms (the old build
+measured 2.7 / 3.0 / 1.9 / 1.8 ms in the same session).

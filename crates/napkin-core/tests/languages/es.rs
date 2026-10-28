@@ -357,6 +357,11 @@ const SPANISH: Table = &[
         ],
         &[Text("4"), Text("3"), Text("0xFF"), Text("0b101")],
     ),
+    // The ordinal day; `º` alone after a number stays degrees
+    (
+        &["1º de mayo de 2026", "30º"],
+        &[Text("vie, 1 may 2026"), Text("30°")],
+    ),
     // Prose stays prose
     (&["Buenos días", "Cuesta 5 €"], &[Nothing, Text("5 €")]),
 ];

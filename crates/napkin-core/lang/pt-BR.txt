@@ -495,6 +495,11 @@ zone.America/Los_Angeles = São Francisco, Califórnia
 zone.America/Chicago = Nova Orleans
 zone.Pacific/Auckland = Nova Zelândia
 
+# Times of day with `h` between hours and minutes (`14h30`); `14h` alone stays 14 hours. The
+# ordinal indicator after the day (`1º de maio`).
+hour-mark = h
+ordinal = º, ª
+
 # Month names in dates (`12 de março de 2026`, `12 março 2026`, `1 de maio`)
 date-word = de
 month.1 = janeiro, jan{,.}

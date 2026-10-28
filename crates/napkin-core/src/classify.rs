@@ -16,6 +16,11 @@
 //! - A word that is both a weight and a currency (`Pfund`, like English `pound`) is the
 //!   currency on lines with money on them and the weight elsewhere; an uppercase currency code
 //!   beats a language's unit word (`5 SEK`, `3 CUP`).
+//! - A numeral written without digits (`三百`) gives way to a phrase or variable that starts at
+//!   the same character and is at least as long, unless that phrase only names a scale
+//!   ([`numerals::merge`]).
+//! - A word with a hyphen between letters is one word, prose unless known as a whole; it
+//!   subtracts only when every part is a value ([`split_hyphens`]).
 
 use std::borrow::Cow;
 use std::f64::consts::{E, PI};
@@ -29,7 +34,8 @@ use crate::currency;
 use crate::custom::{self, Registry};
 use crate::format::Radix;
 use crate::functions::Builtin;
-use crate::lexer::{Raw, RawKind, Sym};
+use crate::lexer::{Raw, RawKind, Sym, is_hyphen};
+use crate::numerals;
 use crate::units::{BUILTINS, Form, Unit, UnitRef, is_length};
 use crate::vocab::{HalfDay, Keyword, Lexicon, Meaning};
 use crate::zones;
@@ -189,6 +195,7 @@ pub(crate) struct Context<'a> {
 
 /// Classifies the raw tokens of a line.
 pub(crate) fn classify(raws: &[Raw], ctx: &Context<'_>) -> Vec<Item> {
+    let raws = &*numerals::merge(raws, ctx);
     let money_line = raws.iter().any(|raw| match raw.kind {
         RawKind::Sign(_) => true,
         RawKind::Word => {
@@ -266,6 +273,90 @@ const KEYWORDS: &[&str] = &[
     "is",
     "pct",
 ];
+
+/// English words that are values on their own (lowercase): constants, document references,
+/// times and days.
+const VALUE_WORDS: &[&str] = &[
+    "pi",
+    "π",
+    "e",
+    "prev",
+    "sum",
+    "total",
+    "avg",
+    "average",
+    "now",
+    "time",
+    "today",
+    "tomorrow",
+    "yesterday",
+    "noon",
+    "midnight",
+];
+
+/// Whether a language meaning is a value on its own (`heute`, `Summe`, `jetzt`).
+fn names_value(meaning: &Meaning) -> bool {
+    matches!(
+        meaning,
+        Meaning::Day(_)
+            | Meaning::Keyword(
+                Keyword::Prev
+                    | Keyword::Sum
+                    | Keyword::Average
+                    | Keyword::Now
+                    | Keyword::Noon
+                    | Keyword::Midnight
+            )
+    )
+}
+
+/// Splits hyphenated words back into a subtraction when every part is a value (`a-b` with
+/// variables `a` and `b`, `pi-e`, `today-yesterday`). Any other word with a hyphen between
+/// letters stays one word, which is prose unless the whole word is known (`Rendez-vous`,
+/// `e-mail`, `après-demain`): a value joined to an unknown word does not subtract.
+pub(crate) fn split_hyphens(
+    line: &str,
+    raws: Vec<Raw>,
+    lexicon: &Lexicon,
+    is_variable: &dyn Fn(&str) -> bool,
+) -> Vec<Raw> {
+    let hyphenated = |raw: &Raw| raw.kind == RawKind::Word && line[raw.range.clone()].contains(is_hyphen);
+    if !raws.iter().any(hyphenated) {
+        return raws;
+    }
+    let value = |part: &str| {
+        is_variable(part)
+            || VALUE_WORDS.contains(&part.to_lowercase().as_str())
+            || lexicon.meanings(part).iter().any(names_value)
+    };
+    let mut out = Vec::with_capacity(raws.len() + 2);
+    for raw in raws {
+        let text = &line[raw.range.clone()];
+        let split = hyphenated(&raw) && lexicon.meanings(text).is_empty() && text.split(is_hyphen).all(value);
+        if !split {
+            out.push(raw);
+            continue;
+        }
+        let mut start = raw.range.start;
+        for (at, hyphen) in text.match_indices(is_hyphen) {
+            let at = raw.range.start + at;
+            out.push(Raw {
+                kind: RawKind::Word,
+                range: start..at,
+            });
+            start = at + hyphen.len();
+            out.push(Raw {
+                kind: RawKind::Sym(Sym::Minus),
+                range: at..start,
+            });
+        }
+        out.push(Raw {
+            kind: RawKind::Word,
+            range: start..raw.range.end,
+        });
+    }
+    out
+}
 
 /// Whether `word` is taken by a keyword, scale, format, unit, currency or zone abbreviation.
 pub(crate) fn is_reserved(word: &str) -> bool {
@@ -467,6 +558,12 @@ impl Classifier<'_> {
             .is_some_and(|r| r.kind == RawKind::Other && self.text(i) == ".")
     }
 
+    /// Whether raw `i` is an ordinal suffix of the language (`er` in `1er mai`).
+    fn is_ordinal(&self, i: usize) -> bool {
+        self.word_at(i)
+            .is_some_and(|word| self.ctx.lexicon.meanings(word).contains(&Meaning::Ordinal))
+    }
+
     fn push(&mut self, tok: Tok, range: Range<usize>, kind: SpanKind) {
         let tok = match (tok, self.half_day.take()) {
             (Tok::Time(time), Some(half_day)) => Tok::Time(shift_half_day(time, half_day)),
@@ -584,7 +681,7 @@ impl Classifier<'_> {
             self.push(Tok::Date(date), self.span(i, i + used - 1), SpanKind::DateTime);
             return used;
         }
-        if let Some((time, used)) = self.oclock(i) {
+        if let Some((time, used)) = self.oclock(i).or_else(|| self.hour_mark_time(i)) {
             self.push(Tok::Time(time), self.span(i, i + used - 1), SpanKind::DateTime);
             return used;
         }
@@ -636,7 +733,8 @@ impl Classifier<'_> {
         let (hour, minute) = match text.split_once(['.', ',']) {
             Some((hour, minute)) if minute.len() == 2 => (hour.parse::<u32>().ok()?, minute.parse().ok()?),
             Some(_) => return None,
-            None => (text.parse::<u32>().ok()?, 0),
+            // The value, not the text: the hour may be a numeral (`三点`).
+            None => (hour_of(self.number_at(i)?)?, 0),
         };
         let (minute, used) = match self.minutes_after_oclock(i + 2) {
             Some((extra, used)) if minute == 0 => (extra, 2 + used),
@@ -674,11 +772,50 @@ impl Classifier<'_> {
         (unit == minute).then_some((minutes, 2))
     }
 
-    /// `12 March [2026]`, `12. März [2026]`.
+    /// French `14h30`, `14 h 30`, Flemish `14u30`: an hour, the language's hour mark and two
+    /// digits of minutes, and how many raws that takes. `14h` alone stays 14 hours, and so does
+    /// `2 h 30 min`.
+    fn hour_mark_time(&self, i: usize) -> Option<(NaiveTime, usize)> {
+        let is_mark = |word: &str| self.ctx.lexicon.meanings(word).contains(&Meaning::HourMark);
+        let digits = |text: &str, len: usize| {
+            (1..=len).contains(&text.len()) && text.bytes().all(|b| b.is_ascii_digit())
+        };
+        if !digits(self.text(i), 2) || !self.spaced(i) {
+            return None;
+        }
+        let hour = hour_of(self.number_at(i)?)?;
+        let next = self.word_at(i + 1)?;
+        let (minutes, last) = match next.find(|c: char| c.is_ascii_digit()) {
+            // `14h30`: the lexer keeps digits after letters in the word.
+            Some(at) if at > 0 && next.len() - at == 2 && is_mark(&next[..at]) => (&next[at..], i + 1),
+            None if self.spaced(i + 1) && self.number_at(i + 2).is_some() && is_mark(next) => {
+                (self.text(i + 2), i + 2)
+            }
+            _ => return None,
+        };
+        if minutes.len() != 2 || !digits(minutes, 2) || self.unit_follows(last) {
+            return None;
+        }
+        let time = NaiveTime::from_hms_opt(if hour == 24 { 0 } else { hour }, minutes.parse().ok()?, 0)?;
+        Some((time, last - i + 1))
+    }
+
+    /// Whether a unit word follows raw `k` (`2 h 30 min` is a duration, not 2:30).
+    fn unit_follows(&self, k: usize) -> bool {
+        self.spaced(k)
+            && self.word_at(k + 1).is_some_and(|word| {
+                BUILTINS.lookup(word).is_some()
+                    || self.language_phrase_at(k + 1).is_some_and(|(meanings, _)| {
+                        meanings.iter().any(|m| matches!(m, Meaning::Unit { .. }))
+                    })
+            })
+    }
+
+    /// `12 March [2026]`, `12. März [2026]`, `1er mai`.
     fn day_month_year(&self, i: usize, day: f64) -> Option<(NaiveDate, usize)> {
         let day = small_int(day, 31)?;
         let mut month_at = i + 1;
-        if self.is_dot(month_at) && self.touching(i) {
+        if self.touching(i) && (self.is_dot(month_at) || self.is_ordinal(month_at)) {
             month_at += 1;
         }
         if !self.spaced(month_at - 1) {
@@ -725,26 +862,27 @@ impl Classifier<'_> {
             })
     }
 
-    /// `March 12[,] [2026]`.
+    /// `March 12[,] [2026]`, `March 1st`.
     fn month_day_year(&self, i: usize, month: u32) -> Option<(NaiveDate, usize)> {
         if !self.spaced(i) {
             return None;
         }
         let day = small_int(self.number_at(i + 1)?, 31)?;
+        let day_end = i + 1 + usize::from(self.touching(i + 1) && self.is_ordinal(i + 2));
         let comma = usize::from(
             self.raws
-                .get(i + 2)
-                .is_some_and(|r| r.kind == RawKind::Other && self.text(i + 2) == ","),
+                .get(day_end + 1)
+                .is_some_and(|r| r.kind == RawKind::Other && self.text(day_end + 1) == ","),
         );
-        let year_at = i + 2 + comma;
-        let (year, used) = match self
+        let year_at = day_end + 1 + comma;
+        let (year, end) = match self
             .year_at(year_at)
             .filter(|_| self.spaced(year_at - 1) || comma == 1)
         {
-            Some(year) => (year, 3 + comma),
-            None => (self.ctx.year, 2),
+            Some(year) => (year, year_at),
+            None => (self.ctx.year, day_end),
         };
-        Some((NaiveDate::from_ymd_opt(year, month, day)?, used))
+        Some((NaiveDate::from_ymd_opt(year, month, day)?, end - i + 1))
     }
 
     /// `2026年3月12日`, `3月12日`, `2026년 3월 12일`.
@@ -772,7 +910,8 @@ impl Classifier<'_> {
 
     fn year_at(&self, i: usize) -> Option<i32> {
         let n = self.number_at(i)?;
-        let digits = self.text(i).len() == 4;
+        // Characters, not bytes: a year may be written in numerals (`二〇二六`).
+        let digits = self.text(i).chars().count() == 4;
         (digits && n.fract() == 0.0)
             .then(|| crate::num::to_i64(n).and_then(|y| i32::try_from(y).ok()))
             .flatten()
@@ -980,7 +1119,13 @@ impl Classifier<'_> {
                 };
                 self.language_keyword(keyword, j, rivals)
             }
-            Meaning::Assign | Meaning::Month(_) | Meaning::DateWord | Meaning::HalfHour => None,
+            Meaning::Assign
+            | Meaning::Month(_)
+            | Meaning::DateWord
+            | Meaning::HalfHour
+            | Meaning::Ordinal
+            | Meaning::HourMark => None,
+            Meaning::Prose => Some((Tok::Text, SpanKind::Text)),
             Meaning::HalfDay(half_day) => {
                 let hour_follows = self.spaced(j)
                     && self
@@ -1185,42 +1330,17 @@ impl Classifier<'_> {
             RawKind::Other => false,
             RawKind::Word => {
                 let text = self.text(j + 1);
-                let english = matches!(
-                    text.to_lowercase().as_str(),
-                    "pi" | "π"
-                        | "e"
-                        | "prev"
-                        | "sum"
-                        | "total"
-                        | "avg"
-                        | "average"
-                        | "now"
-                        | "time"
-                        | "today"
-                        | "tomorrow"
-                        | "yesterday"
-                        | "noon"
-                        | "midnight"
-                );
+                let english = VALUE_WORDS.contains(&text.to_lowercase().as_str());
                 // A word that is also a unit (`hora`: hour and now) is the unit after an operator.
                 let language = self.language_phrase_at(j + 1).is_some_and(|(meanings, _)| {
                     let unit = meanings.iter().any(|m| matches!(m, Meaning::Unit { .. }));
                     meanings.iter().any(|m| {
                         !(unit && *m == Meaning::Keyword(Keyword::Now))
-                            && matches!(
-                                m,
-                                Meaning::Day(_)
-                                    | Meaning::Function(_)
-                                    | Meaning::Keyword(
-                                        Keyword::Prev
-                                            | Keyword::PercentBefore
-                                            | Keyword::Sum
-                                            | Keyword::Average
-                                            | Keyword::Now
-                                            | Keyword::Noon
-                                            | Keyword::Midnight
-                                    )
-                            )
+                            && (names_value(m)
+                                || matches!(
+                                    m,
+                                    Meaning::Function(_) | Meaning::Keyword(Keyword::PercentBefore)
+                                ))
                     })
                 });
                 english
@@ -1518,6 +1638,12 @@ fn small_int(n: f64, max: u32) -> Option<u32> {
     u32::try_from(int).ok().filter(|v| (1..=max).contains(v))
 }
 
+/// An hour of the day from 0 to 24.
+fn hour_of(n: f64) -> Option<u32> {
+    let int = crate::num::to_i64(n).filter(|_| n.fract() == 0.0)?;
+    u32::try_from(int).ok().filter(|hour| *hour <= 24)
+}
+
 fn symbol(sym: Sym) -> Op {
     match sym {
         Sym::Plus => Op::Add,
@@ -1542,14 +1668,47 @@ fn symbol(sym: Sym) -> Op {
 
 /// Splits Korean words the vocabulary does not know into known words when they consist of them
 /// entirely (`인치를` → `인치` + `를`, `만원` → `만` + `원`), so attached particles and units
-/// separate; other words (`초과`) stay whole.
+/// separate; other words (`초과`) stay whole. A word starting with a numeral (`오천원`) splits
+/// into the number and the known words after it, unless the whole word is known as more than a
+/// scale or digits come right before it (`5십만` keeps the scale).
 pub(crate) fn segment(line: &str, raws: Vec<Raw>, lexicon: &Lexicon) -> Vec<Raw> {
-    let mut out = Vec::with_capacity(raws.len());
+    let mut out: Vec<Raw> = Vec::with_capacity(raws.len());
     for raw in raws {
         let text = &line[raw.range.clone()];
         let korean = raw.kind == RawKind::Word && text.chars().next().is_some_and(crate::lexer::is_hangul);
-        let cuts = korean.then(|| decompose(text, lexicon)).flatten();
-        match cuts {
+        if !korean {
+            out.push(raw);
+            continue;
+        }
+        let after_digits = out.last().is_some_and(|before| {
+            matches!(before.kind, RawKind::Number(_)) && before.range.end == raw.range.start
+        });
+        let known = lexicon
+            .meanings(text)
+            .iter()
+            .any(|m| !matches!(m, Meaning::Scale(_)));
+        if let Some((value, end, cuts)) = (!known && !after_digits)
+            .then(|| numerals::korean(text, lexicon))
+            .flatten()
+        {
+            out.push(Raw {
+                kind: RawKind::Number(value),
+                range: raw.range.start..raw.range.start + end,
+            });
+            if end < text.len() {
+                let mut start = raw.range.start + end;
+                for cut in cuts.into_iter().chain([text.len()]) {
+                    let cut = raw.range.start + cut;
+                    out.push(Raw {
+                        kind: RawKind::Word,
+                        range: start..cut,
+                    });
+                    start = cut;
+                }
+            }
+            continue;
+        }
+        match decompose(text, lexicon) {
             Some(cuts) if !cuts.is_empty() => {
                 let mut start = raw.range.start;
                 for cut in cuts.into_iter().chain([text.len()]) {
@@ -1569,7 +1728,7 @@ pub(crate) fn segment(line: &str, raws: Vec<Raw>, lexicon: &Lexicon) -> Vec<Raw>
 
 /// Byte offsets that cut `text` into known words, longest first; `Some(empty)` when `text` is
 /// known as a whole, `None` when it cannot be cut into known words.
-fn decompose(text: &str, lexicon: &Lexicon) -> Option<Vec<usize>> {
+pub(crate) fn decompose(text: &str, lexicon: &Lexicon) -> Option<Vec<usize>> {
     let known = |word: &str| !lexicon.meanings(word).is_empty() || lexicon.window(word) > 0;
     if known(text) {
         return Some(Vec::new());

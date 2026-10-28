@@ -313,6 +313,8 @@ const ITALIAN: Table = &[
         ],
         &[Text("4"), Text("3"), Text("0xFF"), Text("0b101")],
     ),
+    // The ordinal day
+    (&["1º maggio 2026"], &[Text("ven 1 mag 2026")]),
     // Prose stays prose
     (&["Buongiorno a tutti", "Costa 5 €"], &[Nothing, Text("5 €")]),
 ];

@@ -412,6 +412,9 @@ zone.America/Santiago = Santiago del Cile, Cile
 zone.America/Lima = Perù
 zone.Pacific/Auckland = Nuova Zelanda
 
+# The ordinal indicator after the day (`1º maggio`)
+ordinal = º, ª
+
 # Month names in dates (`12 marzo 2026`)
 month.1 = gennaio, gen{,.}
 month.2 = febbraio, feb{,.}

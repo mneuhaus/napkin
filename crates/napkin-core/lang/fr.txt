@@ -415,7 +415,12 @@ zone.America/Argentina/Buenos_Aires = Argentine
 zone.America/Toronto = Montréal, Québec
 zone.Pacific/Auckland = Nouvelle-Zélande
 
-# Month names in dates (`12 mars 2026`)
+# Times of day with `h` between hours and minutes (`14h30`, `14 h 30`, `9h05`); `14h` alone
+# stays 14 hours. The first of a month takes an ordinal (`1er mai`).
+hour-mark = h
+ordinal = er, re, ère
+
+# Month names in dates (`12 mars 2026`, `1er mai`)
 month.1 = janvier, janv{,.}
 month.2 = février, fevrier, févr{,.}, fév{,.}, fevr{,.}
 month.3 = mars

@@ -45,6 +45,13 @@ The document is evaluated top to bottom; one `LineOutput` per line.
 - **Prose tolerance**: words the engine does not know are ignored (`Text` spans), as in Numi:
   `Discounted: prev - 5% discount`, `$275 for the "Model 227"`, `3 apples + 4 apples` → `7`.
   A line without any numeric content yields `LineResult::None`, never an error.
+- **Hyphenated words**: a `-` between two letters joins one word (`Rendez-vous`, `e-mail`,
+  `X-ray`, `well-known`), which is prose unless the whole word is known (`après-demain`,
+  `Port-au-Prince`): `Rendez-vous à 14:00` → `14:00`. It subtracts only when every part is a
+  value (variables, constants, `prev`, `today`, …): `a-b` with variables `a` and `b`, `pi-e`,
+  `today-yesterday`. A value joined to an unknown word is one prose word (`price-discount`,
+  `e-mail`). Next to a digit or a space the `-` stays minus: `x-5`, `5km-3km`, `10-5`, `-5`,
+  `5 - -3`.
 - **Errors**: a line that clearly tries to compute but cannot (incompatible units, unknown
   function arguments, division by zero) yields `LineResult::Error`. The app shows nothing.
 
@@ -58,6 +65,11 @@ The document is evaluated top to bottom; one `LineOutput` per line.
   alone is million, but `MB` is megabytes. `$2k` → `$2,000`, `2M eur` → `€2,000,000`.
 - In `German` and `French` style the decimal separator is `,` for input and output; in
   `Swiss`, `English` and `Plain` it is `.`.
+- Full-width forms read as ASCII in every language: digits, decimal point, operators, letters
+  and the ideographic space (`１２３` → `123`, `１２．５` → `12.5`, `３＋４` → `7`, `５ｋｍ`).
+  The full-width comma `，` stays a clause separator (`5，3` is not 5.3). Spans keep pointing
+  into the line as typed.
+- Chinese, Japanese and Korean numerals: see [Languages](#languages).
 
 ### Operators
 
@@ -174,7 +186,12 @@ after `em = 20px`: `1.2 em in px` → `24 px`.
 
 - `now`, `time` → current local time of day; `today`, `tomorrow`, `yesterday` → dates.
 - Date literals: `2026-03-12`, `12 March 2026`, `March 12`, `12.03.2026`, `3/12/2026`
-  (month first only in English style).
+  (month first only in English style), `24-12-2026`, `1st March 2026`, `March 1st`.
+- Dates with dashes and the year last (`24-12-2026`, `1-5-2026`) need a four-digit year and are
+  day first, except with English number style and English input language, where they are month
+  first like slashes (`3-12-2026` is 12 March there); when that order is no date the other one
+  is tried (`24-12-2026` is 24 December everywhere). Anything else stays a subtraction:
+  `10-5-3` → `2`, `24 - 12 - 2026` → `-2,014`, `31-2-2026` → `-1,997`.
 - Times of day: `14:30`, `2:30 pm`, `2pm`, `noon`, `midnight`.
 - Arithmetic: `today + 2 weeks`, `now + 3 hours`, `3:30 pm + 2 hours` → `17:30`,
   `2026-12-24 - today` → duration in days, `fromunix(1446587186)`.
@@ -239,9 +256,32 @@ setting (`Settings::input_language`, `InputLanguage`, default English) with Numi
 - **Chinese and Japanese** are written without spaces: `5厘米`, `5千米加3毫米`,
   `9美元兑换成欧元` are segmented by the vocabulary (longest phrase). Korean words stay whole but
   separate from digits (`5센티미터`). East Asian dates (`2026年3月12日`, `3月12号`,
-  `2026년 3월 12일`), full-width operators and `＃` headers work.
+  `2026년 3월 12일`), full-width digits and operators and `＃` headers work.
+- **Chinese and Japanese numerals** (`numeral.<value>` in the vocabulary): `三百五十` → `350`,
+  `两千`/`兩千` → `2,000`, `一万五千` → `15,000`, `三亿`/`三億` → `300,000,000`, `十二`, `二十`,
+  `一百零五` → `105`, `三百五` → `350` (as spoken), `五点五`/`五點五` → `5.5`, `二〇二六` →
+  `2026`, Japanese `千円` → `¥1,000`, also with units, currencies, dates and times (`三百元`,
+  `两小时`, `三点半`, `二〇二六年三月十二日`). A numeral takes the multipliers after it (`五千米`
+  is 5,000 m; with a digit `5千米` stays 5 km); the decimal point needs digits after it (`三点`
+  is three o'clock, `三点五分` 3:05). The longest phrase wins: a vocabulary phrase or variable
+  starting at the same character that is at least as long keeps its meaning (`一共` sum,
+  `十六进制` hex, `四舍五入`, `一昨日`, `三明治` as a variable, and prose words listed under
+  `prose`: `一半`, `万一`, `一起`), except a phrase that is only a scale (`十万` alone is the
+  numeral 100,000). A multiplier right after digits stays a scale word (`5十万`).
+- **Korean numerals**: Sino-Korean numerals need a multiplier, so single syllables, which are
+  particles and words as often (`이`, `일`, `오`), and digit pairs (`이사`, `사이`) stay words. A
+  numeral may carry known words (`오천원`, `만원`, `이십분`); a word that is only a numeral needs
+  two syllables starting with a digit or `십` (`삼백`, `십만`; `천사` is an angel, `백조` a
+  swan).
 - **Times of day with an o'clock word**: German `14 Uhr`, `14:30 Uhr`, `14.30 Uhr` (`Uhr` alone
   is the current time), Chinese `下午3点半`, Japanese `午後3時15分`, Korean `오후 3시 30분`.
+- **Times of day with an hour mark** (`hour-mark` in the vocabulary): French and Portuguese
+  `14h30`, `14 h 30`, `9h05`, Flemish `14u30`, two-digit minutes after the mark; they convert
+  like other times (`14h30 à New York`). The mark alone after a number stays the hour unit
+  (`14h`, `2 h`), and so does a time followed by a unit (`2 h 30 min` is 150 minutes). English
+  has no hour mark (`2h30` is `2`).
+- **Ordinal days** (`ordinal` in the vocabulary): French `1er mai`, `1re`, English `1st March`,
+  `March 2nd`, Spanish, Portuguese and Italian `1º de mayo`.
 - **Word order of other languages**: a percent sign or word before the number (Turkish
   `50 + %20` = 60, Chinese `百分之20的50` = 10), units before the number (`摄氏100度`,
   `大さじ3`), conversion words after the target (Korean `100달러를 유로로`, Japanese
