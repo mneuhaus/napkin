@@ -13,7 +13,7 @@ const GERMAN: Table = &[
     ),
     (
         &["5 und 3", "10 weniger 3", "10 ohne 4", "5 € mit 2 €"],
-        &[Text("8"), Text("7"), Text("6"), Text("€7")],
+        &[Text("8"), Text("7"), Text("6"), Text("7 €")],
     ),
     (
         &["7 multipliziert mit 3", "9 dividiert durch 3"],
@@ -29,7 +29,7 @@ const GERMAN: Table = &[
     ),
     (
         &["x ist gleich 5", "x mal 2", "Miete ist 800 €", "Miete durch 2"],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400")],
+        &[Text("5"), Text("10"), Text("800 €"), Text("400 €")],
     ),
     // Percentages
     (
@@ -39,7 +39,7 @@ const GERMAN: Table = &[
             "5 % auf 30 €",
             "6 % Rabatt auf 40 €",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60")],
+        &[Text("10"), Text("10"), Text("31,50 €"), Text("37,60 €")],
     ),
     (
         &[
@@ -47,7 +47,7 @@ const GERMAN: Table = &[
             "10 % abgezogen von 50",
             "100 € zzgl. 19 %",
         ],
-        &[Text("55"), Text("45"), Text("€119")],
+        &[Text("55"), Text("45"), Text("119 €")],
     ),
     (
         &[
@@ -59,7 +59,7 @@ const GERMAN: Table = &[
     ),
     (
         &["20 % von was ist 10", "25 % auf was ist 125", "5 % wovon ist 6 €"],
-        &[Text("50"), Text("100"), Text("€120")],
+        &[Text("50"), Text("100"), Text("120 €")],
     ),
     // Scales (m stays metre)
     (
@@ -74,7 +74,7 @@ const GERMAN: Table = &[
         &[
             Text("2.000.000"),
             Text("3.000.000.000"),
-            Text("€1.500.000"),
+            Text("1.500.000 €"),
             Text("2.000.000.000.000"),
             Text("4.000"),
             Text("2 m"),
@@ -155,15 +155,15 @@ const GERMAN: Table = &[
     // Document references
     (
         &["Miete: 850 €", "Strom: 64 €", "Summe"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("850 €"), Text("64 €"), Text("914 €")],
     ),
     (
         &["Miete: 850 €", "Strom: 64 €", "Durchschnitt", "Ø"],
-        &[Text("€850"), Text("€64"), Text("€457"), Text("€457")],
+        &[Text("850 €"), Text("64 €"), Text("457 €"), Text("457 €")],
     ),
     (
         &["4 €", "6 €", "Mittelwert", "vorheriges * 2", "Gesamt: insgesamt"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Units and localized output
     (
@@ -244,7 +244,7 @@ const GERMAN: Table = &[
             "£5 + 3 Pfund",
             "2 Zentner in kg",
         ],
-        &[Text("2,27 kg"), Text("€5,33"), Text("£8"), Fails],
+        &[Text("2,27 kg"), Text("5,33 €"), Text("8 £"), Fails],
     ),
     // Currency names
     (
@@ -254,7 +254,7 @@ const GERMAN: Table = &[
             "10 britische Pfund in Euro",
             "100 kanadische Dollar in Euro",
         ],
-        &[Text("€4,44"), Text("$3"), Text("€10,67"), Text("€64")],
+        &[Text("4,44 €"), Text("3 $"), Text("10,67 €"), Text("64 €")],
     ),
     (
         &[
@@ -263,7 +263,7 @@ const GERMAN: Table = &[
             "50 indische Rupien",
             "3 schwedische Kronen",
         ],
-        &[Text("€5,33"), Text("2 AUD"), Text("50 INR"), Text("3 SEK")],
+        &[Text("5,33 €"), Text("2 AUD"), Text("50 INR"), Text("3 SEK")],
     ),
     // Functions and formats
     (
@@ -279,7 +279,7 @@ const GERMAN: Table = &[
     // Prose stays prose
     (
         &["Guten Tag", "Das kostet 5 €", "Wir treffen uns um 14 Uhr"],
-        &[Nothing, Text("€5"), Text("14:00")],
+        &[Nothing, Text("5 €"), Text("14:00")],
     ),
 ];
 
@@ -300,7 +300,7 @@ const SWISS: Table = &[(
         Text("200 kg"),
         Text("5 CHF"),
         Text("Mi., 28. Okt. 2026"),
-        Text("€17.78"),
+        Text("€ 17.78"),
     ],
 )];
 

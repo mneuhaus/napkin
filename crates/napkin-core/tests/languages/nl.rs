@@ -13,7 +13,7 @@ const DUTCH: Table = &[
     ),
     (
         &["5 en 3", "5 met 3", "10 minder 3", "10 zonder 4", "5 € met 2 €"],
-        &[Text("8"), Text("8"), Text("7"), Text("6"), Text("€7")],
+        &[Text("8"), Text("8"), Text("7"), Text("6"), Text("€ 7")],
     ),
     // `min` subtracts only between two operands and stays minutes otherwise
     (
@@ -35,7 +35,7 @@ const DUTCH: Table = &[
             "huur is 800 €",
             "huur gedeeld door 2",
         ],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400")],
+        &[Text("5"), Text("10"), Text("€ 800"), Text("€ 400")],
     ),
     // Percentages
     (
@@ -45,7 +45,7 @@ const DUTCH: Table = &[
             "5 % op 30 €",
             "6 % korting op 40 €",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60")],
+        &[Text("10"), Text("10"), Text("€ 31,50"), Text("€ 37,60")],
     ),
     (
         &["10 % bij 50", "10 % erbovenop 50", "10 % afgetrokken van 50"],
@@ -83,7 +83,7 @@ const DUTCH: Table = &[
             Text("3.000.000.000"),
             Text("2.000.000.000.000"),
             Text("4.000"),
-            Text("€1.500.000"),
+            Text("€ 1.500.000"),
             Text("2 m"),
         ],
     ),
@@ -160,15 +160,15 @@ const DUTCH: Table = &[
     // Document references
     (
         &["huur: 850 €", "stroom: 64 €", "som"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("€ 850"), Text("€ 64"), Text("€ 914")],
     ),
     (
         &["huur: 850 €", "stroom: 64 €", "gemiddelde"],
-        &[Text("€850"), Text("€64"), Text("€457")],
+        &[Text("€ 850"), Text("€ 64"), Text("€ 457")],
     ),
     (
         &["4 €", "6 €", "gem", "vorige * 2", "totaal"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("€ 4"), Text("€ 6"), Text("€ 5"), Text("€ 10"), Text("€ 25")],
     ),
     // Units and localized output
     (
@@ -259,7 +259,7 @@ const DUTCH: Table = &[
             Text("300 g"),
             Text("11,02 pond"),
             Text("2,27 kg"),
-            Text("€5,33"),
+            Text("€ 5,33"),
             Text("1.000 kg"),
         ],
     ),
@@ -274,11 +274,11 @@ const DUTCH: Table = &[
             "3 Canadese dollar",
         ],
         &[
-            Text("€7,20"),
-            Text("€40"),
-            Text("€88,89"),
-            Text("€21,33"),
-            Text("€5,33"),
+            Text("€ 7,20"),
+            Text("€ 40"),
+            Text("€ 88,89"),
+            Text("€ 21,33"),
+            Text("€ 5,33"),
             Text("3 CAD"),
         ],
     ),
@@ -295,7 +295,7 @@ const DUTCH: Table = &[
     // Prose stays prose
     (
         &["Goedemorgen", "Dat kost 5 €", "10 euro voor brood"],
-        &[Nothing, Text("€5"), Text("€10")],
+        &[Nothing, Text("€ 5"), Text("€ 10")],
     ),
 ];
 

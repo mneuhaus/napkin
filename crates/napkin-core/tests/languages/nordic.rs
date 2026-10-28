@@ -167,7 +167,12 @@ const NORWEGIAN: Table = &[
     ),
     (
         &["5 km i engelske mil", "100 kr + 50 kr", "20 $ i euro", "x er 5"],
-        &[Text("3,11 engelske mil"), Text("150 NOK"), Text("€16"), Text("5")],
+        &[
+            Text("3,11 engelske mil"),
+            Text("150 NOK"),
+            Text("16 €"),
+            Text("5"),
+        ],
     ),
 ];
 
@@ -324,11 +329,11 @@ const FINNISH: Table = &[
             "100 € + 50 euroa",
             "neliöjuuri 16",
         ],
-        &[Text("20 m²"), Text("2 neliöjalkaa"), Text("€150"), Text("4")],
+        &[Text("20 m²"), Text("2 neliöjalkaa"), Text("150 €"), Text("4")],
     ),
     (
         &["vuokra: 850 €", "ruoka: 320 €", "yhteensä", "x yhtä suuri kuin 5"],
-        &[Text("€850"), Text("€320"), Text("€1 170"), Text("5")],
+        &[Text("850 €"), Text("320 €"), Text("1 170 €"), Text("5")],
     ),
 ];
 

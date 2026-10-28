@@ -199,3 +199,4 @@ month.12 = desember, des{,.}
 weekdays = man., tir., ons., tor., fre., lør., søn.
 months = jan., feb., mar., apr., mai, jun., jul., aug., sep., okt., nov., des.
 date = %a %-d. %b %Y
+money = {amount} {sign}

@@ -44,6 +44,7 @@
 //! | `zone.<Area/City>` | city names for a time zone: `zone.Europe/Vienna = Wien` |
 //! | `month.<1-12>` | month names in date literals (`12. März 2026`) |
 //! | `weekdays`, `months`, `date` | display: seven short weekday names from Monday, twelve short month names, and the date pattern (`%a`, `%-d`, `%d`, `%b`, `%m`, `%Y`) |
+//! | `money` | display: where a currency sign goes around the amount, `{amount}` and `{sign}` standing for the parts (`{amount} {sign}` gives `7,20 €`); the default is `{sign}{amount}` |
 //!
 //! Plural categories follow the language (CLDR): one form for Chinese, Japanese, Korean and
 //! Turkish; `one | other` for most languages; `one | few | many | other` for Russian, Ukrainian,
@@ -277,6 +278,8 @@ pub(crate) struct Vocab {
     weekdays: Option<Vec<String>>,
     months: Option<Vec<String>>,
     date: Option<String>,
+    /// Where the currency sign goes, `{amount}` and `{sign}` standing for the parts.
+    money: Option<String>,
 }
 
 /// Collapses whitespace and unifies apostrophes, the way phrases are compared.
@@ -365,6 +368,11 @@ impl Vocab {
         let names = self.weekdays.as_ref()?;
         let index = usize::try_from(date.weekday().num_days_from_monday()).ok()?;
         names.get(index).map(String::as_str)
+    }
+
+    /// The language's placement of a currency sign around a formatted amount (`{amount} {sign}`).
+    pub(crate) fn money(&self) -> Option<&str> {
+        self.money.as_deref()
     }
 
     /// `date` in the language's pattern, when it has one.
@@ -719,6 +727,7 @@ struct Builder {
     weekdays: Option<Vec<String>>,
     months: Option<Vec<String>>,
     date: Option<String>,
+    money: Option<String>,
 }
 
 /// The farthest day word from today (`day.2 = übermorgen`).
@@ -817,6 +826,9 @@ impl Builder {
             "weekdays" => self.weekdays = Some(names(value, 7)?),
             "months" => self.months = Some(names(value, 12)?),
             "date" => self.date = Some(value.to_owned()),
+            "money" if value.contains("{amount}") && value.contains("{sign}") => {
+                self.money = Some(value.to_owned());
+            }
             _ => return self.keyed(key, value),
         }
         Ok(())
@@ -919,6 +931,7 @@ impl Builder {
             weekdays: self.weekdays,
             months: self.months,
             date: self.date,
+            money: self.money,
             ..Vocab::default()
         };
         for (phrase, meaning) in self.phrases {

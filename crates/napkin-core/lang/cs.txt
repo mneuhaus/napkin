@@ -249,3 +249,4 @@ month.12 = prosin{ec,ce,ci}
 weekdays = po, út, st, čt, pá, so, ne
 months = led, úno, bře, dub, kvě, čvn, čvc, srp, zář, říj, lis, pro
 date = %a %-d. %-m. %Y
+money = {amount} {sign}

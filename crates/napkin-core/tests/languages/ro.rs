@@ -21,7 +21,7 @@ const ROMANIAN: Table = &[
             Text("4"),
             Text("8"),
             Text("6"),
-            Text("€7"),
+            Text("7 €"),
             Text("4,72"),
         ],
     ),
@@ -36,7 +36,7 @@ const ROMANIAN: Table = &[
     ),
     (
         &["x egal cu 5", "x ori 2", "chiria e 800 €", "chiria împărțit la 2"],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400")],
+        &[Text("5"), Text("10"), Text("800 €"), Text("400 €")],
     ),
     // Percentages (`din` is "of")
     (
@@ -47,7 +47,13 @@ const ROMANIAN: Table = &[
             "6 % reducere la 40 €",
             "10 % în plus față de 50",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60"), Text("55")],
+        &[
+            Text("10"),
+            Text("10"),
+            Text("31,50 €"),
+            Text("37,60 €"),
+            Text("55"),
+        ],
     ),
     (
         &[
@@ -122,11 +128,11 @@ const ROMANIAN: Table = &[
     // Document references
     (
         &["Chirie: 850 €", "Curent: 64 €", "sumă"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("850 €"), Text("64 €"), Text("914 €")],
     ),
     (
         &["4 €", "6 €", "medie", "anterior * 2"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €")],
     ),
     // Units and localized output: one, few (2-19, fractions), other with `de`
     (
@@ -182,7 +188,7 @@ const ROMANIAN: Table = &[
     // Currencies
     (
         &["100 de lei", "50 de euro în dolari", "10 lire sterline în euro"],
-        &[Text("100 RON"), Text("$62,50"), Text("€10,67")],
+        &[Text("100 RON"), Text("62,50 $"), Text("10,67 €")],
     ),
     // Functions, formats, prose
     (
@@ -192,7 +198,7 @@ const ROMANIAN: Table = &[
             "Bună ziua",
             "Asta costă 5 €",
         ],
-        &[Text("4"), Text("0xFF"), Nothing, Text("€5")],
+        &[Text("4"), Text("0xFF"), Nothing, Text("5 €")],
     ),
 ];
 

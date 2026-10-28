@@ -13,7 +13,7 @@ const FRENCH: Table = &[
     ),
     (
         &["5 et 3", "10 moins 3", "10 sans 4", "5 € avec 2 €"],
-        &[Text("8"), Text("7"), Text("6"), Text("€7")],
+        &[Text("8"), Text("7"), Text("6"), Text("7 €")],
     ),
     (
         &[
@@ -36,7 +36,7 @@ const FRENCH: Table = &[
             "loyer divisé par 2",
             "y est égal à 3",
         ],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400"), Text("3")],
+        &[Text("5"), Text("10"), Text("800 €"), Text("400 €"), Text("3")],
     ),
     // Percentages
     (
@@ -46,7 +46,7 @@ const FRENCH: Table = &[
             "5 % d'augmentation de 30 €",
             "6 % de réduction sur 40 €",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60")],
+        &[Text("10"), Text("10"), Text("31,50 €"), Text("37,60 €")],
     ),
     (
         &[
@@ -55,7 +55,7 @@ const FRENCH: Table = &[
             "5 % sur 30 €",
             "100 € plus 19 %",
         ],
-        &[Text("45"), Text("55"), Text("€31,50"), Text("€119")],
+        &[Text("45"), Text("55"), Text("31,50 €"), Text("119 €")],
     ),
     (
         &[
@@ -88,7 +88,7 @@ const FRENCH: Table = &[
         &[
             Text("2 000 000"),
             Text("3 000 000 000"),
-            Text("€1 500 000"),
+            Text("1 500 000 €"),
             Text("2 000 000 000 000"),
             Text("4 000"),
             Text("2 000"),
@@ -174,15 +174,15 @@ const FRENCH: Table = &[
     // Document references
     (
         &["loyer : 850 €", "électricité : 64 €", "somme"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("850 €"), Text("64 €"), Text("914 €")],
     ),
     (
         &["loyer : 850 €", "électricité : 64 €", "moyenne"],
-        &[Text("€850"), Text("€64"), Text("€457")],
+        &[Text("850 €"), Text("64 €"), Text("457 €")],
     ),
     (
         &["4 €", "6 €", "moy", "précédent * 2", "Total : somme"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Units and localized output
     (
@@ -253,11 +253,11 @@ const FRENCH: Table = &[
             "2 kilos de pommes",
         ],
         &[
-            Text("€15/h"),
+            Text("15 €/h"),
             Text("90 km/h"),
-            Text("€3/kg"),
-            Text("$3 000 000"),
-            Text("€3 000 000"),
+            Text("3 €/kg"),
+            Text("3 000 000 $"),
+            Text("3 000 000 €"),
             Text("2 kg"),
         ],
     ),
@@ -303,8 +303,8 @@ const FRENCH: Table = &[
         ],
         &[
             Text("2,27 kg"),
-            Text("€5,33"),
-            Text("£8"),
+            Text("5,33 €"),
+            Text("8 £"),
             Text("200 kg"),
             Text("3 nœuds"),
         ],
@@ -319,11 +319,11 @@ const FRENCH: Table = &[
             "20 € en livres sterling",
         ],
         &[
-            Text("€1,92"),
-            Text("€4,44"),
-            Text("€0,53"),
-            Text("€8"),
-            Text("£18,75"),
+            Text("1,92 €"),
+            Text("4,44 €"),
+            Text("0,53 €"),
+            Text("8 €"),
+            Text("18,75 £"),
         ],
     ),
     // Functions and formats
@@ -339,7 +339,7 @@ const FRENCH: Table = &[
     // Prose stays prose
     (
         &["Bonjour tout le monde", "Ça coûte 5 €", "Il a 3 ans"],
-        &[Nothing, Text("€5"), Text("3 ans")],
+        &[Nothing, Text("5 €"), Text("3 ans")],
     ),
 ];
 

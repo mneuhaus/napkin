@@ -242,7 +242,8 @@ impl Units<'_> {
             Some(Radix::Scientific) => format::scientific(quantity.value, settings.precision, style),
             Some(Radix::Decimal) | None => {
                 if let Some(code) = quantity.unit.currency() {
-                    return format::currency(quantity.value, code, style);
+                    let placement = money_placement(settings.input_language);
+                    return format::currency(quantity.value, code, style, placement);
                 }
                 format::number(quantity.value, settings.precision, style)
             }
@@ -308,7 +309,7 @@ impl Units<'_> {
                     let per = Unit {
                         factors: factors.iter().filter(|f| f.power < 0).cloned().collect(),
                     };
-                    let amount = format::currency(quantity.value, code, style);
+                    let amount = format::currency(quantity.value, code, style, money_placement(language));
                     return format!("{amount}/{}", self.symbols(&per.pow(-1)));
                 }
                 format!("{number} {}", self.symbols(unit))
@@ -434,4 +435,11 @@ fn compound(template: &str, word: &str) -> String {
         .map(|first| first.to_lowercase().chain(chars).collect())
         .unwrap_or_default();
     template.replace('*', &lowered)
+}
+
+/// Where `language` puts a currency sign, `None` for the English `$5` default.
+fn money_placement(language: InputLanguage) -> Option<&'static str> {
+    (language != InputLanguage::English)
+        .then(|| vocab::vocab(language).money())
+        .flatten()
 }

@@ -32,7 +32,7 @@ const SPANISH: Table = &[
             Text("7"),
             Text("6"),
             Text("0,5"),
-            Text("€7"),
+            Text("7 €"),
         ],
     ),
     (
@@ -56,7 +56,7 @@ const SPANISH: Table = &[
             "alquiler entre 2",
             "z vale 3",
         ],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400"), Text("3")],
+        &[Text("5"), Text("10"), Text("800 €"), Text("400 €"), Text("3")],
     ),
     // `y` is plus, but a variable named `y` shadows it
     (&["y = 5", "y por 2"], &[Text("5"), Text("10")]),
@@ -68,11 +68,11 @@ const SPANISH: Table = &[
             "5 % sobre 30 €",
             "6 % de descuento sobre 40 €",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60")],
+        &[Text("10"), Text("10"), Text("31,50 €"), Text("37,60 €")],
     ),
     (
         &["10 % de aumento sobre 50", "100 € más 21 %"],
-        &[Text("55"), Text("€121")],
+        &[Text("55"), Text("121 €")],
     ),
     (
         &[
@@ -108,7 +108,7 @@ const SPANISH: Table = &[
             Text("2.000.000"),
             Text("3.000.000.000"),
             Text("3.000.000.000"),
-            Text("€1.500.000"),
+            Text("1.500.000 €"),
             Text("2.000.000.000.000"),
             Text("4.000"),
             Text("2 m"),
@@ -201,15 +201,15 @@ const SPANISH: Table = &[
     // Document references
     (
         &["alquiler: 850 €", "luz: 64 €", "suma"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("850 €"), Text("64 €"), Text("914 €")],
     ),
     (
         &["alquiler: 850 €", "luz: 64 €", "promedio"],
-        &[Text("€850"), Text("€64"), Text("€457")],
+        &[Text("850 €"), Text("64 €"), Text("457 €")],
     ),
     (
         &["4 €", "6 €", "media", "anterior * 2", "Total: total"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Units and localized output
     (
@@ -304,8 +304,8 @@ const SPANISH: Table = &[
         ],
         &[
             Text("2,27 kg"),
-            Text("€5,33"),
-            Text("£8"),
+            Text("5,33 €"),
+            Text("8 £"),
             Text("200 kg"),
             Text("3 nudos"),
         ],
@@ -321,9 +321,9 @@ const SPANISH: Table = &[
         ],
         &[
             Text("100 km/h"),
-            Text("€3/kg"),
-            Text("€10/d"),
-            Text("$3.000.000"),
+            Text("3 €/kg"),
+            Text("10 €/d"),
+            Text("3.000.000 $"),
             Text("2 kg"),
             Text("5 in³"),
         ],
@@ -339,11 +339,11 @@ const SPANISH: Table = &[
             "3 pesos mexicanos",
         ],
         &[
-            Text("€1,92"),
-            Text("€4,44"),
-            Text("€0,53"),
-            Text("€8"),
-            Text("£18,75"),
+            Text("1,92 €"),
+            Text("4,44 €"),
+            Text("0,53 €"),
+            Text("8 €"),
+            Text("18,75 £"),
             Text("3 MXN"),
         ],
     ),
@@ -358,7 +358,7 @@ const SPANISH: Table = &[
         &[Text("4"), Text("3"), Text("0xFF"), Text("0b101")],
     ),
     // Prose stays prose
-    (&["Buenos días", "Cuesta 5 €"], &[Nothing, Text("€5")]),
+    (&["Buenos días", "Cuesta 5 €"], &[Nothing, Text("5 €")]),
 ];
 
 #[test]

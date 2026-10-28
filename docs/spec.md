@@ -254,7 +254,11 @@ setting (`Settings::input_language`, `InputLanguage`, default English) with Numi
   (`2 Stunden`, `1 Tag`, `30,42 Tage`, `5 Zoll`, `3 Fuß`, `5 часов`, `2 godziny`), squared and
   cubed word units as compounds where the language has them (`2 Quadratfuß`), dates and
   weekdays with the language's names and order (`Mi., 28. Okt. 2026`). Symbols stay symbols
-  (`cm`, `kg`, `°C`). English results are unchanged. The number style stays a separate setting.
+  (`cm`, `kg`, `°C`). Currency signs sit where the language puts them: after the amount in
+  German, French, Spanish, Italian, European Portuguese, the Nordic and Slavic languages and
+  Hebrew (`7,20 €`), before it with a space in Austrian and Swiss German, Dutch and Brazilian
+  Portuguese (`€ 7,20`), before it without a space otherwise (`€7.20`). English results are
+  unchanged. The number style stays a separate setting.
 - Each language's vocabulary is a data file, `crates/napkin-core/lang/<tag>.txt`, in Napkin's
   own format (documented in `crates/napkin-core/src/vocab.rs`), with a sample note
   `lang/<tag>.numi` (`InputLanguage::sample_note`). A compatibility test checks every phrase of

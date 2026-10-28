@@ -280,3 +280,4 @@ month.12 = decembrie, dec{,.}
 weekdays = lun., mar., mie., joi, vin., sâm., dum.
 months = ian., feb., mar., apr., mai, iun., iul., aug., sept., oct., nov., dec.
 date = %a, %-d %b %Y
+money = {amount} {sign}

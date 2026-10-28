@@ -24,7 +24,7 @@ const ITALIAN: Table = &[
             Text("8"),
             Text("7"),
             Text("6"),
-            Text("€7"),
+            Text("7 €"),
             Text("2,72"),
         ],
     ),
@@ -44,7 +44,7 @@ const ITALIAN: Table = &[
             "affitto diviso 2",
             "y vale 3",
         ],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400"), Text("3")],
+        &[Text("5"), Text("10"), Text("800 €"), Text("400 €"), Text("3")],
     ),
     // Percentages
     (
@@ -54,11 +54,11 @@ const ITALIAN: Table = &[
             "5 % su 30 €",
             "6 % di sconto su 40 €",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60")],
+        &[Text("10"), Text("10"), Text("31,50 €"), Text("37,60 €")],
     ),
     (
         &["10 % in più su 50", "10 % in meno su 50", "100 € più 22 %"],
-        &[Text("55"), Text("45"), Text("€122")],
+        &[Text("55"), Text("45"), Text("122 €")],
     ),
     (
         &[
@@ -91,7 +91,7 @@ const ITALIAN: Table = &[
         &[
             Text("2.000.000"),
             Text("3.000.000.000"),
-            Text("€1.500.000"),
+            Text("1.500.000 €"),
             Text("4.000"),
             Text("2.000"),
             Text("2.000.000.000.000"),
@@ -173,15 +173,15 @@ const ITALIAN: Table = &[
     // Document references
     (
         &["affitto: 850 €", "luce: 64 €", "somma"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("850 €"), Text("64 €"), Text("914 €")],
     ),
     (
         &["affitto: 850 €", "luce: 64 €", "media"],
-        &[Text("€850"), Text("€64"), Text("€457")],
+        &[Text("850 €"), Text("64 €"), Text("457 €")],
     ),
     (
         &["4 €", "6 €", "media", "precedente * 2", "Totale: totale"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Units and localized output
     (
@@ -278,11 +278,11 @@ const ITALIAN: Table = &[
             "2 chili di mele",
         ],
         &[
-            Text("€15/h"),
+            Text("15 €/h"),
             Text("100 km/h"),
-            Text("€3/kg"),
-            Text("€3.000.000"),
-            Text("€3.000.000"),
+            Text("3 €/kg"),
+            Text("3.000.000 €"),
+            Text("3.000.000 €"),
             Text("2 kg"),
         ],
     ),
@@ -296,11 +296,11 @@ const ITALIAN: Table = &[
             "20 € in sterline",
         ],
         &[
-            Text("€1,92"),
-            Text("€4,44"),
-            Text("€0,53"),
-            Text("€8"),
-            Text("£18,75"),
+            Text("1,92 €"),
+            Text("4,44 €"),
+            Text("0,53 €"),
+            Text("8 €"),
+            Text("18,75 £"),
         ],
     ),
     // Functions and formats
@@ -314,7 +314,7 @@ const ITALIAN: Table = &[
         &[Text("4"), Text("3"), Text("0xFF"), Text("0b101")],
     ),
     // Prose stays prose
-    (&["Buongiorno a tutti", "Costa 5 €"], &[Nothing, Text("€5")]),
+    (&["Buongiorno a tutti", "Costa 5 €"], &[Nothing, Text("5 €")]),
 ];
 
 #[test]

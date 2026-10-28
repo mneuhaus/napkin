@@ -151,8 +151,9 @@ pub(crate) fn radix(x: f64, radix: Radix) -> Option<String> {
     })
 }
 
-/// A currency amount: `$1,234.50`, `€24`, `27.53 CHF`, `0.0005 BTC`.
-pub(crate) fn currency(x: f64, code: &str, style: NumberStyle) -> String {
+/// A currency amount: `$1,234.50`, `€24`, `27.53 CHF`, `0.0005 BTC`. `placement` is a
+/// language's `{amount} {sign}` pattern for currencies with a sign (`7,20 €`).
+pub(crate) fn currency(x: f64, code: &str, style: NumberStyle, placement: Option<&str>) -> String {
     let amount = if x.abs() >= SCIENTIFIC_ABOVE {
         scientific(x, 2, style)
     } else if currency::is_crypto(code) && x.abs() >= 0.5e-8 {
@@ -165,6 +166,9 @@ pub(crate) fn currency(x: f64, code: &str, style: NumberStyle) -> String {
         fixed(cents / 100.0, decimals, style, Trim::Keep)
     };
     match currency::prefix_sign(code) {
+        Some(sign) if let Some(pattern) = placement => {
+            pattern.replace("{amount}", &amount).replace("{sign}", sign)
+        }
         Some(sign) => match amount.strip_prefix('-') {
             Some(abs) => format!("-{sign}{abs}"),
             None => format!("{sign}{amount}"),
@@ -206,15 +210,15 @@ mod tests {
 
     #[test]
     fn currencies() {
-        assert_eq!(currency(1234.5, "USD", NumberStyle::English), "$1,234.50");
-        assert_eq!(currency(24.0, "EUR", NumberStyle::English), "€24");
-        assert_eq!(currency(-5.0, "USD", NumberStyle::English), "-$5");
-        assert_eq!(currency(27.531, "CHF", NumberStyle::English), "27.53 CHF");
-        assert_eq!(currency(0.0005, "BTC", NumberStyle::English), "0.0005 BTC");
+        assert_eq!(currency(1234.5, "USD", NumberStyle::English, None), "$1,234.50");
+        assert_eq!(currency(24.0, "EUR", NumberStyle::English, None), "€24");
+        assert_eq!(currency(-5.0, "USD", NumberStyle::English, None), "-$5");
+        assert_eq!(currency(27.531, "CHF", NumberStyle::English, None), "27.53 CHF");
+        assert_eq!(currency(0.0005, "BTC", NumberStyle::English, None), "0.0005 BTC");
         assert_eq!(
-            currency(0.000_000_1, "BTC", NumberStyle::English),
+            currency(0.000_000_1, "BTC", NumberStyle::English, None),
             "0.0000001 BTC"
         );
-        assert_eq!(currency(2.999, "USD", NumberStyle::English), "$3");
+        assert_eq!(currency(2.999, "USD", NumberStyle::English, None), "$3");
     }
 }

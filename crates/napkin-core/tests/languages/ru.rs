@@ -33,7 +33,7 @@ const RUSSIAN: Table = &[
     ),
     (
         &["5 дюймов в см", "5 дюймов как см", "1 миля в км", "5 € плюс 2 €"],
-        &[Text("12,7 cm"), Text("12,7 cm"), Text("1,61 km"), Text("€7")],
+        &[Text("12,7 cm"), Text("12,7 cm"), Text("1,61 km"), Text("7 €")],
     ),
     (
         &[
@@ -48,12 +48,12 @@ const RUSSIAN: Table = &[
             Text("60 km/h"),
             Text("60 km/h"),
             Text("27,78 m/s"),
-            Text("€50"),
+            Text("50 €"),
         ],
     ),
     (
         &["x равно 5", "x умножить на 2", "аренда равна 800 €", "аренда / 2"],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400")],
+        &[Text("5"), Text("10"), Text("800 €"), Text("400 €")],
     ),
     // Percentages
     (
@@ -70,10 +70,10 @@ const RUSSIAN: Table = &[
             Text("10"),
             Text("10"),
             Text("10"),
-            Text("€31,50"),
-            Text("€37,60"),
+            Text("31,50 €"),
+            Text("37,60 €"),
             Text("45"),
-            Text("€120"),
+            Text("120 €"),
         ],
     ),
     (
@@ -91,7 +91,7 @@ const RUSSIAN: Table = &[
             "20 % уменьшение чего 80",
             "5 % от чего 6 €",
         ],
-        &[Text("50"), Text("100"), Text("100"), Text("€120")],
+        &[Text("50"), Text("100"), Text("100"), Text("120 €")],
     ),
     // Scales (short scale; `т` is the tonne, `М` the million, `м` the metre)
     (
@@ -109,7 +109,7 @@ const RUSSIAN: Table = &[
         &[
             Text("2 000 000"),
             Text("3 000 000 000"),
-            Text("€1 500 000"),
+            Text("1 500 000 €"),
             Text("2 000 000 000 000"),
             Text("4 000"),
             Text("5 000"),
@@ -210,15 +210,15 @@ const RUSSIAN: Table = &[
     // Document references
     (
         &["Аренда: 850 €", "Свет: 64 €", "сумма"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("850 €"), Text("64 €"), Text("914 €")],
     ),
     (
         &["Аренда: 850 €", "Свет: 64 €", "среднее", "в среднем"],
-        &[Text("€850"), Text("€64"), Text("€457"), Text("€457")],
+        &[Text("850 €"), Text("64 €"), Text("457 €"), Text("457 €")],
     ),
     (
         &["4 €", "6 €", "среднее", "пред * 2", "Всего: итого"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Time units and localized output (one | few | many | other)
     (
@@ -380,14 +380,14 @@ const RUSSIAN: Table = &[
             "1 биткоин в долларах",
         ],
         &[
-            Text("€4"),
-            Text("$12,50"),
-            Text("€3,20"),
-            Text("€5,33"),
-            Text("£8"),
-            Text("€0,53"),
-            Text("€1,78"),
-            Text("$100 000"),
+            Text("4 €"),
+            Text("12,50 $"),
+            Text("3,20 €"),
+            Text("5,33 €"),
+            Text("8 £"),
+            Text("0,53 €"),
+            Text("1,78 €"),
+            Text("100 000 $"),
         ],
     ),
     (
@@ -426,7 +426,7 @@ const RUSSIAN: Table = &[
     // Prose stays prose
     (
         &["Добрый день", "Это стоит 5 €", "Встречаемся в 14:00"],
-        &[Nothing, Text("€5"), Text("14:00")],
+        &[Nothing, Text("5 €"), Text("14:00")],
     ),
 ];
 
@@ -514,10 +514,10 @@ const UKRAINIAN: Table = &[
             "100 гривень",
         ],
         &[
-            Text("€850"),
-            Text("€64"),
-            Text("€914"),
-            Text("€4"),
+            Text("850 €"),
+            Text("64 €"),
+            Text("914 €"),
+            Text("4 €"),
             Text("100 UAH"),
         ],
     ),

@@ -227,3 +227,4 @@ month.12 = joulukuu{,ta}, jouluk{,.}
 weekdays = ma, ti, ke, to, pe, la, su
 months = tammik., helmik., maalisk., huhtik., toukok., kesäk., heinäk., elok., syysk., lokak., marrask., jouluk.
 date = %a %-d.%-m.%Y
+money = {amount} {sign}

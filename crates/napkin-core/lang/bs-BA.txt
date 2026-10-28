@@ -251,3 +251,4 @@ month.12 = decemb{ar,ra,ru}, prosin{ac,ca,cu}, dec
 weekdays = pon, uto, sri, čet, pet, sub, ned
 months = jan, feb, mar, apr, maj, jun, jul, aug, sep, okt, nov, dec
 date = %a, %-d. %b %Y.
+money = {amount} {sign}

@@ -30,7 +30,7 @@ const BRAZILIAN: Table = &[
             Text("8"),
             Text("7"),
             Text("6"),
-            Text("€7"),
+            Text("€ 7"),
             Text("4,72"),
             Text("1"),
         ],
@@ -64,7 +64,7 @@ const BRAZILIAN: Table = &[
             "aluguel é 800 €",
             "aluguel dividido por 2",
         ],
-        &[Text("5"), Text("10"), Text("€800"), Text("€400")],
+        &[Text("5"), Text("10"), Text("€ 800"), Text("€ 400")],
     ),
     // Percentages
     (
@@ -74,7 +74,7 @@ const BRAZILIAN: Table = &[
             "5 % a mais em 30 €",
             "6 % de desconto em 40 €",
         ],
-        &[Text("10"), Text("10"), Text("€31,50"), Text("€37,60")],
+        &[Text("10"), Text("10"), Text("€ 31,50"), Text("€ 37,60")],
     ),
     (
         &[
@@ -82,7 +82,7 @@ const BRAZILIAN: Table = &[
             "10 % a menos de 50",
             "100 € mais 19 %",
         ],
-        &[Text("55"), Text("45"), Text("€119")],
+        &[Text("55"), Text("45"), Text("€ 119")],
     ),
     (
         &[
@@ -100,7 +100,7 @@ const BRAZILIAN: Table = &[
             "5 % de quanto é 6 €",
             "20 % de desconto sobre quanto é 80",
         ],
-        &[Text("50"), Text("100"), Text("€120"), Text("100")],
+        &[Text("50"), Text("100"), Text("€ 120"), Text("100")],
     ),
     // Scales (short scale in Brazil; m stays metre)
     (
@@ -187,6 +187,10 @@ const BRAZILIAN: Table = &[
         ],
     ),
     (
+        &["12 de março de 2026", "1 de maio"],
+        &[Text("qui., 12 de mar. de 2026"), Text("sex., 1 de mai. de 2026")],
+    ),
+    (
         &[
             "14:00 em Lisboa",
             "tempo em Londres",
@@ -211,15 +215,15 @@ const BRAZILIAN: Table = &[
     // Document references
     (
         &["Aluguel: 850 €", "Luz: 64 €", "soma"],
-        &[Text("€850"), Text("€64"), Text("€914")],
+        &[Text("€ 850"), Text("€ 64"), Text("€ 914")],
     ),
     (
         &["Aluguel: 850 €", "Luz: 64 €", "média", "méd."],
-        &[Text("€850"), Text("€64"), Text("€457"), Text("€457")],
+        &[Text("€ 850"), Text("€ 64"), Text("€ 457"), Text("€ 457")],
     ),
     (
         &["4 €", "6 €", "média", "anterior * 2", "Total: soma"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("€ 4"), Text("€ 6"), Text("€ 5"), Text("€ 10"), Text("€ 25")],
     ),
     // Units and localized output (Brazil: singular below 2, `1,5 hora`)
     (
@@ -309,7 +313,7 @@ const BRAZILIAN: Table = &[
             "£5 + 3 libras",
             "2 quintais em kg",
         ],
-        &[Text("2,27 kg"), Text("€5,33"), Text("£8"), Text("200 kg")],
+        &[Text("2,27 kg"), Text("€ 5,33"), Text("£ 8"), Text("200 kg")],
     ),
     (
         &[
@@ -337,7 +341,7 @@ const BRAZILIAN: Table = &[
             "20 francos suíços em dólares",
             "1000 ienes em dólares",
         ],
-        &[Text("€80"), Text("€53,33"), Text("$22,22"), Text("$6,67")],
+        &[Text("€ 80"), Text("€ 53,33"), Text("$ 22,22"), Text("$ 6,67")],
     ),
     // Functions and formats
     (
@@ -361,7 +365,7 @@ const BRAZILIAN: Table = &[
     // Prose stays prose
     (
         &["Bom dia", "Isso custa 5 €", "Vou para casa às 14:00"],
-        &[Nothing, Text("€5"), Text("14:00")],
+        &[Nothing, Text("€ 5"), Text("14:00")],
     ),
 ];
 
@@ -373,7 +377,7 @@ const EUROPEAN: Table = &[
             Text("2.000.000.000.000"),
             Text("3.000.000.000"),
             Text("2.000.000.000"),
-            Text("€2.000.000"),
+            Text("2.000.000 €"),
         ],
     ),
     (
@@ -407,7 +411,7 @@ const EUROPEAN: Table = &[
             Text("09:00"),
             Text("13:00"),
             Text("2 m"),
-            Text("€53,33"),
+            Text("53,33 €"),
         ],
     ),
 ];

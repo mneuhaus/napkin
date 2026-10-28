@@ -438,3 +438,4 @@ month.12 = Dezember, Dez{,.}
 weekdays = Mo., Di., Mi., Do., Fr., Sa., So.
 months = Jan., Feb., März, Apr., Mai, Juni, Juli, Aug., Sept., Okt., Nov., Dez.
 date = %a, %-d. %b %Y
+money = {amount} {sign}

@@ -13,3 +13,6 @@ months = Jän., Feb., März, Apr., Mai, Juni, Juli, Aug., Sep., Okt., Nov., Dez.
 # Misspellings that cannot mean anything else
 unit.s = Skeunden
 unit.teaspoon = Teëlöffel
+
+# Display
+money = {sign} {amount}

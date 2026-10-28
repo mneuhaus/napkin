@@ -64,7 +64,7 @@ const POLISH: Table = &[
             Text("60 km/h"),
             Text("10 PLN/kg"),
             Text("100 PLN/d"),
-            Text("€1 200"),
+            Text("1 200 €"),
         ],
     ),
     (
@@ -95,7 +95,7 @@ const POLISH: Table = &[
             Text("55"),
             Text("55"),
             Text("45"),
-            Text("€37,60"),
+            Text("37,60 €"),
             Text("123 PLN"),
         ],
     ),
@@ -230,7 +230,7 @@ const POLISH: Table = &[
     ),
     (
         &["4 €", "6 €", "średnia", "poprzedni * 2", "Razem: łącznie"],
-        &[Text("€4"), Text("€6"), Text("€5"), Text("€10"), Text("€25")],
+        &[Text("4 €"), Text("6 €"), Text("5 €"), Text("10 €"), Text("25 €")],
     ),
     // Time units and localized output (one | few | many | other)
     (
@@ -378,13 +378,13 @@ const POLISH: Table = &[
             "3 SEK",
         ],
         &[
-            Text("€4"),
-            Text("$12,50"),
-            Text("€3,20"),
-            Text("€5,33"),
-            Text("£8"),
-            Text("€0,53"),
-            Text("€1,78"),
+            Text("4 €"),
+            Text("12,50 $"),
+            Text("3,20 €"),
+            Text("5,33 €"),
+            Text("8 £"),
+            Text("0,53 €"),
+            Text("1,78 €"),
             Text("100 PLN"),
             Text("3 SEK"),
         ],

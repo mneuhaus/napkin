@@ -495,7 +495,8 @@ zone.America/Los_Angeles = São Francisco, Califórnia
 zone.America/Chicago = Nova Orleans
 zone.Pacific/Auckland = Nova Zelândia
 
-# Month names in dates (`12 março 2026`)
+# Month names in dates (`12 de março de 2026`, `12 março 2026`, `1 de maio`)
+date-word = de
 month.1 = janeiro, jan{,.}
 month.2 = fevereiro, fev{,.}
 month.3 = março, mar{,.}
@@ -513,3 +514,4 @@ month.12 = dezembro, dez{,.}
 weekdays = seg., ter., qua., qui., sex., sáb., dom.
 months = jan., fev., mar., abr., mai., jun., jul., ago., set., out., nov., dez.
 date = %a, %-d de %b de %Y
+money = {sign} {amount}

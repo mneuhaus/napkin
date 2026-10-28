@@ -137,7 +137,7 @@ const HEBREW: Table = &[
     ),
     (
         &["5 דולר ב אירו", "10 יורו ב דולרים", "3 ש״ח", "שורש 16", "שלום"],
-        &[Text("€4"), Text("$12.50"), Text("3 ILS"), Text("4"), Nothing],
+        &[Text("4 €"), Text("12.50 $"), Text("3 ILS"), Text("4"), Nothing],
     ),
 ];
 

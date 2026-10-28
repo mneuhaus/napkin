@@ -16,3 +16,4 @@ show.cup = chávena | chávenas
 # Display: `quarta, 28/10/2026`
 weekdays = segunda, terça, quarta, quinta, sexta, sábado, domingo
 date = %a, %d/%m/%Y
+money = {amount} {sign}

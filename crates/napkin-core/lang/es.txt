@@ -416,6 +416,7 @@ month.12 = diciembre, dic{,.}
 weekdays = lun, mar, mié, jue, vie, sáb, dom
 months = ene, feb, mar, abr, may, jun, jul, ago, sept, oct, nov, dic
 date = %a, %-d %b %Y
+money = {amount} {sign}
 
 # `hora` alone is the current time; after a number it stays the hour (listed after the units).
 now = hora
