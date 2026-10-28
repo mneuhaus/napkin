@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Napkin · Calculator notepad for macOS</title>
+  <meta name="description" content="Napkin is a free, open-source calculator notepad for macOS. Write math in plain words on the left and read the answers on the right. Speaks Numi's syntax, written in Rust.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1d1e21" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Napkin">
+  <meta property="og:description" content="Back-of-the-napkin math for your desktop. An open-source calculator notepad for macOS.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="assets/icon-64.png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/demo.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="wrap bar">
+    <a class="brand" href="./" aria-label="Napkin home">
+      <img src="assets/icon-64.png" width="32" height="32" alt="">
+      Napkin
+    </a>
+    <nav aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a class="gh" href="https://github.com/mneuhaus/napkin">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="wrap hero">
+      <h1 class="headline">
+        <span class="q">Back-of-the-napkin math</span>
+        <span class="a">for your desktop.</span>
+      </h1>
+
+      <div class="hero-body">
+        <div>
+          <p class="lede"><strong>Napkin is a calculator notepad for macOS.</strong> Write the math in plain words on the left; the answer appears on the right of the same line. It speaks Numi's syntax, and it is free and open source.</p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/mneuhaus/napkin/releases/latest">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 17h12"/></svg>
+              Download for macOS
+            </a>
+            <a class="button" href="https://github.com/mneuhaus/napkin">
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+          <p class="meta">macOS 11 or later · Apple Silicon and Intel · MIT license</p>
+        </div>
+
+        <figure class="shot">
+          <picture>
+            <source srcset="assets/napkin-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="assets/napkin-light.png" width="600" height="520" alt="The Napkin window with a note called Weekend in Lisbon: flights, hotel and food add up to €832, then unit conversions, a time zone, a date and a discount, each with its answer right-aligned on the same line.">
+          </picture>
+        </figure>
+      </div>
+    </div>
+
+    <section class="wrap" aria-labelledby="demo-title">
+      <div class="section-head">
+        <h2 id="demo-title">Type the question. The answer is already there.</h2>
+        <p>Every line is calculated as you type, and its result sits at the right edge of the same line. In the app, click a result to copy it.</p>
+      </div>
+
+      <div class="demo">
+        <div class="window" data-demo-window>
+          <div class="window-bar" aria-hidden="true">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="window-title">Moving day</div>
+          </div>
+          <dl class="calc" data-demo>
+            <div class="row"><dt><span class="hdr"># Moving day</span></dt><dd></dd></div>
+            <div class="row"><dt><span class="lbl">Van:</span> <span class="num">2</span> <span class="unit">days</span> <span class="op">*</span> <span class="unit">€</span><span class="num">79</span></dt><dd>€158</dd></div>
+            <div class="row"><dt><span class="lbl">Boxes:</span> <span class="num">40</span> <span class="op">*</span> <span class="unit">€</span><span class="num">2.50</span></dt><dd>€100</dd></div>
+            <div class="row"><dt><span class="lbl">Pizza for helpers:</span> <span class="num">6</span> <span class="op">*</span> <span class="unit">€</span><span class="num">11</span></dt><dd>€66</dd></div>
+            <div class="row"><dt><span class="lbl">Total:</span> <span class="var">sum</span></dt><dd>€324</dd></div>
+            <div class="row"><dt><span class="lbl">Split three ways:</span> <span class="var">prev</span> <span class="op">/</span> <span class="num">3</span></dt><dd>€108</dd></div>
+            <div class="row gap"></div>
+            <div class="row"><dt><span class="lbl">Sofa:</span> <span class="num">2.1</span> <span class="unit">m</span> <span class="kw">in</span> <span class="unit">feet</span></dt><dd>6.89 feet</dd></div>
+            <div class="row"><dt><span class="lbl">Hallway:</span> <span class="num">32</span> <span class="unit">inches</span> <span class="kw">in</span> <span class="unit">cm</span></dt><dd>81.28 cm</dd></div>
+            <div class="row"><dt><span class="lbl">Drive:</span> <span class="num">340</span> <span class="unit">km</span> <span class="op">/</span> <span class="num">90</span> <span class="unit">km/h</span> <span class="kw">in</span> <span class="unit">hours</span></dt><dd>3.78 hours</dd></div>
+            <div class="row"><dt><span class="lbl">Arrival:</span> <span class="dt">9:00</span> <span class="op">+</span> <span class="var">prev</span></dt><dd>12:46</dd></div>
+            <div class="row"><dt><span class="lbl">Deposit back:</span> <span class="num">80</span><span class="unit">%</span> <span class="kw">of</span> <span class="unit">€</span><span class="num">1,500</span></dt><dd>€1,200</dd></div>
+          </dl>
+        </div>
+
+        <div class="demo-controls">
+          <fieldset class="themes">
+            <legend>Theme of the example note</legend>
+            <label><input type="radio" name="theme" value="system" checked><span class="swatch" style="--sw-bg:#fcfcfb;--sw-fg:#1d1e21"></span>System</label>
+            <label><input type="radio" name="theme" value="light"><span class="swatch" style="--sw-bg:#fcfcfb;--sw-fg:#2f7d68"></span>Light</label>
+            <label><input type="radio" name="theme" value="dark"><span class="swatch" style="--sw-bg:#1d1e21;--sw-fg:#7ccfae"></span>Dark</label>
+            <label><input type="radio" name="theme" value="numi-classic"><span class="swatch" style="--sw-bg:#2b2b2b;--sw-fg:#f5c451"></span>Numi Classic</label>
+            <label><input type="radio" name="theme" value="solarized-light"><span class="swatch" style="--sw-bg:#fdf6e3;--sw-fg:#859900"></span>Solarized Light</label>
+            <label><input type="radio" name="theme" value="solarized-dark"><span class="swatch" style="--sw-bg:#002b36;--sw-fg:#b58900"></span>Solarized Dark</label>
+          </fieldset>
+          <button class="replay" type="button" data-replay hidden>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 2.5v3h3"/></svg>
+            Replay
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="features" aria-labelledby="features-title">
+      <div class="section-head">
+        <h2 id="features-title">What it understands</h2>
+        <p>Everything in Numi's documentation, plus a little more. Every result on this page was calculated by Napkin itself.</p>
+      </div>
+
+      <div class="notes">
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Plain words, Numi's syntax</h3>
+          <p>Operators as symbols or words, implicit multiplication, scales like <code>k</code> and <code>M</code>, hex, binary and octal, and functions from <code>sqrt</code> to <code>tanh</code>.</p>
+          <dl class="calc">
+            <div class="row"><dt><span class="num">8</span> <span class="kw">times</span> <span class="num">9</span></dt><dd>72</dd></div>
+            <div class="row"><dt><span class="unit">$</span><span class="num">50</span> <span class="kw">without</span> <span class="num">10</span><span class="unit">%</span></dt><dd>$45</dd></div>
+            <div class="row"><dt><span class="num">2</span><span class="op">(</span><span class="num">3</span><span class="op">+</span><span class="num">4</span><span class="op">)</span></dt><dd>14</dd></div>
+            <div class="row"><dt><span class="unit">$</span><span class="num">2</span><span class="unit">k</span></dt><dd>$2,000</dd></div>
+            <div class="row"><dt><span class="fn">sqrt</span> <span class="num">16</span> <span class="op">+</span> <span class="num">3</span><span class="op">^</span><span class="num">2</span></dt><dd>13</dd></div>
+            <div class="row"><dt><span class="num">0o1435343</span> <span class="kw">in</span> <span class="kw">hex</span></dt><dd>0x63AE3</dd></div>
+          </dl>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Units, CSS included</h3>
+          <p>Length, area, volume, weight, time, temperature, angles and data, with every SI prefix. Mixed units add up, and CSS <code>px</code>, <code>pt</code> and <code>em</code> convert with an <code>em</code> and <code>ppi</code> you can set.</p>
+          <dl class="calc">
+            <div class="row"><dt><span class="num">20</span> <span class="unit">inches</span> <span class="kw">in</span> <span class="unit">cm</span></dt><dd>50.8 cm</dd></div>
+            <div class="row"><dt><span class="num">1</span> <span class="unit">meter</span> <span class="num">20</span> <span class="unit">cm</span></dt><dd>120 cm</dd></div>
+            <div class="row"><dt><span class="num">60</span> <span class="unit">km</span> <span class="op">/</span> <span class="num">2</span> <span class="unit">h</span></dt><dd>30 km/h</dd></div>
+            <div class="row"><dt><span class="num">1</span> <span class="unit">GiB</span> <span class="kw">in</span> <span class="unit">MB</span></dt><dd>1,073.74 MB</dd></div>
+            <div class="row"><dt><span class="num">100</span> <span class="unit">°C</span> <span class="kw">in</span> <span class="unit">F</span></dt><dd>212 °F</dd></div>
+            <div class="row"><dt><span class="num">12</span> <span class="unit">pt</span> <span class="kw">in</span> <span class="unit">px</span></dt><dd>16 px</dd></div>
+            <div class="row"><dt><span class="unit">em</span> <span class="op">=</span> <span class="num">20</span><span class="unit">px</span></dt><dd>20 px</dd></div>
+            <div class="row"><dt><span class="num">1.2</span> <span class="unit">em</span> <span class="kw">in</span> <span class="unit">px</span></dt><dd>24 px</dd></div>
+          </dl>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Live currencies and crypto</h3>
+          <p>About 160 currencies and 40 crypto tickers, by code, name or sign. Rates refresh in the background and stay cached, so conversions work offline too.</p>
+          <dl class="calc">
+            <div class="row"><dt><span class="unit">$</span><span class="num">30</span> <span class="kw">in</span> <span class="unit">Euro</span></dt><dd>€26.92</dd></div>
+            <div class="row"><dt><span class="unit">£</span><span class="num">15</span> <span class="op">+</span> <span class="unit">€</span><span class="num">10</span> <span class="kw">in</span> <span class="unit">USD</span></dt><dd>$31.11</dd></div>
+            <div class="row"><dt><span class="unit">$</span><span class="num">30</span> <span class="unit">CAD</span> <span class="op">+</span> <span class="num">5</span> <span class="unit">USD</span> <span class="op">-</span> <span class="num">7</span><span class="unit">EUR</span></dt><dd>€16.66</dd></div>
+            <div class="row"><dt><span class="num">0.25</span> <span class="unit">BTC</span> <span class="kw">in</span> <span class="unit">EUR</span></dt><dd>€18,232.12</dd></div>
+          </dl>
+          <p class="aside">Example results with the rates of 28 October 2026.</p>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Every kind of percentage</h3>
+          <p>All of Numi's forms: <em>of</em>, <em>on</em>, <em>off</em>, <em>as a % of</em>, and the reverse questions like <em>of what is</em>.</p>
+          <dl class="calc">
+            <div class="row"><dt><span class="num">20</span><span class="unit">%</span> <span class="kw">of</span> <span class="unit">$</span><span class="num">10</span></dt><dd>$2</dd></div>
+            <div class="row"><dt><span class="num">5</span><span class="unit">%</span> <span class="kw">on</span> <span class="unit">$</span><span class="num">30</span></dt><dd>$31.50</dd></div>
+            <div class="row"><dt><span class="num">6</span><span class="unit">%</span> <span class="kw">off</span> <span class="num">40</span> <span class="unit">EUR</span></dt><dd>€37.60</dd></div>
+            <div class="row"><dt><span class="unit">$</span><span class="num">50</span> <span class="kw">as a %</span> <span class="kw">of</span> <span class="unit">$</span><span class="num">100</span></dt><dd>50%</dd></div>
+            <div class="row"><dt><span class="num">5</span><span class="unit">%</span> <span class="kw">of what is</span> <span class="num">6</span> <span class="unit">EUR</span></dt><dd>€120</dd></div>
+            <div class="row"><dt><span class="unit">$</span><span class="num">10</span> <span class="op">+</span> <span class="num">40</span><span class="unit">%</span></dt><dd>$14</dd></div>
+          </dl>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Dates, times and time zones</h3>
+          <p>Date math, durations, and time zones by city, IANA name or abbreviation, each following its daylight-saving rules. <code>now</code>, <code>today + 2 weeks</code> and <code>New York time</code> work too.</p>
+          <dl class="calc">
+            <div class="row"><dt><span class="dt">3:30 pm</span> <span class="op">+</span> <span class="num">2</span> <span class="unit">hours</span></dt><dd>17:30</dd></div>
+            <div class="row"><dt><span class="dt">2026-03-12</span> <span class="op">+</span> <span class="num">3</span> <span class="unit">weeks</span></dt><dd>Thu, 2 Apr 2026</dd></div>
+            <div class="row"><dt><span class="dt">24 Dec 2026</span> <span class="op">-</span> <span class="dt">1 Oct 2026</span></dt><dd>84 days</dd></div>
+            <div class="row"><dt><span class="dt">2:30 pm</span> <span class="dt">HKT</span> <span class="kw">in</span> <span class="dt">Tokyo</span></dt><dd>15:30</dd></div>
+            <div class="row"><dt><span class="dt">noon</span> <span class="dt">IST</span> <span class="kw">in</span> <span class="dt">Tokyo</span></dt><dd>15:30</dd></div>
+          </dl>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Notes that add up</h3>
+          <p>Headers, labels, <code>//</code> comments and variables. <code>prev</code> is the last result above; <code>sum</code> and <code>avg</code> cover the lines since the last header or blank line. Words Napkin doesn't know are ignored.</p>
+          <dl class="calc">
+            <div class="row"><dt><span class="var">rate</span> <span class="op">=</span> <span class="unit">$</span><span class="num">85</span></dt><dd>$85</dd></div>
+            <div class="row gap"></div>
+            <div class="row"><dt><span class="hdr"># Invoice</span></dt><dd></dd></div>
+            <div class="row"><dt><span class="lbl">Design:</span> <span class="num">12</span> <span class="unit">h</span> <span class="op">*</span> <span class="var">rate</span></dt><dd>$1,020</dd></div>
+            <div class="row"><dt><span class="lbl">Development:</span> <span class="num">30</span> <span class="unit">h</span> <span class="op">*</span> <span class="var">rate</span></dt><dd>$2,550</dd></div>
+            <div class="row"><dt><span class="lbl">Hosting:</span> <span class="unit">$</span><span class="num">40</span> <span class="cmt">// per month</span></dt><dd>$40</dd></div>
+            <div class="row"><dt><span class="lbl">Subtotal:</span> <span class="var">sum</span></dt><dd>$3,610</dd></div>
+            <div class="row"><dt><span class="lbl">VAT:</span> <span class="num">19</span><span class="unit">%</span> <span class="kw">of</span> <span class="var">prev</span></dt><dd>$685.90</dd></div>
+          </dl>
+          <p class="aside">Notes are plain <code>.numi</code> files. Point the notes folder at iCloud Drive or Dropbox to sync them; <kbd>⌘L</kbd> searches them all.</p>
+        </article>
+
+        <article class="note wide" id="languages">
+          <div class="lang-intro">
+            <div>
+              <h3><span class="hash" aria-hidden="true">#</span>28 input languages</h3>
+              <p>The same 28 languages as Numi. Pick one in Settings or let Napkin follow your system language: its words are understood on top of English, and unit names and dates come back in that language.</p>
+              <ul class="lang-list" aria-label="Input languages">
+                <li lang="en">English</li>
+                <li lang="af">Afrikaans</li>
+                <li lang="bs">Bosanski</li>
+                <li lang="cs">Čeština</li>
+                <li lang="da">Dansk</li>
+                <li lang="de">Deutsch</li>
+                <li lang="de-AT">Deutsch (Österreich)</li>
+                <li lang="de-CH">Deutsch (Schweiz)</li>
+                <li lang="es">Español</li>
+                <li lang="fi">Suomi</li>
+                <li lang="fr">Français</li>
+                <li lang="he" dir="rtl">עברית</li>
+                <li lang="it">Italiano</li>
+                <li lang="ja">日本語</li>
+                <li lang="ko">한국어</li>
+                <li lang="nl">Nederlands</li>
+                <li lang="nl-BE">Nederlands (België)</li>
+                <li lang="no">Norsk</li>
+                <li lang="pl">Polski</li>
+                <li lang="pt-BR">Português (Brasil)</li>
+                <li lang="pt-PT">Português (Portugal)</li>
+                <li lang="ro">Română</li>
+                <li lang="ru">Русский</li>
+                <li lang="sv">Svenska</li>
+                <li lang="tr">Türkçe</li>
+                <li lang="uk">Українська</li>
+                <li lang="zh-Hans">简体中文</li>
+                <li lang="zh-Hant">繁體中文</li>
+              </ul>
+            </div>
+            <figure class="shot">
+              <picture>
+                <source srcset="assets/napkin-german-dark.png" media="(prefers-color-scheme: dark)">
+                <img src="assets/napkin-german.png" width="600" height="520" loading="lazy" alt="Napkin in German with German number style: a note called Wochenende in Wien with costs in euros, travel times in Stunden and Minuten, a date and unit conversions.">
+              </picture>
+            </figure>
+          </div>
+
+          <div class="lang-notes">
+            <div lang="de">
+              <h4>Deutsch <span lang="en">German number style</span></h4>
+              <dl class="calc">
+                <div class="row"><dt><span class="var">Miete</span> <span class="kw">ist</span> <span class="num">800</span> <span class="unit">€</span></dt><dd>800 €</dd></div>
+                <div class="row"><dt><span class="lbl">Kaution:</span> <span class="var">Miete</span> <span class="kw">mal</span> <span class="num">3</span></dt><dd>2.400 €</dd></div>
+                <div class="row"><dt><span class="num">5</span> <span class="unit">Zoll</span> <span class="kw">in</span> <span class="unit">cm</span></dt><dd>12,7 cm</dd></div>
+                <div class="row"><dt><span class="num">20</span> <span class="unit">Prozent</span> <span class="kw">von</span> <span class="num">50</span></dt><dd>10</dd></div>
+                <div class="row"><dt><span class="num">2</span> <span class="unit">Stunden</span> <span class="kw">in</span> <span class="unit">Minuten</span></dt><dd>120 Minuten</dd></div>
+                <div class="row"><dt><span class="dt">12. März 2026</span> <span class="op">+</span> <span class="num">3</span> <span class="unit">Wochen</span></dt><dd>Do., 2. Apr. 2026</dd></div>
+              </dl>
+            </div>
+            <div lang="fr">
+              <h4>Français <span lang="en">French number style</span></h4>
+              <dl class="calc">
+                <div class="row"><dt><span class="num">3</span> <span class="kw">fois</span> <span class="num">4</span></dt><dd>12</dd></div>
+                <div class="row"><dt><span class="num">20</span> <span class="unit">pour cent</span> <span class="kw">de</span> <span class="num">80</span></dt><dd>16</dd></div>
+                <div class="row"><dt><span class="num">5</span> <span class="unit">pouces</span> <span class="kw">en</span> <span class="unit">cm</span></dt><dd>12,7 cm</dd></div>
+                <div class="row"><dt><span class="num">2</span> <span class="unit">heures</span> <span class="kw">en</span> <span class="unit">minutes</span></dt><dd>120 minutes</dd></div>
+                <div class="row"><dt><span class="num">3</span> <span class="unit">kilos</span> <span class="kw">en</span> <span class="unit">livres</span></dt><dd>6,61 livres</dd></div>
+                <div class="row"><dt><span class="dt">1er mai 2026</span> <span class="op">+</span> <span class="num">2</span> <span class="unit">semaines</span></dt><dd>ven. 15 mai 2026</dd></div>
+              </dl>
+            </div>
+            <div lang="zh-Hans">
+              <h4>简体中文 <span lang="en">Chinese, simplified</span></h4>
+              <dl class="calc">
+                <div class="row"><dt><span class="num">三百五十</span><span class="unit">元</span></dt><dd>350 CNY</dd></div>
+                <div class="row"><dt><span class="num">一万五千</span></dt><dd>15,000</dd></div>
+                <div class="row"><dt><span class="unit">百分之</span><span class="num">20</span><span class="kw">的</span><span class="num">50</span></dt><dd>10</dd></div>
+                <div class="row"><dt><span class="num">两</span><span class="unit">小时</span></dt><dd>2 小时</dd></div>
+                <div class="row"><dt><span class="num">5</span><span class="unit">厘米</span><span class="kw">加</span><span class="num">3</span><span class="unit">毫米</span></dt><dd>53 mm</dd></div>
+                <div class="row"><dt><span class="dt">2026年3月12日</span></dt><dd>2026年3月12日 周四</dd></div>
+              </dl>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="wrap" id="app" aria-labelledby="app-title">
+      <div class="section-head">
+        <h2 id="app-title">The app around it</h2>
+        <p>A native Mac app that stays out of the way, a command line tool for everything else, and Numi's extension API.</p>
+      </div>
+
+      <div class="notes">
+        <article class="note wide" id="themes">
+          <h3><span class="hash" aria-hidden="true">#</span>Six themes</h3>
+          <p>System (follows light and dark mode), Light, Dark, Numi Classic, Solarized Light and Solarized Dark. Font, font size, precision, number style, angle unit and clock format are settings too.</p>
+          <ul class="theme-shots">
+            <li>
+              <figure>
+                <img src="assets/theme-numi-classic.png" width="600" height="520" loading="lazy" alt="The Weekend in Lisbon note in the Numi Classic theme: dark grey with warm yellow results.">
+                <figcaption>Numi Classic</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <img src="assets/theme-solarized-light.png" width="600" height="520" loading="lazy" alt="The same note in Solarized Light: cream background with olive green results.">
+                <figcaption>Solarized Light</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <img src="assets/theme-solarized-dark.png" width="600" height="520" loading="lazy" alt="The same note in Solarized Dark: deep blue-green background with amber results.">
+                <figcaption>Solarized Dark</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Menu bar and global hotkey</h3>
+          <p>Press the hotkey anywhere to show or hide Napkin. The menu bar icon does the same.</p>
+          <div class="keys" role="img" aria-label="Option Command N"><kbd>⌥</kbd><kbd>⌘</kbd><kbd>N</kbd></div>
+          <ul class="facts">
+            <li>Change the hotkey or turn it off <span>in Settings</span></li>
+            <li>Run with or without a Dock icon</li>
+            <li>Start at login</li>
+            <li>Numi's shortcuts: <kbd>⇧⌘C</kbd> copies the current result, <kbd>⌥⌘C</kbd> the whole note</li>
+          </ul>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Numi's JavaScript extensions</h3>
+          <p>Napkin runs Numi extensions unchanged: <code>numi.addUnit</code>, <code>numi.addFunction</code>, <code>numi.setVariable</code>. It also loads them from Numi's own extension folders.</p>
+<pre><code>numi.addUnit({
+  id: "horse", phrases: "horse, horses, hrs",
+  baseUnitId: "m", format: "hrs", ratio: 2.4,
+});
+numi.addFunction({ id: "zum", phrases: "zum" }, (values) => ({
+  double: values[0].double + values[1].double,
+}));</code></pre>
+          <dl class="calc">
+            <div class="row"><dt><span class="num">3</span> <span class="unit">horses</span> <span class="kw">in</span> <span class="unit">m</span></dt><dd>7.2 m</dd></div>
+            <div class="row"><dt><span class="num">12</span> <span class="unit">m</span> <span class="kw">in</span> <span class="unit">horses</span></dt><dd>5 hrs</dd></div>
+            <div class="row"><dt><span class="fn">zum</span><span class="op">(</span><span class="num">2</span><span class="op">;</span><span class="num">3</span><span class="op">)</span></dt><dd>5</dd></div>
+          </dl>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Command line and Alfred</h3>
+          <p>The same engine as a command: one expression, a whole <code>.numi</code> file, or JSON for scripts.</p>
+<pre class="term"><code><span class="p">$ </span>napkin "20 inches in cm"
+<span class="o">50.8 cm</span>
+<span class="p">$ </span>napkin --language de "5 Zoll in cm"
+<span class="o">12.7 cm</span>
+<span class="p">$ </span>napkin --json "60 km / 2 h"
+<span class="o">{"input":"60 km / 2 h","result":{"text":"30 km/h","number":30.0,"unit":"km/h"},"error":null}</span></code></pre>
+          <p>The app answers Numi's Alfred endpoint on <code>localhost:15055</code>, so Numi's Alfred workflow keeps working. Napkin has its own workflow too, and <code>napkin serve</code> runs the endpoint without the app.</p>
+        </article>
+
+        <article class="note">
+          <h3><span class="hash" aria-hidden="true">#</span>Open source, written in Rust</h3>
+          <p>MIT licensed and developed in the open. Napkin is a native app built with Rust and <a href="https://www.gpui.rs">GPUI</a>, the GPU-accelerated UI framework behind the Zed editor.</p>
+          <ul class="facts">
+            <li><code>napkin-core</code> <span>the calculation engine, no I/O</span></li>
+            <li><code>napkin-rates</code> <span>exchange rates and their cache</span></li>
+            <li><code>napkin-extensions</code> <span>the JavaScript host for extensions</span></li>
+            <li><code>napkin-cli</code> <span>the <code>napkin</code> command</span></li>
+            <li><code>napkin-app</code> <span>the desktop app</span></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="install" aria-labelledby="install-title">
+      <div class="section-head">
+        <h2 id="install-title">Install</h2>
+        <p>For macOS 11 or later. One download runs natively on Apple Silicon and Intel.</p>
+      </div>
+
+      <div class="install">
+        <ol class="steps">
+          <li>
+            <div>
+              <h3>Download the disk image</h3>
+              <p>Get <code>Napkin-&lt;version&gt;.dmg</code> from the <a href="https://github.com/mneuhaus/napkin/releases/latest">latest release on GitHub</a>.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Drag Napkin into Applications</h3>
+              <p>Open the disk image and drag the Napkin icon onto the Applications folder next to it.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>Allow the first launch</h3>
+              <p>This build is not notarized by Apple yet, so macOS blocks it the first time you open it. Open <span class="path">System Settings → Privacy &amp; Security</span>, scroll down to the message about Napkin and click <span class="path">Open Anyway</span>. You only do this once. (On macOS 15 and later, Control-click → Open no longer skips this step.)</p>
+              <p>Prefer the Terminal? This does the same: <code class="long">xattr -dr com.apple.quarantine /Applications/Napkin.app</code></p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="side">
+          <h3>Command line</h3>
+          <p>Build and install the <code>napkin</code> command with Cargo:</p>
+<pre class="term"><code><span class="p">$ </span>cargo install --git https://github.com/mneuhaus/napkin napkin-cli</code></pre>
+          <p>Each release also has a universal <code>napkin-cli</code> download and the Alfred workflow.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <a class="brand" href="https://github.com/mneuhaus/napkin">
+        <img src="assets/icon-64.png" width="24" height="24" alt="">
+        Napkin
+      </a>
+      <p>MIT license. Not affiliated with Numi.</p>
+      <p><a href="https://github.com/mneuhaus/napkin">Source on GitHub</a></p>
+    </div>
+  </footer>
+</body>
+</html>
